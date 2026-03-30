@@ -1,0 +1,25 @@
+Hey everyone. Wanted to kick things off with an intro to something we've been working on for a while now. This is the first of three posts, the next two will cover the Rune SDK and the Discord plugin. But today its all about the Rune Interface itself.
+
+So what is it. Rune stands for Runtime & Utility Node Editor, and basically its a visual workflow editor. You drag nodes onto a canvas, connect them up, and run your flows. No boilerplate, no fighting with config files. Just build what you need.
+
+[PICTURE: Main node editor canvas with flow list on left, graph on right]
+
+We built it because we got tired of the same old automation headaches. Scripts that only work on one machine, workflows that break when you switch from Windows to Linux, that kind of stuff. With Rune you design a flow once and it runs wherever you need it. Windows, Linux, and we're working on macOS support too.
+
+What can you actually do with it. Data processing, file ops, git stuff, HTTP requests, even AI integration if you want. Theres a headless CLI called runecli so you can run your flows on servers or in CI without opening the GUI. And the plugin system lets you extend it, like we did with the Discord plugin. More on that in post three.
+
+[PICTURE: Node menu or example flow with connected nodes]
+
+Who's it for. Honestly anyone who automates things. Devs, ops folks, people who just want to wire up some logic without writing a ton of code. If you've ever thought "I wish I could just connect these things and hit run" then this might be for you.
+
+[PICTURE: Optional - runecli or MCP / AI integration screen if available]
+
+You can grab it over on itch.io and the docs are up if you want to dig in. We'll be posting more as we go, including the SDK and Discord plugin deep dives. Thanks for reading.
+
+Links:
+https://blazium.app
+https://blazium.games
+https://github.com/blazium-games
+https://github.com/blazium-engine
+https://blaziumengine.itch.io/rune-interface
+https://blazium-engine.github.io/rune_docs

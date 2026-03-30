@@ -1,0 +1,38 @@
+Why We Built the Rune Discord Plugin
+
+We built the Rune Discord plugin because we needed a way to extend Rune to support Discord for agent and notification development. Rune is a node based flow editor, the kind where you connect boxes and wires instead of writing code. The interface and SDK posts covered the basics. This one is about actually connecting it to Discord so you can build bots, automation, and agent workflows that use Discord as the I/O layer.
+
+[IMAGE: Screenshot of RUNE with the Discord plugin loaded. Node palette showing Discord/Events (On Ready, On Message, On Reaction), Discord/Actions (Connect, Send Message, Send Embed, etc), Discord/Data (Get User, Get Channel, Build Embed). Source: RUNE editor with plugin installed.]
+
+The use case
+
+If your building an AI agent or any kind of automation that needs to react to Discord messages, send notifications, or interact with users in a server, you typically have to write a bot from scratch. Or glue together a bunch of scripts. The Discord plugin lets you do it visually. Drop an On Message node, wire it to whatever logic you want (could be another plugin, could be custom nodes later), and send a reply. No C++ required once the plugin is in place.
+
+[IMAGE: Example flow: On Message connected to Reply to Message, with maybe a Build Embed in the chain. Or a flow that uses On Reaction. Screenshot from RUNE editor.]
+
+Agent development was the main driver. We wanted flows that could be triggered by Discord events, process them, and respond. Notification development too. Think build status, deploy alerts, or custom bot commands that hit external APIs and post results back to a channel. The plugin handles the Discord side. You focus on the flow logic.
+
+[IMAGE: Project structure from the repo. include/discord_plugin.h, src/discord_plugin.cpp, src/bot_manager.cpp, src/nodes/ with events/, actions/, data/ subdirs. Could be a file explorer screenshot or a simple tree.]
+
+Technical bits
+
+Its built on the Rune plugin SDK and uses DPP (D++ Discord Library) for the Discord API. All the heavy dependencies (OpenSSL, zlib, nlohmann/json) are vendored and built via CMake ExternalProject. You dont have to install them manually. The plugin manages async correctly. DPP runs on background threads, Rune runs on the main thread. The BotManager queues events and processes them during on_tick so nothing blocks.
+
+[IMAGE: Code from include/discord_plugin.h or bot_manager.h showing the config struct (auto_connect, token, intent flags) or the BotManager interface. Or a snippet from on_message.cpp with the listener callback.]
+
+Token resolution is flexible. Plugin settings, node property, flow env, app env. Intent flags are per-toggle in the settings UI. No bitmask editing. Auto-connect kicks in when a flow with an On Ready node loads and youve got it enabled.
+
+[IMAGE: plugin.json contents or a screenshot of the plugin settings UI in RUNE if it exists. Otherwise the dist/ folder layout showing the built plugin files.]
+
+Going further
+
+If your interested in writing your own Rune plugins, the Discord plugin is a good reference. It goes beyond the math and timer examples. External deps, event listeners, async, plugin settings schema.
+
+Links
+
+Blazium: https://blazium.app and https://blazium.games
+GitHub org: https://github.com/blazium-games
+Discord plugin: https://github.com/blazium-games/rune_discord_plugin
+Rune plugin SDK: https://github.com/blazium-games/rune_plugin_sdk
+Rune (itch): https://bioblaze.blazium.games/rune-interface
+Rune docs: https://blazium-games.github.io/rune_docs

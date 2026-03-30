@@ -1,0 +1,29 @@
+Why We Built the Rune Plugin SDK
+
+Rune is a visual node editor. You drag boxes, connect wires, data flows. We built the interface first, then the Discord plugin. But the thing we cared about from the start was extensability. Letting anyone extend Rune with whatever they can imagine.
+
+So we built the Plugin SDK. The goal was simple: if you can write C or C++, you can add new nodes to Rune. No special runtime, no scripting layer you have to learn. Just compile a plugin, drop it in a folder, and RUNE loads it. Your nodes show up. You can build math nodes, file readers, API clients, timers, config parsers. Whatever.
+
+[PICTURE: Screenshot of the examples/ directory. All four plugin folders visible: math_plugin, timer_plugin, config_plugin, env_plugin. Maybe the first few lines of each plugin.json if you can fit them, or just the folder names. Shows the variety of what you can do out of the gate.]
+
+We didnt want a huge API. The headers are in include/. rune_plugin.h and plugin_api.h. You define nodes with pins (inputs, outputs), an execute function, and you register them. The examples do most of the heavy lifting. Copy math_plugin, rename it, change one node. Build. See what happens.
+
+[PICTURE: Screenshot of examples/math_plugin/src/math_plugin.cpp. The Add node implementation. From add_create through add_desc. Around lines 19-68. Shows how little code it takes to add a node.]
+
+[PICTURE: Screenshot of include/plugin_api.h or rune_plugin.h. The PinDesc and NodeDesc struct definitions, or the RUNE_DEFINE_NODE macro. Something that shows the API surface. Could be from plugin_api.h around the struct definitions.]
+
+The reason we did this is we kept hitting walls. "We need a node that does X." "We need to integrate with Y." Building everything into the core would have turned Rune into a bloated mess. So instead we made it so anyone can add the nodes they need. Junior devs, hobbyists, people who want to try something dumb. The examples are there. Copy one, tweak it, break it. Thats the point.
+
+Endless possibilities is a bit of a cliche but its accurate. You want a node that reads a CSV and outputs rows. You want one that hits an HTTP endpoint. You want a timer that fires every N seconds. The timer_plugin already does that. Rip it apart. The config_plugin shows JSON and INI parsing. The env_plugin does environment variables. Use them as starting points.
+
+[PICTURE: Screenshot of the project root. CMakeLists.txt, include/, examples/. The README if you want. Something that says "this is a real SDK, here's the layout."]
+
+The SDK is on the repo. You need RUNE installed first (the interface, from the last post). Then clone the SDK, build the math plugin, copy the dist folder into RUNEs plugins directory. Documentation is at blazium-games.github.io/rune_docs. Go build something weird.
+
+Links:
+- https://blazium.app
+- https://blazium.games
+- GitHub org: https://github.com/blazium-games
+- Plugin SDK repo: https://github.com/blazium-games/rune_plugin_sdk
+- Rune Interface (itch): https://bioblaze.blazium.games/rune-interface
+- Docs: https://blazium-games.github.io/rune_docs

@@ -1,0 +1,38 @@
+Rune Discord Plugin (Post 3)
+
+So we covered the Rune Interface in the first post and the Rune SDK in the second. This one is about the Discord plugin, which is where things get interesting if you want to actually hook Rune up to something real.
+
+[IMAGE: Screenshot of RUNE editor with the node palette open, showing Discord/Events, Discord/Actions, and Discord/Data categories. Source: capture from running RUNE with the plugin loaded, or docs/screenshots if you have them.]
+
+The plugin adds Discord bot nodes directly into Rune. You get event nodes like On Ready, On Message, On Reaction. Action nodes for Connect Discord, Send Message, Send Embed, Reply to Message, Send Direct Message, Set Presence. And data nodes for Get User, Get Channel, Build Embed. Everything you need to wire up a bot without writing a single line of C++ once the plugins installed.
+
+[IMAGE: Screenshot of a simple flow in RUNE: On Message node connected to a Send Message or Reply node, maybe with a Get User in between. Shows the visual flow. Source: RUNE editor screenshot.]
+
+Why we built it
+
+The main reason was to extend Rune so it could support Discord for agent and notification development. We needed something that could handle the async stuff without blocking the editor. We wanted a way to trigger flows from Discord messages, send notifications back, and generally use Discord as an I/O layer for whatever automation or agent logic your building. The plugin sits on top of the SDK and uses DPP (the D++ Discord library) under the hood. All the async stuff, event queuing, and thread safety is handled so Rune stays responsive while Discord events come in on background threads.
+
+[IMAGE: Screenshot or diagram of the project layout from the README: rune_discord_plugin/ with include/, src/, src/nodes/events, actions, data, vendored/, rune_plugin_sdk/. Could be a simple directory tree screenshot or a hand drawn style diagram.]
+
+Token resolution is flexible. You can set the bot token in plugin settings, pass it through a node property, flow env (DISCORD_TOKEN), or app env. Whichever it finds first wins, so you can override per flow or per node without exposing secrets. Same deal with intent flags. The plugin has per-intent toggles in settings so you can turn on message content or guild members or whatever without messing with bitmasks. Auto-connect is there too. When a flow loads that has an On Ready node and youve got auto_connect enabled, it just connects.
+
+[IMAGE: Code snippet from src/nodes/events/on_message.cpp showing the listener registration and the pin definitions (OnMessage, AuthorID, AuthorName, Content, etc). Shows the structure without being overwhelming.]
+
+For anyone whos already messed with the math or timer plugins from the SDK this one is a step up. It shows how to wire up external libs, async stuff, and event listeners. The BotManager singleton handles DPP callbacks and queues events. DPP runs on its own thread, Rune expects node execution on the main thread, so the queue is the important part. Events get processed during on_tick.
+
+Build and install
+
+Clone with --recursive so you get DPP and the rest, otherwise youre missing dependencies. CMake 3.16+, C++17. On Windows its Visual Studio 2022, on Linux its Ninja. Output goes to dist/. Copy the whole dist folder into wherever Rune keeps its plugins. On first launch you should see the Discord nodes under Discord/Events, Discord/Actions, Discord/Data.
+
+[IMAGE: Screenshot of the dist/ folder contents after a build: the plugin DLL or .so, DPP library, plugin.json. Or a terminal showing the cmake build output.]
+
+If something breaks or acts wierd check the docs or dig into the code. The structure is pretty straightforward once you get past the CMake setup.
+
+Links
+
+Blazium: https://blazium.app and https://blazium.games
+GitHub org: https://github.com/blazium-games
+Discord plugin: https://github.com/blazium-games/rune_discord_plugin
+Rune plugin SDK: https://github.com/blazium-games/rune_plugin_sdk
+Rune (itch): https://bioblaze.blazium.games/rune-interface
+Rune docs: https://blazium-games.github.io/rune_docs

@@ -1,0 +1,29 @@
+Rune Plugin SDK: Build Your Own Nodes
+
+So last time we talked about the Rune Interface itself, the visual node editor. This post is about what comes next. The Plugin SDK.
+
+The whole point of Rune was never to be a closed box. We wanted people to extend it, add there own nodes. Hook into whatever they need. So we built an SDK that lets you write plugins in C or C++. You compile a dll, drop it in the plugins folder, and RUNE loads it. Your nodes show up in the editor. Thats it.
+
+[PICTURE: Screenshot of the project layout. Capture the folder structure from the README or your file explorer: rune_plugin_sdk/ with include/, examples/, and the four example plugin folders (math_plugin, timer_plugin, config_plugin, env_plugin) visible. Keep it simple, just the tree.]
+
+What you get out of the box is a header (rune_plugin.h), the plugin API, and four example plugins. Math does Add Multiply Divide Power. Timer does events and async stuff. Config shows settings and parsing. Env does environment variables. The idea is you copy one, change the id in plugin.json, and start messing with it.
+
+[PICTURE: Screenshot of examples/math_plugin/plugin.json. The full file. Shows the id, name, version, entry_symbol. Makes it clear how minimal the config is.]
+
+[PICTURE: Screenshot of examples/math_plugin/src/math_plugin.cpp. Frame the Add node section. Lines 19-68 or so. The add_create, add_destroy, add_execute, the vtable, the pins, the NodeDesc. This is what a node looks like in code.]
+
+The build is CMake. Nothing fancy. You cd into examples/math_plugin, mkdir build, cmake .., cmake --build .. You get a dll. Copy the dist folder into RUNEs plugins directory. Launch RUNE. The Math nodes are there under the Math category.
+
+We kept the API small on purpose. You dont need to understand a ton of abstractions. Look at how Add is done, copy that structure, change what it does. A Double node that multiplies by 2. A Random Compliment node. Something pointless. Thats how you learn.
+
+[PICTURE: Screenshot of include/rune_plugin.h. The top part with the example in the comment block. Lines 1-36. Shows the on_load, on_register, on_unload pattern and the PluginAPI struct. Gives people the "oh thats all it is" moment.]
+
+Next post we'll cover the Discord plugin. For now the SDK is up on the repo. Clone it, build the math plugin, drop it in RUNE. If something breaks the docs are at blazium-games.github.io/rune_docs. Or just ask.
+
+Links:
+- https://blazium.app
+- https://blazium.games
+- GitHub org: https://github.com/blazium-games
+- Plugin SDK repo: https://github.com/blazium-games/rune_plugin_sdk
+- Rune Interface (itch): https://bioblaze.blazium.games/rune-interface
+- Docs: https://blazium-games.github.io/rune_docs

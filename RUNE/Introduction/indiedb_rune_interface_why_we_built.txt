@@ -1,0 +1,25 @@
+Why we built the Rune Interface (Runtime & Utility Node Editor)
+
+Automating workflows sucks. Not the automation itself, thats the whole point. But the process of setting it up, keeping it running, and moving it between machines. You write something on Windows and it breaks on Linux. Or you've got a nice pipeline that only works in one environment. We ran into this alot and eventually got fed up enough to build something different.
+
+[PICTURE: Interface showing a workflow or automation flow]
+
+The idea was simple. Build flows visually, run them anywhere. Design once, deploy on Windows, Linux, macOS. No more rewriting scripts for each platform or fighting with toolchain differences. The flows are interchangeable, you can export them as .flow bundles and drop them on any machine that has Rune or runecli installed. Same flow, different box.
+
+Thats the core of it. We wanted automation that was easy to swap around. You build a flow in the editor, export it, and run it headless with runecli on a server or in your CI. Or run it in the GUI on your desktop. Same thing. The .flow format keeps everything together so you're not hunting down dependencies or config files.
+
+[PICTURE: Export/import or .flow bundle concept if visible in UI]
+
+Cross platform was non negotiable. We're building on Windows and Linux right now with macOS in the pipeline. The whole point is you shouldn't have to care where your workflow runs. If it works on your dev machine it should work on the build server. If it works on Linux it should work on Windows. Thats the goal anyway.
+
+[PICTURE: runecli or headless execution context if applicable]
+
+So thats why. We got tired of platform lock in and brittle automation. Rune Interface is our shot at something that moves with you. If that sounds useful, check out the links below. Docs, downloads, the whole deal.
+
+Links:
+https://blazium.app
+https://blazium.games
+https://github.com/blazium-games
+https://github.com/blazium-engine
+https://blaziumengine.itch.io/rune-interface
+https://blazium-engine.github.io/rune_docs
