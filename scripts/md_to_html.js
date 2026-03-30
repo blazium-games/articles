@@ -13,7 +13,7 @@ marked.use({
       }
     },
     image({ tokens, href }) {
-      return `<strong>[IMAGE:${href}]</strong>`;
+      return `<strong>[MEDIA:${href}]</strong>`;
     },
   },
 });
