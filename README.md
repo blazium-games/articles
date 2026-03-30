@@ -5,13 +5,16 @@ the various platform we are active on (X, IndieDB, itch.io, Patreon).
 
 ## Structure
 
-The file should follow the following structure:
+The directories should follow the following structure:
 
 ```
 - Main Topic
 | - Article Topic
-  | - File for X
-  | - File for IndieDB
-  | - File for itch.io
-  | - File for Patreon
+  | - Article.md
+  | - Article.html (for IndieDB and itch.io)
+  | - assets (optional folder)
+    | - image1.jpg
+    | - image2.png
+    | - image3.gif
+    | - video1.mp4
 ```
