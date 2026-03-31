@@ -18,8 +18,8 @@ official [documentation website](https://docs.blazium.app) to help you make the 
 ### Autowork Unit Testing Module
 ![](assets/temp_autowork.png)
 
-A powerful unit testing framework directly integrated into the engine,
-inspired by the popular [GUT (Godot Unit Test)](https://github.com/bitwes/Gut) addon.
+A high-performance native C++ testing framework deeply integrated into the Blazium Engine for fast,
+reliable unit, integration, and simulation testing.
 
 Learn more in the [dedicated article]().
 
