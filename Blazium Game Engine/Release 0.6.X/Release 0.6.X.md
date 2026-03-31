@@ -31,7 +31,7 @@ A full-featured HTTP server with support for REST APIs, static file serving, and
 Learn more about the HTTP Server in the [dedicated article]().
 
 ### RCON Module
-![](assets/rcon.jpg)
+![](../RCON%20Module/assets/rcon_demo.gif)
 
 Connect as a client to existing RCON-enabled servers or run your own RCON server inside a Blazium project.
 

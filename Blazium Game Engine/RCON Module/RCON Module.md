@@ -6,6 +6,8 @@ cover: "assets/cover.jpg"
 
 # Introducing the RCON Module
 
+![](assets/rcon_demo.gif)
+
 Blazium Game Engine adds another powerful networking tool with the new **RCON** module.
 This native C++ implementation provides both **RCON Client** and **RCON Server** capabilities, enabling
 remote administration and control of games and applications using the widely adopted RCON (Remote Console) protocol.
@@ -27,6 +29,8 @@ authentication results. Works in both editor and exported builds, including head
 - **Packet Management** — Robust handling of RCON packets, including size, ID, type, and body data.
 
 ## Possible Uses in Games and Applications
+
+![](assets/rcon_code.jpg)
 
 The RCON module is particularly valuable for multiplayer and server-based projects:
 
