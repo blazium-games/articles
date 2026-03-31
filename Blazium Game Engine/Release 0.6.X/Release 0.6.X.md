@@ -37,13 +37,6 @@ Connect as a client to existing RCON-enabled servers or run your own RCON server
 
 Learn more in the [dedicated article]().
 
-### SocketIO Module
-![](assets/socketio.jpg)
-
-Easily connect to and manage Socket.IO connections from your projects.
-
-Learn more in the [dedicated article]().
-
 ### IRC Client Module
 ![](assets/irc.jpg)
 
@@ -51,10 +44,17 @@ Quick and simple IRC client integration for real-time chat in your games.
 
 Learn more in the [dedicated article]().
 
-### ENet Module
+### New ENet Module
 ![](assets/enet.jpg)
 
 A more flexible and less restrictive ENet implementation compared to the default one.
+
+Learn more in the [dedicated article]().
+
+### SocketIO Module
+![](assets/socketio.jpg)
+
+Easily connect to and manage Socket.IO connections from your projects.
 
 Learn more in the [dedicated article]().
 

@@ -7,6 +7,8 @@ cover: "assets/cover.jpg"
 
 # Introducing the HTTP Server Module
 
+![](assets/http_demo.gif)
+
 Blazium Game Engine continues to expand its networking capabilities with the new **HTTPServer** module.
 This native C++ implementation brings a lightweight, high-performance HTTP server directly into the engine,
 allowing developers to serve web content, handle API requests, stream real-time updates, and more — all
@@ -35,7 +37,7 @@ your project or external directories.
 
 ## Possible Uses in Games and Applications
 
-![](assets/http_demo.gif)
+![](assets/http_server.jpg)
 
 The HTTP Server module unlocks many powerful scenarios:
 
