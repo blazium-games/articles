@@ -1,12 +1,13 @@
 ---
-title: "ENet Module"
-description: "Introducing the ENet Module: Low-Level ENet Networking for Blazium Game Engine"  
-cover: ""
+title: "New ENet Module"
+description: "Introducing the new ENet Module: Low-Level ENet Networking for Blazium Game Engine"  
+cover: "assets/cover.jpg"
 ---
 
-# Introducing the ENet Module
+# Introducing the New ENet Module
 
-Blazium Game Engine now features an enhanced **ENet** module with a powerful new low-level implementation.
+Blazium Game Engine now features an enhanced **ENet** module with a powerful new low-level implementation
+separate from Godot's high-level networking system.
 This native C++ module provides direct, flexible access to the ENet library, giving developers full control
 over creating custom ENet hosts, managing peers, and handling packet-level communication.
 

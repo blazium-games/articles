@@ -1,12 +1,12 @@
 ---
 title: "IRC Client Module"
 description: "Introducing the IRC Module: Real-Time Chat and IRC Connectivity for Blazium Game Engine"
-cover: ""
+cover: "assets/cover.jpg"
 ---
 
-# Introducing the IRC Module
+# Introducing the IRC Client Module
 
-Blazium Game Engine has just gained a powerful new built-in module: **IRCClient**.
+Blazium Game Engine has just gained a powerful new built-in IRC Client module.
 This C++ module brings full IRC (Internet Relay Chat) client capabilities directly into the engine,
 allowing developers to connect to any IRC server, join channels, exchange messages, handle user events,
 and even perform Direct Client-to-Client (DCC) file transfers — all without third-party plugins or external libraries.

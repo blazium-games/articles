@@ -1,7 +1,7 @@
 ---
 title: "RCON Module"
 description: "Introducing the RCON Module: Remote Console Control for Blazium Game Engine"
-cover: ""
+cover: "assets/cover.jpg"
 ---
 
 # Introducing the RCON Module
