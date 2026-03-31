@@ -22,8 +22,6 @@ This makes it perfect for:
 
 ## Basic Usage
 
-![](assets/httpserver_demo.mp4)
-
 Start the server and register routes with simple GDScript callbacks:
 
 ```gdscript
@@ -47,6 +45,8 @@ func _ready() -> void:
         res.set_body(html)
     )
 ```
+
+![](assets/http_demo.gif)
 
 ## Why Use the Built-in HTTP Server?
 

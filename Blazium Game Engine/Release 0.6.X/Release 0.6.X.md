@@ -24,7 +24,7 @@ reliable unit, integration, and simulation testing.
 Learn more about Autowork in the [dedicated article]().
 
 ### HTTP Server Module
-![](../HTTP Server Module/assets/httpserver_demo.mp4)
+![](../HTTP%20Server%20Module/assets/http_demo.gif)
 
 A full-featured HTTP server with support for REST APIs, static file serving,
 and Server-Sent Events (SSE).
