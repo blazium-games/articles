@@ -5,118 +5,62 @@ description:
 cover: "assets/cover.jpg"
 ---
 
-# Autowork Testing Framework Module
+# Introducing Autowork
+
 ![](assets/autowork.jpg)
 
-The **Autowork** module is a native **C++ testing framework** integrated directly into the **Blazium Engine**
+Blazium Game Engine now includes **Autowork**, a powerful new built-in testing framework designed
+specifically for game and application development. Implemented natively in C++ and deeply integrated
+with the engine via `ClassDB`, Autowork delivers fast, reliable, and expressive testing capabilities
+directly inside Blazium — no external dependencies or slow GDScript-only runners required.
 
-It brings powerful testing capabilities to game and application development by running assertions, mocking,
-signal tracking, and more at native C++ speeds, while offering a simple and familiar interface in GDScript.
+Tests are written in familiar GDScript (or C#) and extend the `AutoworkTest` class.
+The framework automatically discovers test methods (by default those starting with `test_`),
+runs them efficiently, and provides rich tooling for assertions, mocking, signal tracking,
+parameterization, and engine simulation.
 
-This makes testing faster and more reliable compared to pure GDScript solutions, with better access to the engine’s internal systems like nodes, signals, and scenes.
+## Key Features
 
-## Why Autowork?
+- **Native Speed & Deep Integration** — Assertions, mocking, and signal watching are bound directly in
+C++ for maximum performance, even when testing complex engine interactions.
+- **Rich Assertion Library** — Over 30 built-in assertions including `assert_eq`, `assert_between`, and
+many more for values, properties, and edge cases.
+- **Signal Testing** — Easily `watch_signals(node)` and then `assert_signal_emitted` to verify that
+your nodes and systems fire signals correctly.
+- **Mocking & Spying** — Create test doubles with `stub(object, "method").to_return(value)`, spy on
+calls with `spy(object)`, and verify behavior using `assert_called`.
+- **Parameterized Tests** — Run the same test logic against multiple data sets using `use_parameters([...])`.
+- **Engine Simulation** — Support for `await`, input simulation, frame/time manipulation, and realistic
+testing of time-dependent or physics-based logic.
+- **Orphan Node Detection** — Automatically detects and reports leaked nodes that weren't properly freed during tests.
+- **Configurable Test Discovery** — Controlled via `.autoworkconfig.json` (scan directories,
+file prefixes/suffixes, include subdirs, hide orphans, etc.).
+- **Headless CI-Friendly Execution** — Run tests from the command line in headless mode and get a
+clean exit code based on failures.
 
-Blazium projects often involve complex node hierarchies, signal-driven logic, and
-performance-critical systems. Traditional testing approaches can be slow or limited in scope.
+## Why Use Autowork in Your Blazium Projects?
 
-Autowork solves this by:
+![](assets/autowork_docs.jpg)
 
-- Running tests at **C++ speed** instead of interpreted GDScript.
-- Offering **native integration** with the SceneTree, signals, and object system.
-- Supporting advanced features like **mocking**, **parameterized tests**, and **orphan node detection**.
-- Keeping the API intuitive for developers already familiar with popular GDScript testing frameworks.
+Autowork makes it practical to maintain high code quality in game development:
 
-This makes Autowork ideal for unit tests, integration tests, input simulation, and
-even performance-sensitive engine-level validation.
+- **Unit & Integration Testing** — Test individual classes, nodes, systems, and full scenes with full access to the engine.
+- **Regression Prevention** — Catch breaking changes early in UI logic, gameplay systems, networking, or procedural generation.
+- **Behavior-Driven Development** — Combine assertions and signal watching to clearly express “what should happen” in your game.
+- **Mocking Complex Dependencies** — Stub out external services, input, or heavy computations to keep tests fast and isolated.
+- **Performance & Reliability** — Native implementation keeps test suites snappy even as your project grows to hundreds of tests.
 
-## How It Works
+It’s ideal for solo developers, indie teams, and larger studios who want robust automated testing
+without leaving the Blazium ecosystem.
 
-Tests are written in **GDScript** by extending the `AutoworkTest` base class.
-The heavy lifting (assertions, mocking, test execution) happens in a **C++ singleton** called `Autowork`,
-exposed through `ClassDB`.
+## Documentation & Next Steps
 
-A typical test runner script looks like this:
+The module is already available in the [latest release of Blazium](https://blazium.app/download) and
+ships with comprehensive tests (see the dedicated
+[autowork_module_tests repository](https://github.com/blazium-games/autowork_module_tests)
+for validation examples).
 
-```gdscript
-extends SceneTree
+For full technical details head over to the official **Blazium Documentation** at [docs.blazium.app](https://docs.blazium.app).
 
-func _initialize() -> void:
-    var autowork = ClassDB.instantiate("Autowork")
-    root.add_child(autowork)
-    autowork.run_tests()
-    quit(autowork.get_fail_count())
-```
-
-Then, you can run your tests in headless mode with:
-
-```bash
-blazium --headless -s run_tests.gd
-```
-
-## Writing Tests
-
-Create test scripts in your configured test directory (default: `res://tests/`).
-All test methods must start with the configured prefix (default: `test_`).
-
-### Basic Assertions and Signals
-
-```gdscript
-extends AutoworkTest
-
-signal my_custom_signal
-
-func test_basic_math():
-    assert_eq(5 + 5, 10, "Basic math works")
-    assert_between(5, 1, 10, "Value is within range")
-
-func test_signals():
-    watch_signals(self)
-    my_custom_signal.emit()
-    assert_signal_emitted(self, "my_custom_signal")
-```
-
-### Parameterized Tests
-
-```gdscript
-extends AutoworkTest
-
-func test_parameters(p = use_parameters([
-    {"a": 1, "b": 2, "expected": 3},
-    {"a": 5, "b": -1, "expected": 4}
-])):
-    assert_eq(p.a + p.b, p.expected, "Parameterized addition test")
-```
-
-### Mocking and Spying
-
-```gdscript
-extends AutoworkTest
-
-class MyObject extends RefCounted:
-    func get_name() -> String:
-        return "Original"
-
-func test_stubbing():
-    var obj = MyObject.new()
-    stub(obj, "get_name").to_return("StubbedName")
-    spy(obj)
-    
-    var result = obj.get_name()
-    assert_eq(result, "StubbedName")
-    assert_called(obj, "get_name")
-```
-
-## Benefits for Blazium Engine Developers
-
-Autowork helps teams write cleaner, more reliable code and catch issues earlier, especially in projects with
-many nodes and signals. It turns testing into a smoother part of the development process.
-
-For the complete list of assertions, advanced usage examples, and detailed API information,
-check the [official documentation](https://docs.blazium.app).
-
-The [Autowork module tests repository](https://github.com/blazium-games/autowork_module_tests) is
-also a great practical reference, filled with real test examples for assertions, mocking, signals, and more.
-
-Autowork will make testing in Blazium faster, more enjoyable, and deeply integrated with the engine.
-Stay tuned for the next release!
+Autowork brings professional-grade, engine-native testing to Blazium — making it easier than ever to ship
+stable, well-tested games and tools.

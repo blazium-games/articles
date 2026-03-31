@@ -41,9 +41,12 @@ through the game using built-in DCC support.
 Because it uses the engine's native networking stack (`StreamPeerTCP`/`SSL`), the module is lightweight,
 performant, and works in both editor and exported builds (including headless servers).
 
-## Getting Started
+## Documentation & Next Steps
 
-The module is already available in the `blazium-dev` branch of Blazium and ships with comprehensive tests (see the dedicated [irc_module_tests repository](https://github.com/blazium-games/irc_module_tests) for validation examples).
+The module is already available in the [latest release of Blazium](https://blazium.app/download) and
+ships with comprehensive tests (see the dedicated
+[irc_module_tests repository](https://github.com/blazium-games/irc_module_tests)
+for validation examples).
 
 For full technical details head over to the official **Blazium Documentation** at [docs.blazium.app](https://docs.blazium.app).
 
