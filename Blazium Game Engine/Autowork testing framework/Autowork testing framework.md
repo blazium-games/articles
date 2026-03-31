@@ -6,6 +6,7 @@ cover: "assets/cover.jpg"
 ---
 
 # Autowork Testing Framework Module
+![](assets/autowork.jpg)
 
 The **Autowork** module is a native **C++ testing framework** integrated directly into the **Blazium Engine**
 
@@ -112,7 +113,7 @@ Autowork helps teams write cleaner, more reliable code and catch issues earlier,
 many nodes and signals. It turns testing into a smoother part of the development process.
 
 For the complete list of assertions, advanced usage examples, and detailed API information,
-check the [official Blazium documentation](https://docs.blazium.app).
+check the [official documentation](https://docs.blazium.app).
 
 The [Autowork module tests repository](https://github.com/blazium-games/autowork_module_tests) is
 also a great practical reference, filled with real test examples for assertions, mocking, signals, and more.

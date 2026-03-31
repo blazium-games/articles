@@ -58,4 +58,4 @@ Unlike running an external server or using addons, this module is:
 
 Whether you're building a web companion for your game, a streaming overlay tool, or a full backend service, the HTTP Server Module gives you the power you need in a simple, familiar package.
 
-**Full documentation** is available at [docs.blazium.app](https://docs.blazium.app).
+For full technical details head over to the official **Blazium Documentation** at [docs.blazium.app](https://docs.blazium.app).

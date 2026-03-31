@@ -11,12 +11,12 @@ This marks the **last release based on Godot 4.3** and will serve as
 the future **Long-Term Support (LTS)** version once the next 4.6-based release arrives.
 
 Thanks to the significant number of new features, we’ve re-launched our
-official [documentation website](https://docs.blazium.app) to help you make the most of Blazium.
+[official documentation](https://docs.blazium.app) to help you make the most of Blazium.
 
 ## New Features
 
 ### Autowork Unit Testing Module
-![](assets/autowork.jpg)
+![](../Autowork%20testing%20framework/assets/autowork.jpg)
 
 A high-performance native C++ testing framework deeply integrated into the Blazium Engine for fast,
 reliable unit, integration, and simulation testing.
