@@ -2,7 +2,7 @@
 title: "Blazium Engine Release 0.6.X"  
 description: "The final 4.3-based version, which will become the future LTS after the upcoming 4.6-based release."  
 cover: "assets/cover.jpg"
-changes: https://github.com/blazium-games/blazium/commits/blazium-dev/?since=2025-05-04&until=2026-03-30
+changes: https://github.com/blazium-games/blazium/commits/blazium-dev/?since=2025-05-04&until=2026-03-31
 ---
 
 # Blazium Engine Release 0.6.X
@@ -26,10 +26,16 @@ Learn more about Autowork in the [dedicated article]().
 ### HTTP Server Module
 ![](../HTTP%20Server%20Module/assets/http_demo.gif)
 
-A full-featured HTTP server with support for REST APIs, static file serving,
-and Server-Sent Events (SSE).
+A full-featured HTTP server with support for REST APIs, static file serving, and Server-Sent Events (SSE).
 
 Learn more about the HTTP Server in the [dedicated article]().
+
+### RCON Module
+![](assets/rcon.jpg)
+
+Connect as a client to existing RCON-enabled servers or run your own RCON server inside a Blazium project.
+
+Learn more in the [dedicated article]().
 
 ### SocketIO Module
 ![](assets/socketio.jpg)
