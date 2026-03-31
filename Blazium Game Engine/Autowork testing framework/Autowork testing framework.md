@@ -2,7 +2,7 @@
 title: "Autowork Testing Framework Module"
 description:
     "A high-performance native C++ testing framework deeply integrated into the Blazium Engine for fast, reliable unit, integration, and simulation testing."
-cover: ""
+cover: "assets/cover.jpg"
 ---
 
 # Autowork Testing Framework Module

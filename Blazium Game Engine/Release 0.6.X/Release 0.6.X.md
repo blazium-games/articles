@@ -16,12 +16,12 @@ official [documentation website](https://docs.blazium.app) to help you make the 
 ## New Features
 
 ### Autowork Unit Testing Module
-![](assets/temp_autowork.png)
+![](assets/autowork.jpg)
 
 A high-performance native C++ testing framework deeply integrated into the Blazium Engine for fast,
 reliable unit, integration, and simulation testing.
 
-Learn more in the [dedicated article]().
+Learn more about Autowork in the [dedicated article]().
 
 ### HTTP Server Module
 ![](../HTTP Server Module/assets/httpserver_demo.mp4)
@@ -29,7 +29,7 @@ Learn more in the [dedicated article]().
 A full-featured HTTP server with support for REST APIs, static file serving,
 and Server-Sent Events (SSE).
 
-Learn more in the [dedicated article]().
+Learn more about the HTTP Server in the [dedicated article]().
 
 ### SocketIO Module
 ![](assets/socketio.jpg)
