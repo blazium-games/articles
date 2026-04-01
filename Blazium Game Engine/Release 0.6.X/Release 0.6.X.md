@@ -43,8 +43,8 @@ A more flexible and less restrictive ENet implementation compared to the default
 
 Learn more in the [dedicated article]().
 
-### SocketIO Module
-![](assets/socketio.jpg)
+### SocketIO Client Module
+![](../SocketIO%20Client%20Module/assets/socketio_connection.jpg)
 
 Easily connect to and manage Socket.IO connections from your projects.
 
