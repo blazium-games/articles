@@ -6,7 +6,7 @@ cover: "assets/cover.jpg"
 
 # Introducing the KickAPI Module
 
-![](assets/kickapi_demo.jpg)
+![](assets/kick_code.jpg)
 
 Blazium Game Engine expands its growing suite of live-streaming integrations with the new **KickAPI** module.
 This native C++ module delivers direct, high-performance access to the Kick Dev API from within your
@@ -27,7 +27,7 @@ reacting to events in real time.
 
 ## Why Add KickAPI to Your Project?
 
-![](assets/kickapi_demo.jpg)
+![](assets/kick_code2.jpg)
 
 Kick.com has become a major platform for streamers who value high engagement and creator-friendly policies.
 The KickAPI module lets you tap into that audience:

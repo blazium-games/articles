@@ -6,7 +6,7 @@ cover: "assets/cover.jpg"
 
 # Introducing the TwitchAPI Module
 
-![](assets/twitchapi_demo.jpg)
+![](assets/twitch_code.jpg)
 
 Blazium Game Engine continues to expand its live-streaming and audience-interaction toolkit with
 the new **TwitchAPI** module. This native C++ module provides direct, high-performance access to
@@ -26,7 +26,7 @@ responses efficiently using Blazium’s networking stack.
 
 ## Why Add TwitchAPI to Your Project?
 
-![](assets/twitchapi_demo.jpg)
+![](assets/twitch_code2.jpg)
 
 Twitch integration opens exciting possibilities for game developers, especially those targeting live audiences:
 
