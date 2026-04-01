@@ -1,11 +1,11 @@
 ---
-title: "Blazium Engine Release 0.6.X"  
+title: "Blazium Engine Release 0.5.X"  
 description: "The final 4.3-based version, which will become the future LTS after the upcoming 4.6-based release."  
 cover: "assets/cover.jpg"
 changes: https://github.com/blazium-games/blazium/commits/blazium-dev/?since=2025-05-04&until=2026-04-01
 ---
 
-# Blazium Engine Release 0.6.X
+# Blazium Engine Release 0.5.X
 
 This marks the **last release based on Godot 4.3** and will serve as
 the future **Long-Term Support (LTS)** version once the next 4.6-based release arrives.
@@ -110,7 +110,7 @@ The original Godot shader implementation remains available here:
 
 [Download the latest release on blazium.app](https://blazium.app/download)
 
-For the complete list of changes, see the [changelog](https://blazium.app/changelog?v=release_0.6.X).
+For the complete list of changes, see the [changelog](https://blazium.app/changelog?v=release_0.5.X).
 
 ---
 
