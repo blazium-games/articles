@@ -36,7 +36,7 @@ or automate your broadcast workflow.
 
 ## Possible Uses in Games and Applications
 
-![](assets/obs_connectjpg)
+![](assets/obs_connect.jpg)
 
 The OBS Client module is especially valuable for content creators, streamers, and interactive experiences:
 
