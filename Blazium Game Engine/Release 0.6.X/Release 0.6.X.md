@@ -80,7 +80,7 @@ Control OBS Studio directly from within Blazium.
 Learn more in the [dedicated article]().
 
 ### Alternative Scrollbar Style
-![](assets/scroll.jpg)
+![](assets/scroll_demo.gif)
 
 Option to enable thicker editor scrollbars, making them much easier to grab and use.
 
