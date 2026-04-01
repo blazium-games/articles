@@ -2,7 +2,7 @@
 title: "Blazium Engine Release 0.6.X"  
 description: "The final 4.3-based version, which will become the future LTS after the upcoming 4.6-based release."  
 cover: "assets/cover.jpg"
-changes: https://github.com/blazium-games/blazium/commits/blazium-dev/?since=2025-05-04&until=2026-03-31
+changes: https://github.com/blazium-games/blazium/commits/blazium-dev/?since=2025-05-04&until=2026-04-01
 ---
 
 # Blazium Engine Release 0.6.X
@@ -95,8 +95,10 @@ Added support for **QTerminal** as a supported terminal emulator on Linux.
 
 ### GodotSteam Module Removed
 
-After encountering ongoing issues with the existing integration and considering
+After encountering issues with the existing integration of the
+[GodotSteam gdextension](https://godotsteam.com) into the engine and considering
 that it is maintained by a separate team, we decided to remove the GodotSteam module.
+
 We plan to develop our own robust solution in the future.
 
 ### Six-Way Volumetric Lighting Material Removed
