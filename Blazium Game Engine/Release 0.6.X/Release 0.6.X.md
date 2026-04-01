@@ -73,7 +73,7 @@ Kick API integration for modern streaming platforms.
 Learn more in the [dedicated article]().
 
 ### OBS Client Module
-![](assets/obs.jpg)
+![](../OBS%20Client%20Module/assets/obs_code.jpg)
 
 Control OBS Studio directly from within Blazium.
 
