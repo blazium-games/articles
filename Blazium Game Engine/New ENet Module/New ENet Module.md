@@ -6,6 +6,8 @@ cover: "assets/cover.jpg"
 
 # Introducing the New ENet Module
 
+![](assets/enet_client_code.jpg)
+
 Blazium Game Engine now features an enhanced **ENet** module with a powerful new low-level implementation
 separate from Godot's high-level networking system.
 This native C++ module provides direct, flexible access to the ENet library, giving developers full control
@@ -32,6 +34,8 @@ This makes it ideal when you need to interface with external dedicated servers, 
 or legacy ENet services that don’t align with the standard high-level multiplayer peer model.
 
 ## Possible Uses in Games and Applications
+
+![](assets/enet_server_code.jpg)
 
 The new ENet module opens up advanced networking scenarios:
 

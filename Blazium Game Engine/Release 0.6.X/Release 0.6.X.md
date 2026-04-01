@@ -30,14 +30,14 @@ Connect as a client to existing RCON-enabled servers or run your own RCON server
 Learn more in the [dedicated article]().
 
 ### IRC Client Module
-![](assets/irc.jpg)
+![](../IRC%20Client%20Module/assets/irc_client_code.jpg)
 
 Quick and simple IRC client integration for real-time chat in your games.
 
 Learn more in the [dedicated article]().
 
 ### New ENet Module
-![](assets/enet.jpg)
+![](../New%20ENet%20Module/assets/enet_server_code.jpg)
 
 A more flexible and less restrictive ENet implementation compared to the default one.
 

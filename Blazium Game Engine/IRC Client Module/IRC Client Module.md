@@ -6,6 +6,8 @@ cover: "assets/cover.jpg"
 
 # Introducing the IRC Client Module
 
+![](assets/irc_client_code.jpg)
+
 Blazium Game Engine has just gained a powerful new built-in IRC Client module.
 This C++ module brings full IRC (Internet Relay Chat) client capabilities directly into the engine,
 allowing developers to connect to any IRC server, join channels, exchange messages, handle user events,
@@ -18,6 +20,8 @@ It supports SSL, Twitch-specific extensions (badges, commands, etc.), and full m
 helper classes like `IRCChannel`, `IRCUser`, `IRCMessage`, and `IRCDCC`.
 
 ## Why Add IRC to a Game or Application?
+
+![](assets/irc_log.jpg)
 
 The IRC Module opens up a range of lightweight, low-bandwidth, and highly customizable networking possibilities:
 
