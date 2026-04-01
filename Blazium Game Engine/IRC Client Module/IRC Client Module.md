@@ -56,3 +56,15 @@ For full technical details head over to the official **Blazium Documentation** a
 
 Whether you’re building the next big multiplayer title, a Twitch-centric experience, or just want rock-solid
 chat in your indie game, the new IRC Module gives you battle-tested, standards-compliant connectivity with almost zero setup.  
+
+---
+
+**[Jump into our Discord](https://blazium.app/chat)** for real-time chats, dev support and feedback
+
+Or follow us everywhere else:
+
+- **[IndieDB](https://www.indiedb.com/engines/blazium-engine/articles)**
+- **[X / Twitter](https://x.com/BlaziumGames)**
+- **[YouTube](https://www.youtube.com/@blazium)**
+- **[itch.io](https://blaziumengine.itch.io)**
+- **[Patreon](https://www.patreon.com/cw/Blazium)**

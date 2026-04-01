@@ -62,4 +62,17 @@ for validation examples).
 
 For full technical details head over to the official **Blazium Documentation** at [docs.blazium.app](https://docs.blazium.app).
 
-Whether you’re building a custom multiplayer experience or need seamless interoperability with external ENet servers, the new low-level ENet module gives you the power and flexibility you need.
+Whether you’re building a custom multiplayer experience or need seamless interoperability with external ENet servers,
+the new low-level ENet module gives you the power and flexibility you need.
+
+---
+
+**[Jump into our Discord](https://blazium.app/chat)** for real-time chats, dev support and feedback
+
+Or follow us everywhere else:
+
+- **[IndieDB](https://www.indiedb.com/engines/blazium-engine/articles)**
+- **[X / Twitter](https://x.com/BlaziumGames)**
+- **[YouTube](https://www.youtube.com/@blazium)**
+- **[itch.io](https://blaziumengine.itch.io)**
+- **[Patreon](https://www.patreon.com/cw/Blazium)**

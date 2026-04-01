@@ -59,3 +59,15 @@ For full technical details head over to the official **Blazium Documentation** a
 
 With the new SocketIO Client module, adding robust real-time features to your Blazium projects has never been easier.
 Whether you're building the next multiplayer hit or a dynamic interactive tool, Socket.IO support is ready to power your connections.
+
+---
+
+**[Jump into our Discord](https://blazium.app/chat)** for real-time chats, dev support and feedback
+
+Or follow us everywhere else:
+
+- **[IndieDB](https://www.indiedb.com/engines/blazium-engine/articles)**
+- **[X / Twitter](https://x.com/BlaziumGames)**
+- **[YouTube](https://www.youtube.com/@blazium)**
+- **[itch.io](https://blaziumengine.itch.io)**
+- **[Patreon](https://www.patreon.com/cw/Blazium)**

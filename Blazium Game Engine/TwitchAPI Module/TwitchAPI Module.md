@@ -55,3 +55,15 @@ For full technical details head over to the official **Blazium Documentation** a
 
 Bring your games closer to the Twitch community with native, reliable API access.Whether for
 overlays, interactivity, or full audience-driven features, the TwitchAPI module makes it straightforward and powerful.
+
+---
+
+**[Jump into our Discord](https://blazium.app/chat)** for real-time chats, dev support and feedback
+
+Or follow us everywhere else:
+
+- **[IndieDB](https://www.indiedb.com/engines/blazium-engine/articles)**
+- **[X / Twitter](https://x.com/BlaziumGames)**
+- **[YouTube](https://www.youtube.com/@blazium)**
+- **[itch.io](https://blaziumengine.itch.io)**
+- **[Patreon](https://www.patreon.com/cw/Blazium)**

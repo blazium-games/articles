@@ -64,3 +64,15 @@ for validation examples).
 For full technical details head over to the official **Blazium Documentation** at [docs.blazium.app](https://docs.blazium.app).
 
 With the new OBS Client module, Blazium makes it straightforward to bridge your games and tools with professional streaming workflows.
+
+---
+
+**[Jump into our Discord](https://blazium.app/chat)** for real-time chats, dev support and feedback
+
+Or follow us everywhere else:
+
+- **[IndieDB](https://www.indiedb.com/engines/blazium-engine/articles)**
+- **[X / Twitter](https://x.com/BlaziumGames)**
+- **[YouTube](https://www.youtube.com/@blazium)**
+- **[itch.io](https://blaziumengine.itch.io)**
+- **[Patreon](https://www.patreon.com/cw/Blazium)**
