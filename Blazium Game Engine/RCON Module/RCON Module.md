@@ -49,12 +49,11 @@ player lists, or performance metrics via RCON.
 - Prototype or extend support for games and services that expose RCON interfaces.
 - Run lightweight RCON servers inside Blazium applications for custom remote access needs.
 
-Combined with other Blazium networking modules (such as HTTPServer or IRCClient),
-it enables rich hybrid admin and monitoring solutions.
+Combined with other Blazium networking modules, it enables rich hybrid admin and monitoring solutions.
 
 ## Documentation & Next Steps
 
-The module is already available in the [latest release of Blazium](https://blazium.app/download) and
+The module is already available in the [latest release of Blazium](article link) and
 ships with comprehensive tests (see the dedicated
 [rcon_module_tests repository](https://github.com/blazium-games/rcon_module_tests)
 for validation examples).

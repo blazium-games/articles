@@ -32,8 +32,7 @@ data streaming (ideal for live updates, logs, or status feeds).
 your project or external directories.
 - **SSL/TLS Ready** — Secure your server with HTTPS support using Blazium’s existing SSL infrastructure.
 - **Headless-Friendly** — Perfect for running dedicated servers, tools, or backend services without a graphical window.
-- **Deep Engine Integration** — Use signals for request events, combine with other Blazium modules
-(like the new IRC or Autowork), and leverage the editor for rapid prototyping.
+- **Deep Engine Integration** — Use signals for request events, combine with other Blazium modules, and leverage the editor for rapid prototyping.
 
 ## Possible Uses in Games and Applications
 
@@ -60,12 +59,12 @@ Because it runs natively and supports headless mode, it’s also excellent for d
 
 ## Documentation & Next Steps
 
-The module is already available in the [latest release of Blazium](https://blazium.app/download) and
+The module is already available in the [latest release of Blazium](article link) and
 ships with comprehensive tests (see the dedicated
 [httpserver_module_tests repository](https://github.com/blazium-games/httpserver_module_tests)
 for validation examples).
 
 For full technical details head over to the official **Blazium Documentation** at [docs.blazium.app](https://docs.blazium.app).
 
-The HTTP Server module joins other recent networking additions (like IRCClient) to make Blazium an even more
+The HTTP Server module joins other recent networking additions to make Blazium an even more
 versatile engine for both games and tools.

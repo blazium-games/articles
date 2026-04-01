@@ -47,7 +47,7 @@ performant, and works in both editor and exported builds (including headless ser
 
 ## Documentation & Next Steps
 
-The module is already available in the [latest release of Blazium](https://blazium.app/download) and
+The module is already available in the [latest release of Blazium](article link) and
 ships with comprehensive tests (see the dedicated
 [irc_module_tests repository](https://github.com/blazium-games/irc_module_tests)
 for validation examples).
