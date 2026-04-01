@@ -15,14 +15,6 @@ Thanks to the significant number of new features, we’ve re-launched our
 
 ## New Features
 
-### Autowork Unit Testing Module
-![](../Autowork%20testing%20framework/assets/autowork.jpg)
-
-A high-performance native C++ testing framework deeply integrated into the Blazium Engine for fast,
-reliable unit, integration, and simulation testing.
-
-Learn more about Autowork in the [dedicated article]().
-
 ### HTTP Server Module
 ![](../HTTP%20Server%20Module/assets/http_demo.gif)
 
