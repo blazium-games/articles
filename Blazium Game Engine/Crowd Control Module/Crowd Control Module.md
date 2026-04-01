@@ -8,18 +8,22 @@ cover: "assets/cover.jpg"
 
 ![](assets/cc_demo.jpg)
 
-Blazium Game Engine continues to expand its networking and integration capabilities with the new **Crowd Control** module.
-This native C++ module brings seamless support for **Crowd Control** (crowdcontrol.live), the popular platform that
-lets Twitch, TikTok, and other livestream viewers directly interact with your game in real time.
+Blazium Game Engine adds a new capability with the (**Crowd Control**)[https://crowdcontrol.live] module.
+This native C++ module brings seamless integration with the Crowd Control platform, enabling streamers
+and developers to let their live audience directly influence gameplay in real time.
 
-By integrating Crowd Control, streamers can enable viewers to trigger fun, chaotic, or strategic effects inside your
-game — spawning items, altering gameplay, changing character stats, or creating community-driven moments — all
-without custom backend servers or complex WebSocket management.
+The module is exposed primarily through the `CrowdControl` object and a set of helper classes for
+managing effects, parameters, and game packs. It handles communication via HTTP and WebSocket for reliable,
+real-time effect delivery.
 
-The module exposes an easy-to-use `CrowdControlNode` (or similar high-level node) that handles connection to the
-Crowd Control service, authentication, effect reception, and response handling. It integrates cleanly with
-Blazium’s signal system, allowing you to connect callbacks like `effect_received`, `session_started`, or
-`effect_completed` and react instantly in GDScript or C#.
+## Key Features
+
+- **Real-Time Audience Effects** — Receive and apply effects triggered by viewers instantly during live streams.
+- **Effect System** — Define and handle custom effects with the `CrowdControlEffect` and `CrowdControlEffectParameter` classes, supporting parameters like duration, intensity, or custom values.
+- **Game Packs** — Organize effects into structured `CrowdControlGamePack` bundles with metadata (`CrowdControlGamePackMeta`) for easy management per game or version.
+- **HTTP & WebSocket Support** — Built-in `CrowdControlHttpClient` for downloading packs and connecting to Crowd Control services, with WebSocket for low-latency bidirectional communication.
+- **Deep Engine Integration** — Effects can directly interact with your scenes, nodes, signals, and game logic using Blazium’s familiar node and signal system.
+- **Editor Tools** — Includes editor support for configuring packs and effects directly in the Blazium editor.
 
 ## Why Add Crowd Control to Your Game?
 
