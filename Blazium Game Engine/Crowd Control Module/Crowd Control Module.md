@@ -1,0 +1,60 @@
+---
+title: "Crowd Control Module"
+description: "Introducing the Crowd Control Module: Livestream Interactivity for Blazium Games"
+cover: "assets/cover.jpg"
+---
+
+# Introducing the Crowd Control Module
+
+![](assets/cc_demo.jpg)
+
+Blazium Game Engine continues to expand its networking and integration capabilities with the new **Crowd Control** module.
+This native C++ module brings seamless support for **Crowd Control** (crowdcontrol.live), the popular platform that
+lets Twitch, TikTok, and other livestream viewers directly interact with your game in real time.
+
+By integrating Crowd Control, streamers can enable viewers to trigger fun, chaotic, or strategic effects inside your
+game — spawning items, altering gameplay, changing character stats, or creating community-driven moments — all
+without custom backend servers or complex WebSocket management.
+
+The module exposes an easy-to-use `CrowdControlNode` (or similar high-level node) that handles connection to the
+Crowd Control service, authentication, effect reception, and response handling. It integrates cleanly with
+Blazium’s signal system, allowing you to connect callbacks like `effect_received`, `session_started`, or
+`effect_completed` and react instantly in GDScript or C#.
+
+## Why Add Crowd Control to Your Game?
+
+![](assets/cc_demo.jpg)
+
+Crowd Control turns passive viewers into active participants, dramatically increasing engagement, watch time,
+and community excitement. Common use cases include:
+
+**For Games & Stream Experiences**
+- **Viewer-driven chaos** — Let viewers vote on or directly trigger power-ups, enemy spawns,
+environmental changes, or silly cosmetic effects.
+- **Twitch-integrated gameplay** — Popular for roguelikes, platformers, survival games, racing titles,
+and party games where audience input creates unpredictable fun.
+- **Monetization & Retention Boost** — Streamers love games with strong Crowd Control support because
+it encourages more subs, bits, and channel points usage.
+- **Custom Effect Systems** — Define your own game-specific effects that viewers can purchase or redeem
+through the Crowd Control app and website.
+
+**For Developers**
+- Rapid prototyping of interactive features without writing your own live audience backend.
+- Cross-platform support (desktop, and potentially mobile/web depending on export templates).
+- Lightweight and performant — built directly into the engine using Blazium’s networking primitives.
+
+It builds on the existing official Crowd Control developer tools and SDK patterns
+(already available for Godot and other engines), but as a native Blazium module it offers better performance,
+deeper engine integration, and no need for external GDExtension plugins.
+
+## Documentation & Next Steps
+
+The module is already available in the [latest release of Blazium](article link) and
+ships with comprehensive tests (see the dedicated
+[crowdcontrol_module_tests repository](https://github.com/blazium-games/crowdcontrol_module_tests)
+for validation examples).
+
+For full technical details head over to the official **Blazium Documentation** at [docs.blazium.app](https://docs.blazium.app).
+
+Whether you’re building the next viral streaming hit or just want to add a fun interactive layer to your
+existing game, the new Crowd Control module makes it simple and native.
