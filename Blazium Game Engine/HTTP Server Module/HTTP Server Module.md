@@ -59,7 +59,7 @@ Because it runs natively and supports headless mode, it’s also excellent for d
 
 ## Documentation & Next Steps
 
-The module is already available in the [latest release of Blazium](article link) and
+The module is already available in the [latest release of Blazium](https://blazium.app/download) and
 ships with comprehensive tests (see the dedicated
 [httpserver_module_tests repository](https://github.com/blazium-games/httpserver_module_tests)
 for validation examples).

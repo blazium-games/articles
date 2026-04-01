@@ -55,7 +55,7 @@ The implementation remains lightweight, performant, and works in both editor and
 
 ## Documentation & Next Steps
 
-The module is already available in the [latest release of Blazium](article link) and
+The module is already available in the [latest release of Blazium](https://blazium.app/download) and
 ships with comprehensive tests (see the dedicated
 [enet_module_tests repository](https://github.com/blazium-games/enet_module_tests)
 for validation examples).
