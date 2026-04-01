@@ -59,14 +59,14 @@ viewer-driven events for streamers.
 Learn more in the [dedicated article]().
 
 ### Twitch API Module
-![](assets/twitchapi.jpg)
+![](../TwitchAPI%20Module/assets/twitch_code.jpg)
 
 Full Twitch API integration for your streaming and community features.
 
 Learn more in the [dedicated article]().
 
 ### Kick API Module
-![](assets/kickapi.jpg)
+![](../KickAPI%20Module/assets/kick_code.jpg)
 
 Kick API integration for modern streaming platforms.
 
