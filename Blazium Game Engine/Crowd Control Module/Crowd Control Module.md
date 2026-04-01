@@ -6,7 +6,7 @@ cover: "assets/cover.jpg"
 
 # Introducing the Crowd Control Module
 
-![](assets/cc_demo.jpg)
+![](assets/cc_code.jpg)
 
 Blazium Game Engine adds a new capability with the (**Crowd Control**)[https://crowdcontrol.live] module.
 This native C++ module brings seamless integration with the Crowd Control platform, enabling streamers
@@ -27,7 +27,7 @@ real-time effect delivery.
 
 ## Why Add Crowd Control to Your Game?
 
-![](assets/cc_demo.jpg)
+![](assets/cc_code2.jpg)
 
 Crowd Control turns passive viewers into active participants, dramatically increasing engagement, watch time,
 and community excitement. Common use cases include:

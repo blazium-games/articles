@@ -51,7 +51,7 @@ Easily connect to and manage Socket.IO connections from your projects.
 Learn more in the [dedicated article]().
 
 ### CrowdControl Module
-![](assets/crowdcontrol.jpg)
+![](../Crowd%20Control%20Module/assets/cc_code2.jpg)
 
 Seamless Crowd Control integration, making it easy to add interactive chat and
 viewer-driven events for streamers.
