@@ -1,7 +1,7 @@
 ---
 title: "Autowork Testing Framework Module"
 description:
-    "A high-performance native C++ testing framework deeply integrated into the Blazium Engine for fast, reliable unit, integration, and simulation testing."
+    "A testing framework deeply integrated into the Blazium Engine for fast, reliable unit, integration, and simulation testing."
 cover: "assets/cover.jpg"
 ---
 
@@ -9,20 +9,16 @@ cover: "assets/cover.jpg"
 
 ![](assets/autowork.jpg)
 
-Blazium Game Engine now includes **Autowork**, a powerful new built-in testing framework designed
-specifically for game and application development. Implemented natively in C++ and deeply integrated
-with the engine via `ClassDB`, Autowork delivers fast, reliable, and expressive testing capabilities
-directly inside Blazium — no external dependencies or slow GDScript-only runners required.
+**Autowork** is a powerful new built-in testing framework designed specifically for game and application development.
+Inpired by [GUT](https://github.com/bitwes/Gut) and implemented natively into the engine Autowork delivers
+fast, reliable, and expressive testing capabilities without external dependencies or GDScript-only runners required.
 
-Tests are written in familiar GDScript (or C#) and extend the `AutoworkTest` class.
-The framework automatically discovers test methods (by default those starting with `test_`),
-runs them efficiently, and provides rich tooling for assertions, mocking, signal tracking,
-parameterization, and engine simulation.
+Tests are written in GDScript (or C#) by extending the `AutoworkTest` class.
+The framework will discover tests scripts following configuration, runs them, and provides rich logging
+for assertions, mocking, signal tracking, parameterization, and engine simulation.
 
 ## Key Features
 
-- **Native Speed & Deep Integration** — Assertions, mocking, and signal watching are bound directly in
-C++ for maximum performance, even when testing complex engine interactions.
 - **Rich Assertion Library** — Over 30 built-in assertions including `assert_eq`, `assert_between`, and
 many more for values, properties, and edge cases.
 - **Signal Testing** — Easily `watch_signals(node)` and then `assert_signal_emitted` to verify that
@@ -37,6 +33,7 @@ testing of time-dependent or physics-based logic.
 file prefixes/suffixes, include subdirs, hide orphans, etc.).
 - **Headless CI-Friendly Execution** — Run tests from the command line in headless mode and get a
 clean exit code based on failures.
+- **GUT compatibily** — Easly convert existing GUT scripts into Autowork scripts.
 
 ## Why Use Autowork in Your Blazium Projects?
 
@@ -55,19 +52,17 @@ without leaving the Blazium ecosystem.
 
 ## Documentation & Next Steps
 
-The module is already available in the [latest release of Blazium](https://blazium.app/download) and
+The module is will be already available in the [latest nightly of Blazium](https://blazium.app/download) and
 ships with comprehensive tests (see the dedicated
 [autowork_module_tests repository](https://github.com/blazium-games/autowork_module_tests)
 for validation examples).
-
-For full technical details head over to the official **Blazium Documentation** at [docs.blazium.app](https://docs.blazium.app).
 
 Autowork brings professional-grade, engine-native testing to Blazium — making it easier than ever to ship
 stable, well-tested games and tools.
 
 ---
 
-**[Jump into our Discord](https://blazium.app/chat)** for real-time chats, dev support and feedback
+**[Jump into our Discord](https://blazium.app/chat)** for real-time chats, dev support and feedback!
 
 Or follow us everywhere else:
 
@@ -75,4 +70,3 @@ Or follow us everywhere else:
 - **[X / Twitter](https://x.com/BlaziumGames)**
 - **[YouTube](https://www.youtube.com/@blazium)**
 - **[itch.io](https://blaziumengine.itch.io)**
-- **[Patreon](https://www.patreon.com/cw/Blazium)**
