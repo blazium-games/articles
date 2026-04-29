@@ -9,7 +9,7 @@ cover: "assets/cover.jpg"
 ![](assets/bignum_test.jpg)
 
 **BlaziumBigNum** is a new class added to the Blazium Game Engine, powered by [BigNum++](https://github.com/AmmoniumX/BigNumPlusPlus) 
-it is designed to handle extremely large numbers with precision and performance up to `1e(2^64)`.
+it is designed to handle extremely large numbers with precision and performance up to **1e(2^64)**.
 Built specifically for incremental, idle, and simulation-heavy games, BlaziumBigNum removes the traditional limits of
 standard numeric types and enables developers to scale their systems without compromise.
 
