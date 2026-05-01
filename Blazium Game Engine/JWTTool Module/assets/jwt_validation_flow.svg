@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="360" viewBox="0 0 1500 360" role="img" aria-labelledby="title desc">
+  <title id="title">Blazium JWTTool validation flow</title>
+  <desc id="desc">A flow diagram showing a backend service issuing a JSON Web Token, a Blazium game client receiving it, JWTTool validating signature, timing, claims, key IDs, and revocation, then granting or rejecting access.</desc>
+  <!-- Created from Lucid document: https://lucid.app/lucidchart/34a036b8-4d98-46e8-b43f-1abc9acc7a63/edit -->
+  <defs>
+    <marker id="arrow-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#555555" />
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2d7a3a" />
+    </marker>
+    <marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#a33a3a" />
+    </marker>
+    <style>
+      text {
+        font-family: Arial, Helvetica, sans-serif;
+        fill: #1f1f1f;
+      }
+      .box-text {
+        font-size: 17px;
+        font-weight: 600;
+        text-anchor: middle;
+      }
+      .small-text {
+        font-size: 14px;
+        font-weight: 400;
+        text-anchor: middle;
+      }
+      .label {
+        font-size: 13px;
+        fill: #444444;
+        text-anchor: middle;
+      }
+      .line {
+        fill: none;
+        stroke: #555555;
+        stroke-width: 2.5;
+        marker-end: url(#arrow-gray);
+      }
+      .line-green {
+        fill: none;
+        stroke: #2d7a3a;
+        stroke-width: 2.5;
+        marker-end: url(#arrow-green);
+      }
+      .line-red {
+        fill: none;
+        stroke: #a33a3a;
+        stroke-width: 2.5;
+        marker-end: url(#arrow-red);
+      }
+    </style>
+  </defs>
+
+  <rect x="1" y="1" width="1498" height="358" rx="8" fill="#ffffff" stroke="#d6d6d6" />
+
+  <rect x="45" y="120" width="185" height="82" rx="6" fill="#e8f1ff" stroke="#315e9e" stroke-width="2" />
+  <text class="box-text" x="137.5" y="145">Backend Service</text>
+  <text class="small-text" x="137.5" y="169">Creates signed JWT</text>
+  <text class="small-text" x="137.5" y="191">HS256 or RS256</text>
+
+  <path d="M 285 120 L 455 120 L 455 202 Q 370 224 285 202 Z" fill="#fff4d6" stroke="#9e7d22" stroke-width="2" />
+  <text class="box-text" x="370" y="146">JSON Web Token</text>
+  <text class="small-text" x="370" y="170">header.payload.signature</text>
+
+  <rect x="515" y="120" width="185" height="82" rx="6" fill="#eaf7ea" stroke="#3c7a3c" stroke-width="2" />
+  <text class="box-text" x="607.5" y="145">Blazium Game Client</text>
+  <text class="small-text" x="607.5" y="169">Receives token</text>
+
+  <rect x="760" y="105" width="220" height="112" rx="6" fill="#f0e8ff" stroke="#6849a8" stroke-width="2" />
+  <line x1="785" y1="105" x2="785" y2="217" stroke="#6849a8" stroke-width="2" />
+  <line x1="955" y1="105" x2="955" y2="217" stroke="#6849a8" stroke-width="2" />
+  <text class="box-text" x="870" y="136">JWTTool Module</text>
+  <text class="small-text" x="870" y="160">JWT singleton</text>
+  <text class="small-text" x="870" y="182">DecodedJWT</text>
+  <text class="small-text" x="870" y="204">JWTBuilder</text>
+
+  <rect x="1045" y="85" width="245" height="150" rx="6" fill="#f8f8f8" stroke="#555555" stroke-width="2" />
+  <text class="box-text" x="1167.5" y="116">Validate token</text>
+  <text class="small-text" x="1167.5" y="140">Signature</text>
+  <text class="small-text" x="1167.5" y="162">exp / nbf / leeway</text>
+  <text class="small-text" x="1167.5" y="184">issuer / audience / claims</text>
+  <text class="small-text" x="1167.5" y="206">kid key map / jti revoke</text>
+
+  <path d="M 1360 160 L 1430 105 L 1500 160 L 1430 215 Z" transform="translate(-55 0)" fill="#ffffff" stroke="#444444" stroke-width="2" />
+  <text class="box-text" x="1375" y="155">Token</text>
+  <text class="box-text" x="1375" y="179">valid?</text>
+
+  <rect x="1230" y="270" width="220" height="62" rx="6" fill="#ffe4e4" stroke="#a33a3a" stroke-width="2" />
+  <text class="box-text" x="1340" y="295">Reject session</text>
+  <text class="small-text" x="1340" y="317">Show error and diagnostics</text>
+
+  <rect x="1230" y="25" width="220" height="70" rx="6" fill="#dff5e3" stroke="#2d7a3a" stroke-width="2" />
+  <text class="box-text" x="1340" y="51">Grant access</text>
+  <text class="small-text" x="1340" y="75">Enable features and read claims</text>
+
+  <path class="line" d="M 230 161 L 285 161" />
+  <text class="label" x="257" y="151">issues</text>
+  <path class="line" d="M 455 161 L 515 161" />
+  <text class="label" x="485" y="151">sends to client</text>
+  <path class="line" d="M 700 161 L 760 161" />
+  <text class="label" x="730" y="151">parse</text>
+  <path class="line" d="M 980 161 L 1045 161" />
+  <text class="label" x="1012" y="151">validate</text>
+  <path class="line" d="M 1290 161 L 1305 161" />
+  <path class="line-green" d="M 1375 105 L 1375 60 L 1230 60" />
+  <text class="label" x="1393" y="83">yes</text>
+  <path class="line-red" d="M 1375 215 L 1375 301 L 1450 301" />
+  <text class="label" x="1395" y="258">no</text>
+</svg>

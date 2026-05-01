@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="500" viewBox="0 0 960 500" role="img" aria-labelledby="title desc">
+  <title id="title">JWTTool code example screenshot</title>
+  <desc id="desc">A screenshot-style code panel showing JWT creation and validation code in a Blazium project.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9adbb8" />
+    </marker>
+    <style>
+      text {
+        font-family: Consolas, Monaco, monospace;
+      }
+      .ui {
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      .code {
+        font-size: 17px;
+        fill: #d6deeb;
+      }
+      .keyword {
+        font-size: 17px;
+        fill: #8bd5ff;
+      }
+      .control {
+        font-size: 17px;
+        fill: #c792ea;
+      }
+      .string {
+        font-size: 17px;
+        fill: #ecc48d;
+      }
+      .call {
+        font-size: 17px;
+        fill: #82aaff;
+      }
+    </style>
+  </defs>
+
+  <rect width="960" height="500" rx="20" fill="#121821" />
+  <rect x="24" y="24" width="912" height="452" rx="16" fill="#192230" stroke="#38465c" stroke-width="2" />
+  <path d="M 40 24 H 920 A 16 16 0 0 1 936 40 V 70 H 24 V 40 A 16 16 0 0 1 40 24 Z" fill="#243044" />
+  <circle cx="54" cy="47" r="7" fill="#ff5f57" />
+  <circle cx="76" cy="47" r="7" fill="#ffbd2e" />
+  <circle cx="98" cy="47" r="7" fill="#28c840" />
+  <text class="ui" x="138" y="54" font-size="18" fill="#d8e6ff">JWTTool Module - create and validate a token</text>
+
+  <rect x="52" y="96" width="560" height="330" rx="10" fill="#101722" stroke="#303d52" />
+  <text class="keyword" x="78" y="128">var</text>
+  <text class="code" x="122" y="128">header = {</text>
+  <text class="string" x="221" y="128">"alg"</text>
+  <text class="code" x="272" y="128">: </text>
+  <text class="string" x="292" y="128">"HS256"</text>
+  <text class="code" x="366" y="128">, </text>
+  <text class="string" x="388" y="128">"typ"</text>
+  <text class="code" x="439" y="128">: </text>
+  <text class="string" x="459" y="128">"JWT"</text>
+  <text class="code" x="511" y="128">}</text>
+
+  <text class="keyword" x="78" y="168">var</text>
+  <text class="code" x="122" y="168">payload = {</text>
+  <text class="string" x="232" y="168">"sub"</text>
+  <text class="code" x="283" y="168">: </text>
+  <text class="string" x="303" y="168">"player_123"</text>
+  <text class="code" x="417" y="168">,</text>
+  <text class="string" x="102" y="204">"aud"</text>
+  <text class="code" x="153" y="204">: </text>
+  <text class="string" x="173" y="204">"blazium"</text>
+  <text class="code" x="265" y="204">,</text>
+  <text class="string" x="102" y="240">"exp"</text>
+  <text class="code" x="153" y="240">: Time.get_unix_time_from_system() + 3600}</text>
+
+  <text class="keyword" x="78" y="292">var</text>
+  <text class="code" x="122" y="292">token = JWT.create_jwt_hs256(</text>
+  <text class="code" x="102" y="326">header, payload, </text>
+  <text class="string" x="254" y="326">"secret"</text>
+  <text class="code" x="326" y="326">)</text>
+
+  <text class="control" x="78" y="370">if</text>
+  <text class="code" x="105" y="370">JWT.validate_signature_hs256(token, </text>
+  <text class="string" x="430" y="370">"secret"</text>
+  <text class="code" x="503" y="370">) and</text>
+  <text class="code" x="102" y="400">JWT.validate_timing(token):</text>
+
+  <rect x="676" y="96" width="220" height="330" rx="10" fill="#0f1f1b" stroke="#2f6f55" />
+  <text class="ui" x="700" y="138" font-size="22" font-weight="700" fill="#b8ffd9">JWTTool validates</text>
+  <text class="ui" x="700" y="182" font-size="18" fill="#d9fff0">Signature</text>
+  <text class="ui" x="700" y="222" font-size="18" fill="#d9fff0">Expiration and nbf</text>
+  <text class="ui" x="700" y="262" font-size="18" fill="#d9fff0">Issuer and audience</text>
+  <text class="ui" x="700" y="302" font-size="18" fill="#d9fff0">Custom claims</text>
+  <text class="ui" x="700" y="342" font-size="18" fill="#d9fff0">kid key maps</text>
+  <text class="ui" x="700" y="382" font-size="18" fill="#d9fff0">Diagnostic errors</text>
+  <path d="M 623 261 L 666 261" stroke="#9adbb8" stroke-width="4" marker-end="url(#arrow)" />
+</svg>
