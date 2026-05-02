@@ -12,21 +12,21 @@ Blazium Game Engine now includes a native **SQLite3** module for projects that n
 embedded tools, analytics, or data-heavy gameplay systems.
 SQLite is one of the most widely used database engines in the world, and this module brings it directly into Blazium with a rich engine-facing API.
 
-The module provides three layers for different workflows: `SQLiteAccess` for low-level control,
-`SQLiteDatabase` as a resource-backed database layer, and the `SQLite` node for scene-friendly integration.
+The module provides three layers for different workflows: *SQLiteAccess* for low-level control,
+*SQLiteDatabase* as a resource-backed database layer, and the *SQLite* node for scene-friendly integration.
 Together they cover simple queries, prepared statements, transactions, backups, BLOB access, custom SQL functions,
 JSON import/export, object serialization, diagnostics, and reactive hooks.
 
 ## Key Features
 
 - **Native SQLite Integration** — Use SQLite directly inside Blazium projects with the performance and portability of a built-in C++ module.
-- **Multiple API Layers** — Choose `SQLiteAccess` for direct control, `SQLiteDatabase` for resource workflows, or the `SQLite` node for scene-based projects.
+- **Multiple API Layers** — Choose *SQLiteAccess* for direct control, *SQLiteDatabase* for resource workflows, or the *SQLite* node for scene-based projects.
 - **File, Memory, and Buffered Databases** — Open persistent database files, in-memory databases, or buffered databases backed by packed byte arrays.
 - **Prepared Queries and Binding** — Create reusable queries, pass arguments safely, inspect results, and handle errors through structured result objects.
 - **Transactions, Savepoints, and WAL** — Use classic database transaction tools, savepoints, write-ahead logging, and checkpoints for reliable data flows.
-- **Backup and Restore Tools** — Run synchronous backups or use `SQLiteBackup` for stepped asynchronous backup and restore workflows.
-- **Incremental BLOB Access** — Read and write large binary values in chunks with `SQLiteBlob`, useful for save data, assets, thumbnails, or cached content.
-- **Custom SQL Extensions** — Register custom functions, aggregate functions, and collations with `Callable` hooks from engine scripts.
+- **Backup and Restore Tools** — Run synchronous backups or use *SQLiteBackup* for stepped asynchronous backup and restore workflows.
+- **Incremental BLOB Access** — Read and write large binary values in chunks with *SQLiteBlob*, useful for save data, assets, thumbnails, or cached content.
+- **Custom SQL Extensions** — Register custom functions, aggregate functions, and collations with *Callable* hooks from engine scripts.
 - **Serialization and Diagnostics** — Export/import JSON, serialize objects, inspect database status, set limits, tune configuration, and collect diagnostic data.
 
 ## Possible Uses in Games and Applications
@@ -50,20 +50,19 @@ It is small, battle-tested, and well suited to desktop tools, headless servers, 
 - Use status, limits, configuration, and diagnostics APIs to understand database behavior in demanding tools.
 
 Because SQLite is embedded, the same project can run in the editor, in exported applications, or in headless automation with the same database behavior.
-The node and resource layers make common workflows approachable, while `SQLiteAccess` remains available when a project needs advanced control.
+The node and resource layers make common workflows approachable, while *SQLiteAccess* remains available when a project needs advanced control.
 
 ## Documentation & Next Steps
 
 <!-- TODO: Add short code screenshot showing a parameterized query, transaction, and result inspection with the SQLite3 module. -->
 
-The module is already available in the [latest release of Blazium](https://blazium.app/download) and
+The module is already available in the [latest nightly of Blazium](https://blazium.app/download) and
 ships with comprehensive tests (see the dedicated
 [sqlite3_module_tests repository](https://github.com/blazium-games/sqlite3_module_tests)
 for validation examples).
 
-For full technical details head over to the official **Blazium Documentation** at [docs.blazium.app](https://docs.blazium.app).
-
-Whether you are building a game with deep save data, an editor with structured project files, or a headless service with local persistence, the SQLite3 module gives Blazium a powerful embedded database toolkit.
+Whether you are building a game with deep save data, an editor with structured project files, or
+a headless service with local persistence, the SQLite3 module gives Blazium a powerful embedded database toolkit.
 
 ---
 
@@ -75,4 +74,3 @@ Or follow us everywhere else:
 - **[X / Twitter](https://x.com/BlaziumGames)**
 - **[YouTube](https://www.youtube.com/@blazium)**
 - **[itch.io](https://blaziumengine.itch.io)**
-- **[Patreon](https://www.patreon.com/cw/Blazium)**
