@@ -36,7 +36,7 @@ clean exit code based on failures.
 
 ## Why Use Autowork in Your Blazium Projects?
 
-![](assets/autowork_docs.jpg)
+![](assets/autowork_code.jpg)
 
 Autowork makes it practical to maintain high code quality in game development:
 
