@@ -51,7 +51,7 @@ without leaving the Blazium ecosystem.
 
 ## Documentation & Next Steps
 
-The module is will be already available in the [latest nightly of Blazium](https://blazium.app/download) and
+The module is already available in the [latest nightly of Blazium](https://blazium.app/download) and
 ships with comprehensive tests (see the dedicated
 [autowork_module_tests repository](https://github.com/blazium-games/autowork_module_tests)
 for validation examples).
