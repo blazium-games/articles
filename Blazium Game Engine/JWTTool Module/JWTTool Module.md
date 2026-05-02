@@ -7,7 +7,7 @@ cover: "assets/cover.jpg"
 
 # Introducing the JWTTool Module
 
-![](assets/jwttool_code_hero.svg)
+![](assets/jwttool_code_hero.jpg)
 
 Blazium Game Engine now includes a built-in **JWTTool** module for working with JSON Web Tokens directly from your projects.
 Whether you are authenticating players, validating backend-issued session tokens, signing local service messages,
@@ -37,7 +37,7 @@ to explain validation failures.
 
 ## Why Add JWTTool to a Game or Application?
 
-![](assets/jwt_validation_flow.png)
+![](assets/jwt_validation_flow.jpg)
 
 JWTs are a common bridge between games, web services, launchers, account systems, dashboards, and internal tooling.
 With JWTTool built into Blazium, projects can validate tokens close to the gameplay or application logic that depends on them.
