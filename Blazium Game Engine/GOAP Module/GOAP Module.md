@@ -6,7 +6,7 @@ cover: "assets/cover.jpg"
 
 # Introducing the GOAP Module
 
-<!-- TODO: Add hero GIF recorded from `goap_module_tests/showcase/goap_agent_planning_showcase.tscn`, showing a Blazium GOAP agent selecting a goal, building a plan, and executing actions in-game. -->
+![](assets/planning_showcase.gif)
 
 Blazium Game Engine now includes a native **GOAP** module for building flexible, goal-driven AI directly inside your projects.
 Goal-Oriented Action Planning lets an agent decide what it wants to accomplish, inspect the current world state,
@@ -52,7 +52,7 @@ A small prototype can use fixed preconditions and effects, while a larger projec
 
 ## Documentation & Next Steps
 
-<!-- TODO: Add screenshot recorded from `goap_module_tests/showcase/goap_action_code_window.tscn`, showing a `BlaziumGoapAction` with preconditions, effects, and a custom `_perform` implementation. -->
+![](assets/goap_actions.gif)
 
 The module is already available in the [latest release of Blazium](https://blazium.app/download) and
 ships with comprehensive tests (see the dedicated
