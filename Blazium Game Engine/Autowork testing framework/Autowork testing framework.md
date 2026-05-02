@@ -13,23 +13,23 @@ cover: "assets/cover.jpg"
 Inpired by [GUT](https://github.com/bitwes/Gut) and implemented natively into the engine Autowork delivers
 fast, reliable, and expressive testing capabilities without external dependencies or GDScript-only runners required.
 
-Tests are written in GDScript (or C#) by extending the *AutoworkTest* class.
+Tests are written in GDScript (or C#) by extending the `AutoworkTest` class.
 The framework will discover tests scripts following configuration, runs them, and provides rich logging
 for assertions, mocking, signal tracking, parameterization, and engine simulation.
 
 ## Key Features
 
-- **Rich Assertion Library** — Over 30 built-in assertions including *assert_eq*, *assert_between*, and
+- **Rich Assertion Library** — Over 30 built-in assertions including `assert_eq`, `assert_between`, and
 many more for values, properties, and edge cases.
-- **Signal Testing** — Easily *watch_signals(node)* and then *assert_signal_emitted* to verify that
+- **Signal Testing** — Easily `watch_signals(node)` and then `assert_signal_emitted` to verify that
 your nodes and systems fire signals correctly.
-- **Mocking & Spying** — Create test doubles with *stub(object, "method").to_return(value)*, spy on
-calls with *spy(object)*, and verify behavior using *assert_called*.
-- **Parameterized Tests** — Run the same test logic against multiple data sets using *use_parameters([...])*.
-- **Engine Simulation** — Support for *await*, input simulation, frame/time manipulation, and realistic
+- **Mocking & Spying** — Create test doubles with `stub(object, "method").to_return(value)`, spy on
+calls with `spy(object)`, and verify behavior using `assert_called`.
+- **Parameterized Tests** — Run the same test logic against multiple data sets using `use_parameters([...])`.
+- **Engine Simulation** — Support for `await`, input simulation, frame/time manipulation, and realistic
 testing of time-dependent or physics-based logic.
 - **Orphan Node Detection** — Automatically detects and reports leaked nodes that weren't properly freed during tests.
-- **Configurable Test Discovery** — Controlled via *.autoworkconfig.json* (scan directories,
+- **Configurable Test Discovery** — Controlled via `.autoworkconfig.json` (scan directories,
 file prefixes/suffixes, include subdirs, hide orphans, etc.).
 - **Headless CI-Friendly Execution** — Run tests from the command line in headless mode and get a
 clean exit code based on failures.
