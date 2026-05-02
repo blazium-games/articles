@@ -15,6 +15,11 @@ marked.use({
     image({ tokens, href }) {
       return `<strong>[MEDIA:${href}]</strong>`;
     },
+    codespan({ text }) {
+      // convert inline code [ `print("code")` ] to italic
+      // since indiedb does not render code tags as inline
+      return `<em>${text}</em>`;
+    },
   },
 });
 

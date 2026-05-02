@@ -33,11 +33,10 @@ testing of time-dependent or physics-based logic.
 file prefixes/suffixes, include subdirs, hide orphans, etc.).
 - **Headless CI-Friendly Execution** — Run tests from the command line in headless mode and get a
 clean exit code based on failures.
-- **GUT compatibily** — Easly convert existing GUT scripts into Autowork scripts.
 
 ## Why Use Autowork in Your Blazium Projects?
 
-![](assets/autowork_docs.jpg)
+![](assets/autowork_code.jpg)
 
 Autowork makes it practical to maintain high code quality in game development:
 
@@ -52,7 +51,7 @@ without leaving the Blazium ecosystem.
 
 ## Documentation & Next Steps
 
-The module is will be already available in the [latest nightly of Blazium](https://blazium.app/download) and
+The module is already available in the [latest nightly of Blazium](https://blazium.app/download) and
 ships with comprehensive tests (see the dedicated
 [autowork_module_tests repository](https://github.com/blazium-games/autowork_module_tests)
 for validation examples).
