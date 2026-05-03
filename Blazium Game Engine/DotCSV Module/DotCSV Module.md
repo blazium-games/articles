@@ -25,7 +25,7 @@ API without relying on external libraries.
 
 ## Why Use DotCSV in Your Blazium Projects?
 
-![](assets/dotcsv_code.jpg)
+![](assets/dotcsv2.jpg)
 
 DotCSV simplifies one of the most common data-handling tasks in development:
 

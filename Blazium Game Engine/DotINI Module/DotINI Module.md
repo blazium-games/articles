@@ -28,7 +28,7 @@ solution that is both flexible and efficient.
 
 ## Why Use DotINI in Your Blazium Projects?
 
-![](assets/dotini_code.jpg)
+![](assets/dotini2.jpg)
 
 DotINI shines in scenarios where structured configuration is essential:
 

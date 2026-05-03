@@ -28,7 +28,7 @@ straightforward and engine-native solution without external dependencies.
 
 ## Why Use DotENV in Your Blazium Projects?
 
-![](assets/dotenv_code.jpg)
+![](assets/dotenv2.jpg)
 
 DotENV addresses one of the most common challenges in modern development: configuration management.
 
