@@ -1,6 +1,7 @@
 ---
 title: "DotCSV Module"
-description: "Introducing the DotCSV Module"
+description: 
+    "DotCSV is a lightweight and flexible CSV parsing and writing module built directly into Blazium Engine, designed to make working with structured text data effortless inside your projects."
 cover: "assets/cover.jpg"
 ---
 

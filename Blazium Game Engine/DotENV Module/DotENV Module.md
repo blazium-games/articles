@@ -1,6 +1,7 @@
 ---
 title: "DotENV Module"
-description: "Introducing the DotENV Module"
+description: 
+    "DotENV is a lightweight and practical environment configuration module built directly into Blazium Engine, designed to simplify how projects manage environment variables and configuration files."
 cover: "assets/cover.jpg"
 ---
 

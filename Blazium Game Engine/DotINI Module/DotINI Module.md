@@ -1,6 +1,7 @@
 ---
-title: "DotINT Module"
-description: "Introducing the DotINI Module"
+title: "DotINI Module"
+description: 
+    "DotINI is a lightweight and intuitive INI parsing and writing module built directly into Blazium Engine, designed to simplify working with configuration-style data in your projects."
 cover: "assets/cover.jpg"
 ---
 
