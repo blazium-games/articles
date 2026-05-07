@@ -35,7 +35,7 @@ and inspect GOAP activity with the editor debugger panel.
 
 ## Why Add GOAP to Your Blazium Project?
 
-<!-- TODO: Add screenshot of the GOAP editor/debug bottom panel showing active agents, current goal, current action, and world state. -->
+![](assets/goap_actions.gif)
 
 GOAP is useful when an AI character needs to respond to changing conditions without every possible decision being scripted by hand.
 Instead of writing a fixed chain like "find wood, walk to fire pit, light fire," you describe the desired state and
@@ -64,8 +64,6 @@ A small prototype can use fixed preconditions and effects, while a larger projec
 and action preparation dynamically from gameplay data.
 
 ## Documentation & Next Steps
-
-![](assets/goap_actions.gif)
 
 The module is already available in the [latest nightly of Blazium](https://blazium.app/download) and
 ships with comprehensive tests (see the dedicated
