@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Blazium — Autowork Featurette</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=block"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #06060a;
+        font-family: "Inter", sans-serif;
+      }
+      .scene {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .caption-text-wrapper {
+        position: absolute;
+        bottom: 120px;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        pointer-events: none;
+        overflow: visible;
+        padding: 16px 48px;
+        min-height: 140px;
+      }
+      .caption-line {
+        color: #f4f4f8;
+        font-size: 38px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        text-align: center;
+        text-shadow: 0 4px 22px rgba(0, 0, 0, 0.65);
+        transform: translateY(100%);
+        opacity: 0;
+        max-width: 1400px;
+        padding: 0 24px;
+        line-height: 1.35;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="30"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div
+        id="scene-1"
+        class="scene"
+        data-composition-id="scene1-autowork-intro"
+        data-composition-src="compositions/scene1-autowork-intro.html"
+        data-start="0"
+        data-duration="2"
+        data-track-index="1"
+        data-width="1920"
+        data-height="1080"
+      ></div>
+
+      <div
+        id="scene-2"
+        class="scene"
+        data-composition-id="scene2-autowork-body"
+        data-composition-src="compositions/scene2-autowork-body.html"
+        data-start="2"
+        data-duration="18"
+        data-track-index="1"
+        data-width="1920"
+        data-height="1080"
+      ></div>
+
+      <div
+        id="scene-5"
+        class="scene"
+        data-composition-id="scene5-autowork-outro"
+        data-composition-src="compositions/scene5-autowork-outro.html"
+        data-start="20"
+        data-duration="10"
+        data-track-index="1"
+        data-width="1920"
+        data-height="1080"
+      ></div>
+
+      <div
+        id="captions-comp"
+        data-composition-id="captions"
+        data-start="2"
+        data-duration="18"
+        data-track-index="2"
+        data-width="1920"
+        data-height="1080"
+      >
+        <div class="caption-text-wrapper" data-layout-allow-overflow>
+          <div id="caption-text" class="caption-line">Inspired by GUT—native to Blazium. No extra runners.</div>
+        </div>
+
+        <script>
+          (function () {
+            var tl = gsap.timeline({ paused: true });
+            var text = document.querySelector("#caption-text");
+
+            tl.to(text, { opacity: 1, y: 0, duration: 0.72, ease: "power3.out" }, 0);
+            tl.to(text, { opacity: 0, y: -22, duration: 0.32, ease: "power3.in" }, 4.45);
+            tl.set(text, { innerText: "Signals, stubs, spies—express behavior, not boilerplate.", y: 36 }, 4.82);
+            tl.to(text, { opacity: 1, y: 0, duration: 0.62, ease: "power3.out" }, 4.82);
+            tl.to(text, { opacity: 0, y: -22, duration: 0.32, ease: "power3.in" }, 9.55);
+            tl.set(text, { innerText: "Simulate time & input—then run headless for CI.", y: 36 }, 9.92);
+            tl.to(text, { opacity: 1, y: 0, duration: 0.62, ease: "power3.out" }, 9.92);
+            tl.to(text, { opacity: 0, y: -22, duration: 0.38, ease: "power3.in" }, 14.85);
+
+            window.__timelines = window.__timelines || {};
+            window.__timelines["captions"] = tl;
+          })();
+        </script>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      var mainTl = gsap.timeline({ paused: true });
+
+      mainTl.set("#scene-2", { scale: 1, filter: "blur(0px)" }, 2);
+      mainTl.to(
+        "#scene-2",
+        { duration: 0.28, scale: 0.94, filter: "blur(8px)", opacity: 0, ease: "power2.in" },
+        19.72,
+      );
+
+      window.__timelines["main"] = mainTl;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,216 @@
+<template id="scene1-logo-intro-template">
+  <div
+    data-composition-id="scene1-logo-intro"
+    data-width="1920"
+    data-height="1080"
+    data-duration="2"
+  >
+    <div class="canvas" data-layout-allow-overflow>
+      <div class="bg-bloom" data-layout-allow-overflow></div>
+      <div class="grid"></div>
+      <div class="ghost-type">ENGINE</div>
+      <div class="corner-tl"></div>
+      <div class="corner-br"></div>
+      <div class="meta-strip">blazium.app · OPEN SOURCE</div>
+
+      <div class="scene-content">
+        <div class="wordmark">
+          <span class="letter">B</span>
+          <span class="letter">L</span>
+          <span class="letter">A</span>
+          <span class="letter">Z</span>
+          <span class="letter">I</span>
+          <span class="letter">U</span>
+          <span class="letter">M</span>
+        </div>
+        <div class="sub">2D · 3D · XR · ONE WORKFLOW</div>
+      </div>
+
+      <div class="ring-wrap">
+        <svg viewBox="0 0 400 400" width="520" height="520">
+          <circle
+            class="ring"
+            cx="200"
+            cy="200"
+            r="90"
+            fill="none"
+            stroke="#ff5c28"
+            stroke-width="6"
+          />
+        </svg>
+      </div>
+    </div>
+
+    <style>
+      [data-composition-id="scene1-logo-intro"] .canvas {
+        width: 1920px;
+        height: 1080px;
+        background: radial-gradient(ellipse 120% 80% at 50% 20%, #1a1520 0%, #06060a 55%, #06060a 100%);
+        position: relative;
+        overflow: hidden;
+        font-family: "Inter", sans-serif;
+      }
+
+      [data-composition-id="scene1-logo-intro"] .bg-bloom {
+        position: absolute;
+        inset: -20%;
+        background: radial-gradient(circle at 30% 40%, rgba(255, 92, 40, 0.22) 0%, transparent 45%),
+          radial-gradient(circle at 70% 60%, rgba(56, 245, 199, 0.12) 0%, transparent 40%);
+        pointer-events: none;
+      }
+
+      [data-composition-id="scene1-logo-intro"] .grid {
+        position: absolute;
+        inset: 0;
+        opacity: 0.18;
+        background-image: linear-gradient(rgba(244, 244, 248, 0.06) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(244, 244, 248, 0.06) 1px, transparent 1px);
+        background-size: 48px 48px;
+        mask-image: radial-gradient(ellipse at center, black 35%, transparent 75%);
+      }
+
+      [data-composition-id="scene1-logo-intro"] .ghost-type {
+        position: absolute;
+        left: 50%;
+        top: 46%;
+        transform: translate(-50%, -50%);
+        font-size: 280px;
+        font-weight: 800;
+        letter-spacing: -0.06em;
+        color: rgba(244, 244, 248, 0.04);
+        white-space: nowrap;
+        pointer-events: none;
+      }
+
+      [data-composition-id="scene1-logo-intro"] .corner-tl,
+      [data-composition-id="scene1-logo-intro"] .corner-br {
+        position: absolute;
+        width: 120px;
+        height: 120px;
+        border: 3px solid rgba(56, 245, 199, 0.45);
+      }
+      [data-composition-id="scene1-logo-intro"] .corner-tl {
+        top: 48px;
+        left: 48px;
+        border-right: none;
+        border-bottom: none;
+      }
+      [data-composition-id="scene1-logo-intro"] .corner-br {
+        right: 48px;
+        bottom: 48px;
+        border-left: none;
+        border-top: none;
+      }
+
+      [data-composition-id="scene1-logo-intro"] .meta-strip {
+        position: absolute;
+        bottom: 56px;
+        left: 64px;
+        font-family: ui-monospace, "SF Mono", Consolas, monospace;
+        font-size: 22px;
+        color: rgba(156, 163, 176, 0.95);
+        letter-spacing: 0.12em;
+      }
+
+      [data-composition-id="scene1-logo-intro"] .scene-content {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        padding: 120px 160px;
+        box-sizing: border-box;
+      }
+
+      [data-composition-id="scene1-logo-intro"] .wordmark {
+        display: flex;
+        gap: 4px;
+        font-size: 132px;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        color: #f4f4f8;
+        line-height: 1;
+      }
+
+      [data-composition-id="scene1-logo-intro"] .letter {
+        display: inline-block;
+        text-shadow: 0 0 40px rgba(255, 92, 40, 0.35);
+      }
+
+      [data-composition-id="scene1-logo-intro"] .sub {
+        font-size: 36px;
+        font-weight: 600;
+        color: #38f5c7;
+        letter-spacing: 0.28em;
+      }
+
+      [data-composition-id="scene1-logo-intro"] .ring-wrap {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 520px;
+        height: 520px;
+        margin-left: -260px;
+        margin-top: -260px;
+        pointer-events: none;
+      }
+
+      [data-composition-id="scene1-logo-intro"] .ring {
+        transform-origin: center center;
+        opacity: 0;
+      }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      (function () {
+        const root = '[data-composition-id="scene1-logo-intro"]';
+        const tl = gsap.timeline({ paused: true });
+        const letters = gsap.utils.toArray(`${root} .letter`);
+        const ring = `${root} .ring`;
+        const wordmark = `${root} .wordmark`;
+        const sub = `${root} .sub`;
+        const corners = [`${root} .corner-tl`, `${root} .corner-br`];
+        const bloom = `${root} .bg-bloom`;
+
+        gsap.set(letters, { y: 120, opacity: 0, rotateX: -80 });
+        gsap.set(sub, { opacity: 0, y: 24, letterSpacing: "0.5em" });
+        gsap.set(corners, { scale: 0.6, opacity: 0 });
+
+        tl.to(bloom, { opacity: 1, duration: 0.01 }, 0);
+        tl.to(
+          letters,
+          {
+            y: 0,
+            opacity: 1,
+            rotateX: 0,
+            duration: 0.55,
+            stagger: 0.045,
+            ease: "back.out(1.35)",
+          },
+          0.05,
+        );
+        tl.to(sub, { opacity: 1, y: 0, letterSpacing: "0.28em", duration: 0.45, ease: "power3.out" }, 0.35);
+        tl.to(corners, { scale: 1, opacity: 1, duration: 0.35, ease: "power2.out" }, 0.5);
+
+        tl.fromTo(
+          ring,
+          { scale: 0.35, opacity: 0.95 },
+          { scale: 2.2, opacity: 0, duration: 0.55, ease: "power2.out" },
+          0.72,
+        );
+
+        tl.to(wordmark, { scale: 1.04, duration: 0.12, ease: "power2.out" }, 0.85);
+        tl.to(wordmark, { scale: 1, duration: 0.18, ease: "power2.in" }, 0.97);
+
+        tl.to([wordmark, sub, ...corners, `${root} .meta-strip`], { opacity: 0, y: -40, duration: 0.35, ease: "power3.in" }, 1.55);
+        tl.to(`${root} .ghost-type`, { opacity: 0, duration: 0.25 }, 1.55);
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["scene1-logo-intro"] = tl;
+      })();
+    </script>
+  </div>
+</template>

@@ -28,10 +28,13 @@ Learn more about the Autowork module in the
 [dedicated article](https://www.indiedb.com/engines/blazium-engine/features/autowork-testing-framework-module).
 
 ### Integrated MCP
+![](../JustAMCP%20Module/assets/justamcp_hero.jpg)
 
-Blazium Engine now includes integrated **MCP** support, improving interoperability with external tools, automation workflows, and
+Blazium Engine now includes integrated **MCP** support through the **JustAMCP** module, improving interoperability with external tools, automation workflows, and
 AI-assisted development pipelines.
 This integration streamlines communication between the editor, external utilities, and development environments.
+
+Learn more about the JustAMCP module in the dedicated article.
 
 ### DotCSV Module
 ![](../DotCSV%20Module/assets/dotcsv.jpg)
@@ -84,8 +87,11 @@ multiplayer systems, APIs, and online authentication.
 Learn more about the JWT module in the [dedicated article](https://www.indiedb.com/engines/blazium-engine/features/jwttool-module).
 
 ### Tiled Importer
+![](../Tiled%20Importer%20Module/assets/tiled_importer_hero.jpg)
 
 Blazium Engine now supports importing maps created with **Tiled**, making it easier to integrate external level design workflows into your projects.
+
+Learn more about the Tiled Importer module in the dedicated article.
 
 ## Updates
 

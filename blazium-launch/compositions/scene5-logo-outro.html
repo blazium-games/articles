@@ -1,0 +1,178 @@
+<template id="scene5-logo-outro-template">
+  <div
+    data-composition-id="scene5-logo-outro"
+    data-width="1920"
+    data-height="1080"
+    data-duration="10"
+  >
+    <div class="canvas" data-layout-allow-overflow>
+      <div class="wash" data-layout-allow-overflow></div>
+      <div class="flare" data-layout-allow-overflow></div>
+      <div class="grid"></div>
+
+      <div class="scene-content">
+        <img class="brand-logo" src="../assets/blazium-logo.svg" alt="" width="720" height="291" />
+        <div class="tagline">Community-built · MIT licensed · Cross‑platform</div>
+        <div class="row">
+          <div class="pill primary"><span class="dot"></span> blazium.app</div>
+          <div class="pill ghost">github.com/blazium-games/blazium</div>
+        </div>
+      </div>
+
+      <div class="footer-meta">DOWNLOAD · DOCS · DISCORD</div>
+    </div>
+
+    <style>
+      [data-composition-id="scene5-logo-outro"] .canvas {
+        width: 1920px;
+        height: 1080px;
+        background: radial-gradient(ellipse 90% 70% at 50% 35%, #161222 0%, #06060a 62%);
+        position: relative;
+        overflow: hidden;
+        font-family: "Inter", sans-serif;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .wash {
+        position: absolute;
+        inset: -15%;
+        background: radial-gradient(circle at 40% 40%, rgba(255, 92, 40, 0.18) 0%, transparent 45%),
+          radial-gradient(circle at 70% 55%, rgba(96, 0, 191, 0.12) 0%, transparent 40%);
+      }
+
+      [data-composition-id="scene5-logo-outro"] .flare {
+        position: absolute;
+        left: 50%;
+        top: 38%;
+        width: 900px;
+        height: 900px;
+        transform: translate(-50%, -50%);
+        background: radial-gradient(circle, rgba(56, 245, 199, 0.12) 0%, transparent 55%);
+        pointer-events: none;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .grid {
+        position: absolute;
+        inset: 0;
+        opacity: 0.12;
+        background-image: linear-gradient(rgba(244, 244, 248, 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(244, 244, 248, 0.05) 1px, transparent 1px);
+        background-size: 56px 56px;
+        mask-image: radial-gradient(ellipse at center, black 40%, transparent 72%);
+      }
+
+      [data-composition-id="scene5-logo-outro"] .scene-content {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 36px;
+        padding: 100px 140px;
+        box-sizing: border-box;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .brand-logo {
+        width: min(720px, 78vw);
+        height: auto;
+        filter: drop-shadow(0 24px 80px rgba(0, 0, 0, 0.55));
+      }
+
+      [data-composition-id="scene5-logo-outro"] .tagline {
+        font-size: 40px;
+        font-weight: 600;
+        color: #c8cdd6;
+        text-align: center;
+        max-width: 1200px;
+        line-height: 1.25;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .pill {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 16px 28px;
+        border-radius: 999px;
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .pill.primary {
+        background: rgba(255, 92, 40, 0.18);
+        border: 2px solid rgba(255, 92, 40, 0.65);
+        color: #f4f4f8;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .pill.ghost {
+        background: rgba(18, 18, 26, 0.85);
+        border: 2px solid rgba(244, 244, 248, 0.14);
+        color: #9ca3b0;
+        font-family: ui-monospace, "SF Mono", Consolas, monospace;
+        font-weight: 600;
+        font-size: 24px;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 999px;
+        background: #38f5c7;
+        box-shadow: 0 0 18px rgba(56, 245, 199, 0.75);
+      }
+
+      [data-composition-id="scene5-logo-outro"] .footer-meta {
+        position: absolute;
+        bottom: 52px;
+        width: 100%;
+        text-align: center;
+        font-family: ui-monospace, "SF Mono", Consolas, monospace;
+        font-size: 22px;
+        letter-spacing: 0.35em;
+        color: rgba(156, 163, 176, 0.85);
+      }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      (function () {
+        const root = '[data-composition-id="scene5-logo-outro"]';
+        const tl = gsap.timeline({ paused: true });
+
+        const logo = `${root} .brand-logo`;
+        const tagline = `${root} .tagline`;
+        const pills = `${root} .pill`;
+        const footer = `${root} .footer-meta`;
+        const flare = `${root} .flare`;
+
+        gsap.set(logo, { y: 40, opacity: 0, scale: 0.92 });
+        gsap.set(tagline, { opacity: 0, y: 24 });
+        gsap.set(pills, { opacity: 0, y: 18 });
+        gsap.set(footer, { opacity: 0 });
+
+        tl.fromTo(flare, { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.8, ease: "power2.out" }, 0);
+        tl.to(logo, { y: 0, opacity: 1, scale: 1, duration: 0.85, ease: "back.out(1.15)" }, 0.15);
+        tl.to(tagline, { opacity: 1, y: 0, duration: 0.65, ease: "power3.out" }, 0.55);
+        tl.to(pills, { opacity: 1, y: 0, duration: 0.55, stagger: 0.12, ease: "power2.out" }, 1.05);
+        tl.to(footer, { opacity: 1, duration: 0.6, ease: "power2.out" }, 1.65);
+
+        tl.to(
+          logo,
+          { filter: "drop-shadow(0 24px 80px rgba(0, 0, 0, 0.55)) brightness(1.05)", duration: 0.25 },
+          2.4,
+        );
+        tl.to(logo, { filter: "drop-shadow(0 24px 80px rgba(0, 0, 0, 0.55)) brightness(1)", duration: 0.35 }, 2.65);
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["scene5-logo-outro"] = tl;
+      })();
+    </script>
+  </div>
+</template>
