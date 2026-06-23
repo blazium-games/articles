@@ -19,18 +19,18 @@ define preconditions and effects with dictionaries, and let the planner choose t
 
 ## Key Features
 
-- **Native Goal-Oriented Planning** — Built into the engine as a C++ module, giving projects a ready-to-use
+- **Native Goal-Oriented Planning**: Built into the engine as a C++ module, giving projects a ready-to-use
 planning layer without external plugins.
-- **Scene-Based Workflow** — Add a `BlaziumGoapAgent` to your actor, point it at goal and action containers,
+- **Scene-Based Workflow**: Add a `BlaziumGoapAgent` to your actor, point it at goal and action containers,
 and keep AI behavior organized in the scene tree.
-- **Dictionary World State** — Use `BlaziumGoapWorldState` as a shared blackboard for facts like inventory,
+- **Dictionary World State**: Use `BlaziumGoapWorldState` as a shared blackboard for facts like inventory,
 health, resources, nearby targets, or tactical conditions.
-- **Cost-Aware Action Selection** — Assign costs to actions and priorities to goals so the planner can choose
+- **Cost-Aware Action Selection**: Assign costs to actions and priorities to goals so the planner can choose
 efficient plans instead of only following hard-coded behavior trees.
-- **Dynamic GDScript Hooks** — Override methods such as `_is_valid`, `_get_cost`, `_get_priority`,
+- **Dynamic GDScript Hooks**: Override methods such as `_is_valid`, `_get_cost`, `_get_priority`,
 `_prepare_action`, `_enter`, `_perform`, and `_exit` to adapt plans to live gameplay.
-- **Replanning and Failure Handling** — React when goals become invalid, actions fail, or the world changes before a plan completes.
-- **Signals and Debugging Tools** — Track goal, plan, and action changes through signals, enable `debug_enabled`,
+- **Replanning and Failure Handling**: React when goals become invalid, actions fail, or the world changes before a plan completes.
+- **Signals and Debugging Tools**: Track goal, plan, and action changes through signals, enable `debug_enabled`,
 and inspect GOAP activity with the editor debugger panel.
 
 ## Why Add GOAP to Your Blazium Project?
@@ -43,15 +43,15 @@ the actions that can create it.
 The planner then works out which actions are currently possible and how expensive each route is.
 
 **For Games**
-- **Adaptive NPC behavior** — Let characters choose between gathering, fleeing, healing, fighting, crafting,
+- **Adaptive NPC behavior**: Let characters choose between gathering, fleeing, healing, fighting, crafting,
 or searching based on the current world state.
-- **Emergent enemy AI** — Give enemies multiple ways to reach the same objective, such as flanking, reloading,
+- **Emergent enemy AI**: Give enemies multiple ways to reach the same objective, such as flanking, reloading,
 calling allies, or retreating when conditions change.
-- **Survival and simulation systems** — Model needs like hunger, warmth, shelter, safety, and inventory as
+- **Survival and simulation systems**: Model needs like hunger, warmth, shelter, safety, and inventory as
 goals and let agents plan around available actions.
-- **Companion and squad AI** — Build helpers that can prioritize supporting the player, collecting items,
+- **Companion and squad AI**: Build helpers that can prioritize supporting the player, collecting items,
 defending positions, or completing objectives.
-- **Readable AI debugging** — Inspect which goal was selected, which plan was produced, and why an action is currently running.
+- **Readable AI debugging**: Inspect which goal was selected, which plan was produced, and why an action is currently running.
 
 **For Applications & Tools**
 - Prototype planning systems for robotics, automation, simulations, or training scenarios.
@@ -66,9 +66,9 @@ and action preparation dynamically from gameplay data.
 ## Documentation & Next Steps
 
 The module is already available in the [latest nightly of Blazium](https://blazium.app/download) and
-ships with comprehensive tests (see the dedicated
-[goap_module_tests repository](https://github.com/blazium-games/goap_module_tests)
-for validation examples).
+includes a dedicated test project (see
+[goap_module_tests](https://github.com/blazium-games/goap_module_tests)
+for examples).
 
 For full technical details head over to the official **Blazium Documentation** at [docs.blazium.app](https://docs.blazium.app).
 

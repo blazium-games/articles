@@ -1,7 +1,7 @@
 ---
 title: "DotINI Module"
 description: 
-    "DotINI is a lightweight and intuitive INI parsing and writing module built directly into Blazium Engine, designed to simplify working with configuration-style data in your projects."
+    "DotINI is a lightweight INI parsing and writing module built into Blazium Engine for configuration-style data in your projects."
 cover: "assets/cover.jpg"
 ---
 
@@ -9,47 +9,44 @@ cover: "assets/cover.jpg"
 
 ![](assets/dotini.jpg)
 
-**DotINI** is a lightweight and intuitive INI parsing and writing module built directly into **Blazium Engine**,
-designed to simplify working with configuration-style data in your projects.
-INI files are a long-standing standard for structured configuration, and DotINI makes them feel like a natural part
-of your workflow—without the need for external libraries or complex parsing logic.
+**DotINI** reads and writes INI files directly in **Blazium Engine**.
+INI has been around forever for config files, and DotINI makes it feel native to the engine.
+No external libraries, no custom parser to maintain.
 
-Whether you're managing settings, user preferences, or structured game data, DotINI provides a clean, engine-native
-solution that is both flexible and efficient.
+Use it for settings, user preferences, or any structured data that fits the section/key format.
 
 ## Key Features
 
-- **Simple INI Parsing** — Load `.ini` files into structured sections and key-value pairs with minimal effort.
-- **Section-Based Organization** — Naturally supports grouped data using INI sections for better readability and structure.
-- **Read & Write Support** — Easily modify and save INI files directly from your project.
-- **Type-Friendly Values** — Seamlessly handles strings, numbers, and booleans without unnecessary friction.
-- **Lightweight & Fast** — Designed for performance with minimal overhead, even in frequent read/write scenarios.
-- **Engine-Native Integration** — Fully compatible with GDScript and C#, no external dependencies required.
-- **Graceful Error Handling** — Handles missing sections, duplicate keys, and malformed lines reliably.
+- **Simple INI Parsing**: Load `.ini` files into structured sections and key-value pairs.
+- **Section-Based Organization**: Group data with INI sections for readable config files.
+- **Read & Write Support**: Modify and save INI files from your project.
+- **Type-Friendly Values**: Handles strings, numbers, and booleans without extra conversion code.
+- **Lightweight & Fast**: Low overhead, even when you read and write often.
+- **Engine-Native Integration**: Works with GDScript and C#, no external dependencies.
+- **Graceful Error Handling**: Handles missing sections, duplicate keys, and malformed lines.
 
 ## Why Use DotINI in Your Blazium Projects?
 
 ![](assets/dotini2.jpg)
 
-DotINI shines in scenarios where structured configuration is essential:
+DotINI fits anywhere you need structured configuration:
 
-- **Game Settings & Preferences** — Store player settings such as audio levels, controls, or graphics options.
-- **Configuration Files** — Manage engine or project-level settings in a clean, human-readable format.
-- **Modding Support** — Allow users to tweak gameplay values or configurations easily without specialized tools.
-- **Save Metadata** — Store lightweight structured information alongside save files.
-- **Rapid Iteration** — Quickly tweak values without recompiling or touching core logic.
+- **Game Settings & Preferences**: Store player settings such as audio levels, controls, or graphics options.
+- **Configuration Files**: Manage engine or project-level settings in a clean, human-readable format.
+- **Modding Support**: Let users tweak gameplay values or configurations without specialized tools.
+- **Save Metadata**: Store lightweight structured information alongside save files.
+- **Rapid Iteration**: Tweak values without recompiling or touching core logic.
 
-INI files are easy to read, edit, and version-control, making DotINI a practical choice for both developers and designers.
+INI files are easy to read, edit, and version-control. That makes DotINI practical for both developers and designers.
 
 ## Documentation & Next Steps
 
 The module is already available in the [latest nightly of Blazium](https://blazium.app/download) and
-it comes with comprehensive tests (see the dedicated
-[dotini_module_tests repository](https://github.com/blazium-games/dotini_module_tests)
-for validation examples).
+includes a dedicated test project (see
+[dotini_module_tests](https://github.com/blazium-games/dotini_module_tests)
+for examples).
 
-DotINI brings straightforward, engine-native configuration handling to Blazium—helping you build flexible,
-data-driven systems with minimal friction.
+DotINI gives you straightforward, engine-native config handling in Blazium.
 
 ---
 

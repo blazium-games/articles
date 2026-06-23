@@ -1,6 +1,6 @@
 ---
 title: "Tiled Importer Module"
-description: "Import Tiled map editor files into Blazium — tile layers, object groups, tilesets, and animated tiles via GodotTsonTileson."
+description: "Import Tiled map editor files into Blazium: tile layers, object groups, tilesets, and animated tiles via GodotTsonTileson."
 cover: "assets/cover.jpg"
 ---
 
@@ -18,12 +18,12 @@ Tile flip flags, animated tiles, infinite maps, and custom properties are all ha
 
 ## Key Features
 
-- **TMX & JSON Parsing** — Load maps from file or string via `GodotTsonTileson.parse_file` and `parse_string`.
-- **Tile Layers** — Access tile GIDs, flip flags, drawing rects, and per-tile properties.
-- **Object Layers** — Read spawn points, collision shapes, and custom object metadata.
-- **Tileset Support** — Tile images, animations, terrain definitions, and sub-rectangle offsets.
-- **Editor Import** — Import `.tmx` files directly as scenes from the asset pipeline.
-- **Edge Case Handling** — Infinite maps, margin/spacing tilesets, and compressed map data.
+- **TMX & JSON Parsing**: Load maps from file or string via `GodotTsonTileson.parse_file` and `parse_string`.
+- **Tile Layers**: Access tile GIDs, flip flags, drawing rects, and per-tile properties.
+- **Object Layers**: Read spawn points, collision shapes, and custom object metadata.
+- **Tileset Support**: Tile images, animations, terrain definitions, and sub-rectangle offsets.
+- **Editor Import**: Import `.tmx` files directly as scenes from the asset pipeline.
+- **Edge Case Handling**: Infinite maps, margin/spacing tilesets, and compressed map data.
 
 ## Why Use the Tiled Importer in Your Blazium Projects?
 
@@ -32,9 +32,9 @@ Tile flip flags, animated tiles, infinite maps, and custom properties are all ha
 Level design stays in a dedicated tool while runtime stays in the engine:
 
 **For Games**
-- **2D level pipelines** — Platformers, RPGs, and top-down games with designer-friendly map editing.
-- **Rapid iteration** — Re-export from Tiled and re-import without rebuilding level geometry by hand.
-- **Tile animations** — Use Tiled's animation frames directly through the tile accessor API.
+- **2D level pipelines**: Platformers, RPGs, and top-down games with designer-friendly map editing.
+- **Rapid iteration**: Re-export from Tiled and re-import without rebuilding level geometry by hand.
+- **Tile animations**: Use Tiled's animation frames directly through the tile accessor API.
 
 **For Applications & Tools**
 - Batch-import map libraries for procedural or data-driven world generation.
@@ -44,9 +44,9 @@ Level design stays in a dedicated tool while runtime stays in the engine:
 ## Documentation & Next Steps
 
 The module is available in the [latest nightly of Blazium](https://blazium.app/download) and
-ships with comprehensive tests (see the dedicated
-[tiled_importer_module_tests repository](https://github.com/blazium-games/tiled_importer_module_tests)
-for validation examples).
+includes a dedicated test project (see
+[tiled_importer_module_tests](https://github.com/blazium-games/tiled_importer_module_tests)
+for examples).
 
 ---
 

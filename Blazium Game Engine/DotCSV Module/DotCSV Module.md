@@ -1,7 +1,7 @@
 ---
 title: "DotCSV Module"
 description: 
-    "DotCSV is a lightweight and flexible CSV parsing and writing module built directly into Blazium Engine, designed to make working with structured text data effortless inside your projects."
+    "DotCSV is a CSV parsing and writing module built into Blazium Engine for structured text data in your projects."
 cover: "assets/cover.jpg"
 ---
 
@@ -9,44 +9,41 @@ cover: "assets/cover.jpg"
 
 ![](assets/dotcsv.jpg)
 
-**DotCSV** is a lightweight and flexible CSV parsing and writing module built directly into **Blazium Engine**,
-designed to make working with structured text data effortless inside your projects.
-Whether you're handling game data, configuration files, or external datasets, DotCSV provides a clean and efficient
-API without relying on external libraries.
+**DotCSV** reads and writes CSV files inside **Blazium Engine**.
+Game data, config exports, spreadsheet imports: if it is tabular text, DotCSV handles it without pulling in external libraries.
 
 ## Key Features
 
-- **Simple CSV Parsing** — Load and parse CSV files into structured arrays with minimal boilerplate.
-- **Flexible Delimiters** — Supports custom delimiters beyond commas, making it adaptable to various data formats.
-- **Read & Write Support** — Not just a parser, DotCSV allows you to generate and save CSV files directly from your project.
-- **Type-Friendly Handling** — Works naturally with strings, numbers, and mixed data without cumbersome conversions.
-- **Lightweight Design** — Minimal overhead ensures fast execution even when working with large datasets.
-- **Engine-Native Integration** — Fully compatible with GDScript and C#, no external dependencies required.
-- **Robust Error Handling** — Gracefully manages malformed rows, missing values, and edge cases.
+- **Simple CSV Parsing**: Load and parse CSV files into structured arrays with minimal boilerplate.
+- **Flexible Delimiters**: Supports custom delimiters beyond commas for different data formats.
+- **Read & Write Support**: Generate and save CSV files directly from your project.
+- **Type-Friendly Handling**: Works with strings, numbers, and mixed data without cumbersome conversions.
+- **Lightweight Design**: Fast execution even with large datasets.
+- **Engine-Native Integration**: Works with GDScript and C#, no external dependencies required.
+- **Error Handling**: Handles malformed rows, missing values, and edge cases without crashing.
 
 ## Why Use DotCSV in Your Blazium Projects?
 
 ![](assets/dotcsv2.jpg)
 
-DotCSV simplifies one of the most common data-handling tasks in development:
+CSV shows up everywhere in game dev. DotCSV keeps the workflow inside the engine:
 
-- **Data-Driven Design** — Store game balance values, dialogue, localization, or level data in easily editable CSV files.
-- **Tooling & Pipelines** — Integrate with spreadsheets or external tools and import data directly into your game.
-- **Rapid Iteration** — Designers can tweak values without touching code, speeding up development cycles.
-- **Save/Export Systems** — Generate CSV outputs for debugging, analytics, or player-generated content.
-- **Interoperability** — CSV remains one of the most widely supported formats, making integration with other tools trivial.
+- **Data-Driven Design**: Store game balance values, dialogue, localization, or level data in easily editable CSV files.
+- **Tooling & Pipelines**: Integrate with spreadsheets or external tools and import data directly into your game.
+- **Rapid Iteration**: Designers can tweak values without touching code.
+- **Save/Export Systems**: Generate CSV outputs for debugging, analytics, or player-generated content.
+- **Interoperability**: CSV remains one of the most widely supported formats for cross-tool data exchange.
 
-From indie prototypes to large-scale systems, DotCSV helps keep your data workflows clean, readable, and efficient.
+From indie prototypes to larger systems, DotCSV keeps data workflows readable and straightforward.
 
 ## Documentation & Next Steps
 
 The module is already available in the [latest nightly of Blazium](https://blazium.app/download) and
-it comes with comprehensive tests (see the dedicated
-[dotcsv_module_tests repository](https://github.com/blazium-games/dotcsv_module_tests)
-for validation examples).
+includes a dedicated test project (see
+[dotcsv_module_tests](https://github.com/blazium-games/dotcsv_module_tests)
+for examples).
 
-DotCSV brings straightforward, engine-native CSV handling to Blazium — helping you build data-driven
-systemsfaster and with less friction.
+DotCSV brings engine-native CSV handling to Blazium so you can build data-driven systems faster and with less friction.
 
 ---
 
