@@ -20,19 +20,19 @@ registered claim helpers, timing checks, key selection, revocation, and diagnost
 
 ## Key Features
 
-- **Engine-Level JWT Singleton** — Use the global `JWT` singleton to create, parse, decode, validate,
+- **Engine-Level JWT Singleton**: Use the global `JWT` singleton to create, parse, decode, validate,
 and inspect tokens from GDScript or C#.
-- **HS256 and RS256 Support** — Sign and verify shared-secret tokens with `HS256`, or use RSA keys with
+- **HS256 and RS256 Support**: Sign and verify shared-secret tokens with `HS256`, or use RSA keys with
 `RS256` for public/private key workflows.
-- **Fluent Token Builder** — Create tokens with `JWTBuilder` by setting the algorithm, issuer, subject,
+- **Fluent Token Builder**: Create tokens with `JWTBuilder` by setting the algorithm, issuer, subject,
 audience, expiration, JWT ID, and custom claims.
-- **Decoded Token Helpers** — Use `DecodedJWT` to read headers, payload values, registered claims, and typed claim values after parsing.
-- **Claim and Header Validation** — Validate expected payload claims, header claims, algorithm choices,
+- **Decoded Token Helpers**: Use `DecodedJWT` to read headers, payload values, registered claims, and typed claim values after parsing.
+- **Claim and Header Validation**: Validate expected payload claims, header claims, algorithm choices,
 and token structure with dedicated helpers.
-- **Timing Controls** — Check expiration, not-before (`nbf`) values, issued-at timing, and leeway windows for real-world clock drift.
-- **Key ID Workflows** — Read `kid` headers and validate against key maps with `validate_with_map`,
+- **Timing Controls**: Check expiration, not-before (`nbf`) values, issued-at timing, and leeway windows for real-world clock drift.
+- **Key ID Workflows**: Read `kid` headers and validate against key maps with `validate_with_map`,
 making multi-key rotation easier to manage.
-- **Revocation and Diagnostics** — Revoke tokens by `jti`, clear revocation state, and use diagnostic dictionaries
+- **Revocation and Diagnostics**: Revoke tokens by `jti`, clear revocation state, and use diagnostic dictionaries
 to explain validation failures.
 
 ## Why Add JWTTool to a Game or Application?
@@ -44,13 +44,13 @@ With JWTTool built into Blazium, projects can validate tokens close to the gamep
 That makes it easier to gate features, read session metadata, and verify signed messages without writing a custom token stack.
 
 **For Games**
-- **Player authentication** — Accept backend-issued tokens and validate issuer, audience, expiration,
+- **Player authentication**: Accept backend-issued tokens and validate issuer, audience, expiration,
 subject, and signature before enabling online features.
-- **Entitlements and feature gates** — Store signed claims for DLC access, beta flags, roles, cosmetics, or tournament permissions.
-- **Dedicated server handoff** — Pass short-lived tokens from matchmaking or account services to headless Blazium servers.
-- **Secure streamer or creator integrations** — Validate signed identity or permission tokens before
+- **Entitlements and feature gates**: Store signed claims for DLC access, beta flags, roles, cosmetics, or tournament permissions.
+- **Dedicated server handoff**: Pass short-lived tokens from matchmaking or account services to headless Blazium servers.
+- **Secure streamer or creator integrations**: Validate signed identity or permission tokens before
 connecting gameplay to external services.
-- **Token rotation workflows** — Use `kid` headers and key maps to support multiple signing keys during migrations.
+- **Token rotation workflows**: Use `kid` headers and key maps to support multiple signing keys during migrations.
 
 **For Applications & Tools**
 - Build admin panels, launchers, dashboards, or internal tools that understand JWT-based authentication.
@@ -67,9 +67,9 @@ while JWTTool handles the token mechanics inside the engine.
 ![](assets/granting_access.gif)
 
 The module is already available in the [latest nightly of Blazium](https://blazium.app/download) and
-ships with comprehensive tests (see the dedicated
-[jwttool_module_tests repository](https://github.com/blazium-games/jwttool_module_tests)
-for validation examples).
+includes a dedicated test project (see
+[jwttool_module_tests](https://github.com/blazium-games/jwttool_module_tests)
+for examples).
 
 From small internal tools to online games with account-backed services, the JWTTool module gives Blazium projects a practical native foundation for token-based authentication and signed claims.
 
