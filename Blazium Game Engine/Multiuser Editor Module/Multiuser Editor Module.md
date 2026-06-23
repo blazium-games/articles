@@ -43,11 +43,7 @@ Pair programming and distributed teams get a first-class workflow inside the edi
 
 ## Documentation & Next Steps
 
-The module is available in the [latest nightly of Blazium](https://blazium.app/download) and
-includes extensive engine tests (135+ cases in `test_multiuser_editor.h` covering CRDT merge,
-filesystem sync, permissions, and security validation).
-
-For full technical details head over to the official **Blazium Documentation** at [docs.blazium.app](https://docs.blazium.app).
+The module is available in the [latest nightly of Blazium](https://blazium.app/download).
 
 ---
 
@@ -55,8 +51,8 @@ For full technical details head over to the official **Blazium Documentation** a
 
 Or follow us everywhere else:
 
+- **[GitHub](https://github.com/blazium-games)**
 - **[IndieDB](https://www.indiedb.com/engines/blazium-engine/articles)**
 - **[X / Twitter](https://x.com/BlaziumGames)**
 - **[YouTube](https://www.youtube.com/@blazium)**
 - **[itch.io](https://blaziumengine.itch.io)**
-- **[Patreon](https://www.patreon.com/cw/Blazium)**

@@ -9,8 +9,7 @@ cover: "assets/cover.jpg"
 ![](assets/steam_hero.jpg)
 
 Blazium Game Engine ships a native **Steam** module that replaces the old GodotSteam integration.
-It talks directly to Steamworks through a built-in C++ layer, exposing a clean `Steam` singleton for
-GDScript and C# projects.
+It talks directly to Steamworks through a built-in C++ layer, exposing a clean `Steam` singleton.
 
 After GodotSteam was removed in release 0.5.246, we built our own path forward. The result covers
 achievements, stats, inventory, web API tickets, and backend authentication — the pieces most games
@@ -44,12 +43,10 @@ Whether you are shipping on Steam or building tools around it, the module keeps 
 
 ## Documentation & Next Steps
 
-The module is available in the [latest release of Blazium](https://blazium.app/download) and
+The module is available in the [latest nightly of Blazium](https://blazium.app/download) and
 ships with a full e2e test suite (see the
 [steam_module_tests repository](https://github.com/blazium-games/steam_module_tests)
 for validation examples).
-
-For full technical details head over to the official **Blazium Documentation** at [docs.blazium.app](https://docs.blazium.app).
 
 ---
 
@@ -57,8 +54,8 @@ For full technical details head over to the official **Blazium Documentation** a
 
 Or follow us everywhere else:
 
+- **[GitHub](https://github.com/blazium-games)**
 - **[IndieDB](https://www.indiedb.com/engines/blazium-engine/articles)**
 - **[X / Twitter](https://x.com/BlaziumGames)**
 - **[YouTube](https://www.youtube.com/@blazium)**
 - **[itch.io](https://blaziumengine.itch.io)**
-- **[Patreon](https://www.patreon.com/cw/Blazium)**

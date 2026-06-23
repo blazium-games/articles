@@ -13,7 +13,7 @@ The **Tiled Importer** module lets Blazium projects load maps created in the
 It parses `.tmx` and `.json` map files and exposes the data through `GodotTsonTileson` bindings
 with typed accessors for tiles, layers, objects, and tilesets.
 
-Designers keep working in Tiled. Developers import maps as Godot scenes and wire up gameplay on top.
+Designers keep working in Tiled. Developers import maps as scenes and wire up gameplay on top.
 Tile flip flags, animated tiles, infinite maps, and custom properties are all handled in the import path.
 
 ## Key Features
@@ -22,7 +22,7 @@ Tile flip flags, animated tiles, infinite maps, and custom properties are all ha
 - **Tile Layers** — Access tile GIDs, flip flags, drawing rects, and per-tile properties.
 - **Object Layers** — Read spawn points, collision shapes, and custom object metadata.
 - **Tileset Support** — Tile images, animations, terrain definitions, and sub-rectangle offsets.
-- **Editor Import** — Import `.tmx` files directly as Godot scenes from the asset pipeline.
+- **Editor Import** — Import `.tmx` files directly as scenes from the asset pipeline.
 - **Edge Case Handling** — Infinite maps, margin/spacing tilesets, and compressed map data.
 
 ## Why Use the Tiled Importer in Your Blazium Projects?
@@ -48,16 +48,14 @@ ships with comprehensive tests (see the dedicated
 [tiled_importer_module_tests repository](https://github.com/blazium-games/tiled_importer_module_tests)
 for validation examples).
 
-For full technical details head over to the official **Blazium Documentation** at [docs.blazium.app](https://docs.blazium.app).
-
 ---
 
 **[Jump into our Discord](https://blazium.app/chat)** for real-time chats, dev support and feedback
 
 Or follow us everywhere else:
 
+- **[GitHub](https://github.com/blazium-games)**
 - **[IndieDB](https://www.indiedb.com/engines/blazium-engine/articles)**
 - **[X / Twitter](https://x.com/BlaziumGames)**
 - **[YouTube](https://www.youtube.com/@blazium)**
 - **[itch.io](https://blaziumengine.itch.io)**
-- **[Patreon](https://www.patreon.com/cw/Blazium)**

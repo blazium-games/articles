@@ -48,16 +48,14 @@ ships with comprehensive tests (see the dedicated
 [justamcp_module_tests repository](https://github.com/blazium-games/justamcp_module_tests)
 for validation examples).
 
-For full technical details head over to the official **Blazium Documentation** at [docs.blazium.app](https://docs.blazium.app).
-
 ---
 
 **[Jump into our Discord](https://blazium.app/chat)** for real-time chats, dev support and feedback
 
 Or follow us everywhere else:
 
+- **[GitHub](https://github.com/blazium-games)**
 - **[IndieDB](https://www.indiedb.com/engines/blazium-engine/articles)**
 - **[X / Twitter](https://x.com/BlaziumGames)**
 - **[YouTube](https://www.youtube.com/@blazium)**
 - **[itch.io](https://blaziumengine.itch.io)**
-- **[Patreon](https://www.patreon.com/cw/Blazium)**

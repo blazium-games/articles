@@ -13,12 +13,9 @@ It links the engine against GDK runtime libraries, wires in Xbox Services (XSAPI
 a dedicated Xbox export platform with editor tooling — so shipping an Xbox title from Blazium
 is not a manual side quest.
 
-The module follows Microsoft's custom-engine guidance for PC titles using `Thunks.dll`, and
-includes a full Autowork test pass ported from the XBOX-Godot-Sample project.
-
 ## Key Features
 
-- **GDK Runtime Integration** — Engine links against the GDK on PC using `Thunks.dll`, following Microsoft's custom-engine guidance for PC titles.
+- **GDK Runtime Integration** — The engine links against the GDK on PC using `Thunks.dll`, following Microsoft's custom-engine guidance for PC titles.
 - **XSAPI Services** — Xbox Services API layer for achievements, presence, leaderboards, stats, and multiplayer activity.
 - **Export Platform** — Dedicated Xbox export target with `MicrosoftGame.config` packaging support.
 - **Editor Plugin** — GDK tooling lives inside the Blazium editor instead of bolted on from the outside.
@@ -45,10 +42,7 @@ Xbox developers get a path from editor to packaged build without leaving the eng
 The module is already available in the [latest nightly of Blazium](https://blazium.app/download)
 and it comes with comprehensive tests — see the dedicated
 [xbox_module_tests repository](https://github.com/blazium-games/xbox_module_tests)
-for validation examples. Tier 0/1 tests cover class registration, packaging, and toolchain validation
-without Xbox credentials; set `LIVE_TESTS=1` for signed-in Xbox Live scenarios.
-
-For full technical details head over to the official **Blazium Documentation** at [docs.blazium.app](https://docs.blazium.app).
+for validation examples.
 
 The GDK module brings Microsoft's Game Development Kit straight into Blazium on PC.
 
@@ -58,8 +52,8 @@ The GDK module brings Microsoft's Game Development Kit straight into Blazium on 
 
 Or follow us everywhere else:
 
+- **[GitHub](https://github.com/blazium-games)**
 - **[IndieDB](https://www.indiedb.com/engines/blazium-engine/articles)**
 - **[X / Twitter](https://x.com/BlaziumGames)**
 - **[YouTube](https://www.youtube.com/@blazium)**
 - **[itch.io](https://blaziumengine.itch.io)**
-- **[Patreon](https://www.patreon.com/cw/Blazium)**
