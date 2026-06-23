@@ -1,7 +1,7 @@
 ---
 title: "DotENV Module"
 description: 
-    "DotENV is a lightweight and practical environment configuration module built directly into Blazium Engine, designed to simplify how projects manage environment variables and configuration files."
+    "DotENV is an environment configuration module built into Blazium Engine for managing .env files and runtime variables."
 cover: "assets/cover.jpg"
 ---
 
@@ -9,53 +9,49 @@ cover: "assets/cover.jpg"
 
 ![](assets/dotenv.jpg)
 
-**DotENV** is a lightweight and practical environment configuration module built directly into **Blazium Engine**,
-designed to simplify how projects manage environment variables and configuration files.
-Inspired by the widely used `.env` pattern, DotENV allows developers to separate configuration from
-code, making projects cleaner, safer, and easier to maintain.
+**DotENV** loads `.env` files into **Blazium Engine** at runtime.
+If you already use the `.env` pattern in web or backend projects, this module works the same way:
+keep config out of source code and swap values per environment.
 
-Whether you're managing API keys, feature flags, or environment-specific settings, DotENV provides a
-straightforward and engine-native solution without external dependencies.
+Handy for API keys, feature flags, or anything that changes between dev and production builds.
 
 ## Key Features
 
-- **.env File Parsing** — Easily load key-value pairs from `.env` files into your project at runtime.
-- **Environment Separation** — Manage different configurations for development, testing, and production with ease.
-- **Simple API** — Access variables through a clean and intuitive interface.
-- **Secure Configuration Handling** — Keep sensitive data like tokens and credentials out of source code.
-- **Lightweight Implementation** — Minimal overhead ensures fast loading and negligible performance impact.
-- **Engine-Native Integration** — Fully compatible with GDScript and C#, no additional libraries required.
-- **Flexible Usage** — Works seamlessly for both small projects and complex systems.
+- **.env File Parsing**: Load key-value pairs from `.env` files into your project at runtime.
+- **Environment Separation**: Keep different configs for development, testing, and production.
+- **Simple API**: Access variables through a straightforward interface.
+- **Secure Configuration Handling**: Keep tokens and credentials out of source code.
+- **Lightweight Implementation**: Fast loading with negligible performance impact.
+- **Engine-Native Integration**: Works with GDScript and C#, no additional libraries required.
+- **Flexible Usage**: Fits small projects and larger multi-service setups alike.
 
 ## Why Use DotENV in Your Blazium Projects?
 
 ![](assets/dotenv2.jpg)
 
-DotENV addresses one of the most common challenges in modern development: configuration management.
+Configuration management is one of those chores every project hits eventually. DotENV keeps it simple:
 
-- **Cleaner Codebase** — Remove hardcoded values and centralize configuration in dedicated `.env` files.
-- **Improved Security** — Keep secrets out of your repository and reduce the risk of accidental exposure.
-- **Environment Flexibility** — Switch between development and production settings without modifying code.
-- **Team-Friendly Workflow** — Developers can maintain their own local configurations without conflicts.
-- **Scalable Architecture** — Essential for larger projects with multiple deployment targets or services.
-- **Rapid Setup** — Quickly configure new environments or features with minimal friction.
+- **Cleaner Codebase**: Remove hardcoded values and centralize configuration in dedicated `.env` files.
+- **Improved Security**: Keep secrets out of your repository and reduce the risk of accidental exposure.
+- **Environment Flexibility**: Switch between development and production settings without modifying code.
+- **Team-Friendly Workflow**: Developers can maintain their own local configurations without conflicts.
+- **Scalable Architecture**: Useful when you have multiple deployment targets or services.
+- **Rapid Setup**: Configure new environments or features with minimal setup.
 
-From indie games to complex applications, DotENV helps enforce best practices while
-keeping your workflow simple and efficient.
+From indie games to larger applications, DotENV helps keep config out of your codebase.
 
 ## Documentation & Next Steps
 
 The module is already available in the [latest nightly of Blazium](https://blazium.app/download) and
-it comes with comprehensive tests (see the dedicated
-[dotenv_module_tests repository](https://github.com/blazium-games/dotenv_module_tests)
-for validation examples).
+includes a dedicated test project (see
+[dotenv_module_tests](https://github.com/blazium-games/dotenv_module_tests)
+for examples).
 
-DotENV brings modern environment configuration handling to Blazium — making your projects more
-maintainable, secure, and production-ready.
+DotENV brings familiar `.env` configuration handling to Blazium.
 
 ---  
 
-**[Jump into our Discord](https://blazium.app/chat)** for real‑time chats, dev support and feedback!
+**[Jump into our Discord](https://blazium.app/chat)** for real-time chats, dev support and feedback!
 
 Or follow us everywhere else:  
 

@@ -1,6 +1,6 @@
 ---
 title: "JustAMCP Module"
-description: "Model Context Protocol built into the Blazium editor — scene, script, and resource tools for AI-driven automation."
+description: "Model Context Protocol built into the Blazium editor: scene, script, and resource tools for AI-driven automation."
 cover: "assets/cover.jpg"
 ---
 
@@ -10,7 +10,7 @@ cover: "assets/cover.jpg"
 
 **JustAMCP** brings the Model Context Protocol directly into the Blazium editor.
 AI agents and automation tools can inspect scenes, edit scripts, browse resources, and query
-documentation through a native MCP server — no external bridge required.
+documentation through a native MCP server. No external bridge required.
 
 The module centers on `JustAMCPServer` for transport, `JustAMCPToolExecutor` for dispatch, and
 dozens of specialized tool groups covering scenes, scripts, shaders, tilemaps, themes, and more.
@@ -18,12 +18,12 @@ dozens of specialized tool groups covering scenes, scripts, shaders, tilemaps, t
 
 ## Key Features
 
-- **Native MCP Server** — Streamable HTTP transport with protocol capabilities, pagination, logging, and async task support.
-- **Tool Executor** — Central dispatch to scene, script, resource, documentation, networking, and analysis tool groups.
-- **Editor Integration** — Tools operate on the active scene tree, inspector, and filesystem through validated editor APIs.
-- **Runtime Endpoint** — `JustAMCPRuntime` exposes a configurable port for headless or in-game automation.
-- **Task Manager** — Async MCP tasks with status notifications and result retrieval for long-running operations.
-- **Contract Validation** — Full tool schema catalog with dispatch and settings tests in the Autowork suite.
+- **Native MCP Server**: Streamable HTTP transport with protocol capabilities, pagination, logging, and async task support.
+- **Tool Executor**: Central dispatch to scene, script, resource, documentation, networking, and analysis tool groups.
+- **Editor Integration**: Tools operate on the active scene tree, inspector, and filesystem through validated editor APIs.
+- **Runtime Endpoint**: `JustAMCPRuntime` exposes a configurable port for headless or in-game automation.
+- **Task Manager**: Async MCP tasks with status notifications and result retrieval for long-running operations.
+- **Contract Validation**: Full tool schema catalog with dispatch and settings tests in the Autowork suite.
 
 ## Why Add JustAMCP to Your Blazium Project?
 
@@ -32,9 +32,9 @@ dozens of specialized tool groups covering scenes, scripts, shaders, tilemaps, t
 Agent-driven workflows become a native part of the editor instead of a fragile sidecar:
 
 **For Developers**
-- **Scene automation** — Let agents create nodes, read properties, and modify the scene tree safely.
-- **Script assistance** — Validate, read, and update GDScript files with structured tool responses.
-- **Resource management** — Browse and update themes, shaders, tilemaps, and other project resources.
+- **Scene automation**: Let agents create nodes, read properties, and modify the scene tree safely.
+- **Script assistance**: Validate, read, and update GDScript files with structured tool responses.
+- **Resource management**: Browse and update themes, shaders, tilemaps, and other project resources.
 
 **For Tooling & Pipelines**
 - Wire CI or local agents into the editor without custom socket protocols.
@@ -44,9 +44,9 @@ Agent-driven workflows become a native part of the editor instead of a fragile s
 ## Documentation & Next Steps
 
 The module is available in the [latest nightly of Blazium](https://blazium.app/download) and
-ships with comprehensive tests (see the dedicated
-[justamcp_module_tests repository](https://github.com/blazium-games/justamcp_module_tests)
-for validation examples).
+includes a dedicated test project (see
+[justamcp_module_tests](https://github.com/blazium-games/justamcp_module_tests)
+for examples).
 
 ---
 

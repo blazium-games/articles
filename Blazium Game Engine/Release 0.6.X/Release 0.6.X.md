@@ -21,7 +21,7 @@ continuing to improve engine stability and runtime performance.
 ### Autowork Module
 ![](../Autowork%20testing%20framework/assets/autowork.jpg)
 
-**Autowork** is a powerful new built-in testing framework designed specifically for game and application development.
+**Autowork** is a built-in testing framework for game and application development.
 It provides an easy way to automate gameplay testing, validation workflows, regression testing, and project verification directly inside the engine.
 
 Learn more about the Autowork module in the
@@ -32,7 +32,7 @@ Learn more about the Autowork module in the
 
 Blazium Engine now includes integrated **MCP** support through the **JustAMCP** module, improving interoperability with external tools, automation workflows, and
 AI-assisted development pipelines.
-This integration streamlines communication between the editor, external utilities, and development environments.
+This connects the editor to external utilities, automation tools, and development environments.
 
 Learn more about the JustAMCP module in the
 [dedicated article]().
@@ -40,8 +40,7 @@ Learn more about the JustAMCP module in the
 ### DotCSV Module
 ![](../DotCSV%20Module/assets/dotcsv.jpg)
 
-**DotCSV** is a lightweight and flexible CSV parsing and writing module built directly into **Blazium Engine**,
-designed to make working with structured text data effortless inside your projects.
+**DotCSV** reads and writes CSV files directly in **Blazium Engine** for game data, config exports, and spreadsheet imports.
 
 Learn more about the DotCSV module in the
 [dedicated article](https://www.indiedb.com/engines/blazium-engine/features/dotcsv-module).
@@ -49,8 +48,7 @@ Learn more about the DotCSV module in the
 ### DotENV Module
 ![](../DotENV%20Module/assets/dotenv.jpg)
 
-**DotENV** is a lightweight and practical environment configuration module built directly into **Blazium Engine**,
-designed to simplify how projects manage environment variables and configuration files.
+**DotENV** loads `.env` files into **Blazium Engine** so you can keep config and secrets out of source code.
 
 Learn more about the DotENV module in the
 [dedicated article](https://www.indiedb.com/engines/blazium-engine/features/dotenv-module).
@@ -58,8 +56,7 @@ Learn more about the DotENV module in the
 ### DotINI Module
 ![](../DotINI%20Module/assets/dotini.jpg)
 
-**DotINI** is a lightweight and intuitive INI parsing and writing module built directly into **Blazium Engine**,
-designed to simplify working with configuration-style data in your projects.
+**DotINI** reads and writes INI config files directly in **Blazium Engine** for settings and structured data.
 
 Learn more about the DotINI module in the
 [dedicated article](https://www.indiedb.com/engines/blazium-engine/features/dotini-module).
@@ -67,8 +64,8 @@ Learn more about the DotINI module in the
 ### GOAP Module
 ![](../GOAP%20Module/assets/planning_showcase.gif)
 
-The new **GOAP (Goal-Oriented Action Planning)** module introduces advanced AI planning systems directly into Blazium Engine.
-This allows developers to build more dynamic and intelligent NPC behaviors using goal-based decision making instead of rigid state machines.
+The new **GOAP (Goal-Oriented Action Planning)** module adds goal-based AI planning to Blazium Engine.
+Developers can build NPC behavior that picks actions based on world state instead of rigid state machines.
 
 Learn more about the GOAP module in the
 [dedicated article](https://www.indiedb.com/engines/blazium-engine/features/goap-module).
