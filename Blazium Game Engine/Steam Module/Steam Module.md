@@ -12,7 +12,7 @@ Blazium Game Engine ships a native **Steam** module that replaces the old GodotS
 It talks directly to Steamworks through a built-in C++ layer, exposing a clean `Steam` singleton.
 
 After GodotSteam was removed in release 0.5.246, we built our own path forward. The result covers
-achievements, stats, inventory, web API tickets, and backend authentication: the pieces most games
+achievements, stats, inventory, web API tickets, and backend authentication, the pieces most games
 actually need on day one.
 
 ## Key Features
