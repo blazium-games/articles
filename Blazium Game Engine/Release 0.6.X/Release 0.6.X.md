@@ -28,10 +28,14 @@ Learn more about the Autowork module in the
 [dedicated article](https://www.indiedb.com/engines/blazium-engine/features/autowork-testing-framework-module).
 
 ### Integrated MCP
+![](../JustAMCP%20Module/assets/justamcp_hero.jpg)
 
-Blazium Engine now includes integrated **MCP** support, improving interoperability with external tools, automation workflows, and
+Blazium Engine now includes integrated **MCP** support through the **JustAMCP** module, improving interoperability with external tools, automation workflows, and
 AI-assisted development pipelines.
 This integration streamlines communication between the editor, external utilities, and development environments.
+
+Learn more about the JustAMCP module in the
+[dedicated article]().
 
 ### DotCSV Module
 ![](../DotCSV%20Module/assets/dotcsv.jpg)
@@ -39,7 +43,8 @@ This integration streamlines communication between the editor, external utilitie
 **DotCSV** is a lightweight and flexible CSV parsing and writing module built directly into **Blazium Engine**,
 designed to make working with structured text data effortless inside your projects.
 
-Learn more about the DotCSV module in the [dedicated article](https://www.indiedb.com/engines/blazium-engine/features/dotcsv-module).
+Learn more about the DotCSV module in the
+[dedicated article](https://www.indiedb.com/engines/blazium-engine/features/dotcsv-module).
 
 ### DotENV Module
 ![](../DotENV%20Module/assets/dotenv.jpg)
@@ -47,7 +52,8 @@ Learn more about the DotCSV module in the [dedicated article](https://www.indied
 **DotENV** is a lightweight and practical environment configuration module built directly into **Blazium Engine**,
 designed to simplify how projects manage environment variables and configuration files.
 
-Learn more about the DotENV module in the [dedicated article](https://www.indiedb.com/engines/blazium-engine/features/dotenv-module).
+Learn more about the DotENV module in the
+[dedicated article](https://www.indiedb.com/engines/blazium-engine/features/dotenv-module).
 
 ### DotINI Module
 ![](../DotINI%20Module/assets/dotini.jpg)
@@ -55,7 +61,8 @@ Learn more about the DotENV module in the [dedicated article](https://www.indied
 **DotINI** is a lightweight and intuitive INI parsing and writing module built directly into **Blazium Engine**,
 designed to simplify working with configuration-style data in your projects.
 
-Learn more about the DotINI module in the [dedicated article](https://www.indiedb.com/engines/blazium-engine/features/dotini-module).
+Learn more about the DotINI module in the
+[dedicated article](https://www.indiedb.com/engines/blazium-engine/features/dotini-module).
 
 ### GOAP Module
 ![](../GOAP%20Module/assets/planning_showcase.gif)
@@ -63,7 +70,8 @@ Learn more about the DotINI module in the [dedicated article](https://www.indied
 The new **GOAP (Goal-Oriented Action Planning)** module introduces advanced AI planning systems directly into Blazium Engine.
 This allows developers to build more dynamic and intelligent NPC behaviors using goal-based decision making instead of rigid state machines.
 
-Learn more about the GOAP module in the [dedicated article](https://www.indiedb.com/engines/blazium-engine/features/goap-module).
+Learn more about the GOAP module in the
+[dedicated article](https://www.indiedb.com/engines/blazium-engine/features/goap-module).
 
 ### BigNum++ Integration
 ![](../BlaziumBigNum/assets/bignum_test.jpg)
@@ -72,7 +80,8 @@ Blazium Engine now integrates **BigNum++**, enabling support for arbitrary preci
 This is especially useful for idle games, simulation projects, scientific tooling, financial systems, and
 projects that require extremely large or highly precise numeric values.
 
-Learn more about the BigNum integration in the [dedicated article](https://www.indiedb.com/engines/blazium-engine/features/bignum-integration).
+Learn more about the BigNum integration in the
+[dedicated article](https://www.indiedb.com/engines/blazium-engine/features/bignum-integration).
 
 ### JWT Module
 ![](../JWTTool%20Module/assets/jwttool_code_hero.jpg)
@@ -81,11 +90,18 @@ A brand new **JWT (JSON Web Token)** module has been added to simplify secure au
 Developers can now easily generate, validate, and decode JWT tokens directly from inside the engine for backend services,
 multiplayer systems, APIs, and online authentication.
 
-Learn more about the JWT module in the [dedicated article](https://www.indiedb.com/engines/blazium-engine/features/jwttool-module).
+Learn more about the JWT module in the
+[dedicated article](https://www.indiedb.com/engines/blazium-engine/features/jwttool-module).
 
 ### Tiled Importer
+![](../Tiled%20Importer%20Module/assets/tiled_importer_hero.jpg)
 
-Blazium Engine now supports importing maps created with **Tiled**, making it easier to integrate external level design workflows into your projects.
+Blazium Engine now supports importing maps created with the
+[Tiled map editor](https://www.mapeditor.org/),
+making it easier to integrate external level design workflows into your projects.
+
+Learn more about the Tiled Importer module in the
+[dedicated article]().
 
 ## Updates
 
@@ -128,6 +144,7 @@ For the complete list of changes, see the [changelog](https://blazium.app/change
 
 Or follow us everywhere else:
 
+- **[GitHub](https://github.com/blazium-games)**
 - **[IndieDB](https://www.indiedb.com/engines/blazium-engine)**
 - **[X / Twitter](https://x.com/BlaziumGames)**
 - **[YouTube](https://www.youtube.com/@blazium)**
