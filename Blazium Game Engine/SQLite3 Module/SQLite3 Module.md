@@ -6,7 +6,7 @@ cover: "assets/cover.jpg"
 
 # Introducing the SQLite3 Module
 
-<!-- TODO: Add hero GIF showing a Blazium project creating a database, running queries, and displaying live results. -->
+![](assets/cover.jpg)
 
 Blazium Game Engine now includes a native **SQLite3** module for projects that need local databases, structured saves,
 embedded tools, analytics, or data-heavy gameplay systems.
@@ -39,7 +39,7 @@ tune configuration, and collect diagnostic data.
 
 ## Possible Uses in Games and Applications
 
-<!-- TODO: Add screenshot of a Blazium editor tool or in-game UI browsing SQLite tables and query results. -->
+![](assets/sqlite_code.jpg)
 
 The SQLite3 module is useful anywhere a project needs more structure than flat files but does not need a separate database server.
 It is small, battle-tested, and well suited to desktop tools, headless servers, editor utilities, and exported games.
@@ -65,8 +65,6 @@ The node and resource layers make common workflows approachable, while `SQLiteAc
 when a project needs advanced control.
 
 ## Documentation & Next Steps
-
-<!-- TODO: Add short code screenshot showing a parameterized query, transaction, and result inspection with the SQLite3 module. -->
 
 The module is already available in the [latest nightly of Blazium](https://blazium.app/download) and
 includes a dedicated test project (see
