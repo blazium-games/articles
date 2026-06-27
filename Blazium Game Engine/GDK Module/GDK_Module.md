@@ -6,7 +6,7 @@ cover: "assets/cover.jpg"
 
 # Introducing the GDK Module
 
-![](assets/gdk.jpg)
+![](assets/cover.jpg)
 
 The **GDK Module** is a working integration with Microsoft's Game Development Kit on PC.
 It links the engine against GDK runtime libraries, wires in Xbox Services (XSAPI), and adds
@@ -23,7 +23,7 @@ does not have to be a manual side quest.
 
 ## Why Add the GDK Module to Your Blazium Project?
 
-![](assets/gdk_usecase.jpg)
+![](assets/gdk.jpg)
 
 Xbox developers get a path from editor to packaged build without leaving the engine:
 
