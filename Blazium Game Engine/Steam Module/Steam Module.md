@@ -6,7 +6,7 @@ cover: "assets/cover.jpg"
 
 # Introducing the Steam Module
 
-![](assets/steam_hero.jpg)
+![](assets/cover.jpg)
 
 Blazium Game Engine ships a native **Steam** module that replaces the old GodotSteam integration.
 It talks directly to Steamworks through a built-in C++ layer, exposing a clean `Steam` singleton.
@@ -26,7 +26,7 @@ actually need on day one.
 
 ## Why Add the Steam Module to Your Blazium Project?
 
-![](assets/steam_usecase.jpg)
+![](assets/steam_code.jpg)
 
 Whether you are shipping on Steam or building tools around it, the module keeps everything in-engine:
 
