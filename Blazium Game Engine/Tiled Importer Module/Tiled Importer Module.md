@@ -1,16 +1,16 @@
 ---
 title: "Tiled Importer Module"
-description: "Import Tiled map editor files into Blazium: tile layers, object groups, tilesets, and animated tiles via GodotTsonTileson."
+description: "Import Tiled map editor files into Blazium: tile layers, object groups, tilesets, and animated tiles."
 cover: "assets/cover.jpg"
 ---
 
 # Introducing the Tiled Importer Module
 
-![](assets/tiled_importer_hero.jpg)
+![](assets/cover.jpg)
 
 The **Tiled Importer** module lets Blazium projects load maps created in the
 [Tiled map editor](https://www.mapeditor.org/) without manual conversion.
-It parses `.tmx` and `.json` map files and exposes the data through `GodotTsonTileson` bindings
+It parses `.tmx` and `.json` map files and exposes the data through `TiledTileson` bindings
 with typed accessors for tiles, layers, objects, and tilesets.
 
 Designers keep working in Tiled. Developers import maps as scenes and wire up gameplay on top.
@@ -18,7 +18,7 @@ Tile flip flags, animated tiles, infinite maps, and custom properties are all ha
 
 ## Key Features
 
-- **TMX & JSON Parsing**: Load maps from file or string via `GodotTsonTileson.parse_file` and `parse_string`.
+- **TMX & JSON Parsing**: Load maps from file or string via `TiledTileson.parse_file` and `parse_string`.
 - **Tile Layers**: Access tile GIDs, flip flags, drawing rects, and per-tile properties.
 - **Object Layers**: Read spawn points, collision shapes, and custom object metadata.
 - **Tileset Support**: Tile images, animations, terrain definitions, and sub-rectangle offsets.
@@ -27,7 +27,7 @@ Tile flip flags, animated tiles, infinite maps, and custom properties are all ha
 
 ## Why Use the Tiled Importer in Your Blazium Projects?
 
-![](assets/tiled_importer_usecase.jpg)
+![](assets/tiled.jpg)
 
 Level design stays in a dedicated tool while runtime stays in the engine:
 
