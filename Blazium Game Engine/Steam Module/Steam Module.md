@@ -24,7 +24,7 @@ actually need on day one.
 - **User Info**: Persona name, avatar images, and local Steam ID access.
 - **Debug Logging**: Built-in debug log capture for diagnosing integration issues during development.
 
-## Why Add the Steam Module to Your Blazium Project?
+## Why Use the Steam Module in Your Blazium Project?
 
 ![](assets/steam_code.jpg)
 
