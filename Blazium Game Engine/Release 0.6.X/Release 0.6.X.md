@@ -1,15 +1,15 @@
 ---
 title: "Blazium Engine Release 0.6.X"  
 description:
-    "A major update introducing new built-in modules, workflow improvements, tooling integrations, rendering fixes, and performance optimizations across the engine."  
+    "A major update introducing new modules, workflow improvements, tooling integrations, and performance optimizations across the engine."  
 cover: "assets/cover.jpg"
 changes: https://github.com/blazium-games/blazium/milestone/1?closed=1
 ---
 
 # Blazium Engine Release 0.6.X
 
-Blazium Engine 0.6.X is one of the biggest updates to the engine so far, bringing a wide range of new built-in modules,
-workflow improvements, tooling integrations, renderer fixes, and performance upgrades.
+Blazium Engine 0.6.X is one of the biggest updates to the engine so far, bringing a wide range of new modules,
+workflow improvements, tooling integrations, and performance upgrades.
 
 This release focuses heavily on developer productivity, data handling, automation, and modern tooling support while
 continuing to improve engine stability and runtime performance.
@@ -40,7 +40,7 @@ Learn more about the JustAMCP module in the
 ### DotCSV Module
 ![](../DotCSV%20Module/assets/dotcsv.jpg)
 
-**DotCSV** reads and writes CSV files directly in **Blazium Engine** for game data, config exports, and spreadsheet imports.
+**DotCSV** reads and writes CSV files directly in engine for game data, config exports, and spreadsheet imports.
 
 Learn more about the DotCSV module in the
 [dedicated article](https://www.indiedb.com/engines/blazium-engine/features/dotcsv-module).
@@ -48,7 +48,7 @@ Learn more about the DotCSV module in the
 ### DotENV Module
 ![](../DotENV%20Module/assets/dotenv.jpg)
 
-**DotENV** loads `.env` files into **Blazium Engine** so you can keep config and secrets out of source code.
+**DotENV** loads `.env` files, so you can keep config and secrets out of source code.
 
 Learn more about the DotENV module in the
 [dedicated article](https://www.indiedb.com/engines/blazium-engine/features/dotenv-module).

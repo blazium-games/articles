@@ -43,10 +43,7 @@ Whether you are shipping on Steam or building tools around it, the module keeps 
 
 ## Documentation & Next Steps
 
-The module is available in the [latest nightly of Blazium](https://blazium.app/download) and
-ships with a full e2e test suite (see the
-[steam_module_tests repository](https://github.com/blazium-games/steam_module_tests)
-for validation examples).
+The module is available in the [latest nightly of Blazium](https://blazium.app/download).
 
 ---
 
