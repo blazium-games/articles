@@ -1,14 +1,14 @@
 ---
-title: "JustAMCP Module"
+title: "MCP Module"
 description: "Model Context Protocol built into the Blazium editor: scene, script, and resource tools for AI-driven automation."
 cover: "assets/cover.jpg"
 ---
 
-# Introducing the JustAMCP Module
+# Introducing the MCP Module
 
-![](assets/justamcp_hero.jpg)
+![](assets/mcp_prompts.jpg)
 
-**JustAMCP** brings the Model Context Protocol directly into the Blazium editor.
+The new **JustAMCP** module brings the Model Context Protocol directly into the Blazium editor.
 AI agents and automation tools can inspect scenes, edit scripts, browse resources, and query
 documentation through a native MCP server. No external bridge required.
 
@@ -25,9 +25,9 @@ dozens of specialized tool groups covering scenes, scripts, shaders, tilemaps, t
 - **Task Manager**: Async MCP tasks with status notifications and result retrieval for long-running operations.
 - **Contract Validation**: Full tool schema catalog with dispatch and settings tests in the Autowork suite.
 
-## Why Add JustAMCP to Your Blazium Project?
+## Why use MCP in Your Blazium Project?
 
-![](assets/justamcp_usecase.jpg)
+![](assets/mcp_settings.jpg)
 
 Agent-driven workflows become a native part of the editor instead of a fragile sidecar:
 
@@ -38,7 +38,6 @@ Agent-driven workflows become a native part of the editor instead of a fragile s
 
 **For Tooling & Pipelines**
 - Wire CI or local agents into the editor without custom socket protocols.
-- Run the full tool catalog test suite to verify MCP compatibility after engine updates.
 - Forward engine logs through MCP for unified debugging during agent sessions.
 
 ## Documentation & Next Steps

@@ -6,7 +6,7 @@ cover: "assets/cover.jpg"
 
 # Introducing the Multiuser Editor Module
 
-![](assets/multiuser_editor_hero.jpg)
+![](assets/cover.jpg)
 
 The **Multiuser Editor** module brings real-time collaborative editing to the Blazium editor.
 Multiple developers can work on the same project at once, syncing scripts, files, and editor state
@@ -25,9 +25,7 @@ even on larger projects.
 - **Ghost Cursor Overlays**: See where remote collaborators are working in the scene and script editors.
 - **Security Validation**: Path canonicalization, property name checks, and JWT-backed session authentication.
 
-## Why Add the Multiuser Editor to Your Blazium Project?
-
-![](assets/multiuser_editor_usecase.jpg)
+## Why use Multiuser Editor in Your Blazium Project?
 
 Pair programming and distributed teams get a first-class workflow inside the editor:
 
