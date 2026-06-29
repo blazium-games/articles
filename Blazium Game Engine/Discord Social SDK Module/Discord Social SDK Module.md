@@ -8,7 +8,7 @@ cover: "assets/cover.jpg"
 
 ![](assets/cover.jpg)
 
-Blazium Game Engine now includes a native **Discord Social SDK** module. It brings official Discord features straight into your games with a simple `Discord` singleton—no extra plugins needed.
+Blazium Game Engine now includes a native **Discord Social SDK** module. It brings official Discord features straight into your games with a simple `Discord` singleton.
 
 The module offers two modes: a lightweight version for rich presence and a full version with social tools like friends and invites. It was built to make connecting with Discord players smooth and straightforward.
 

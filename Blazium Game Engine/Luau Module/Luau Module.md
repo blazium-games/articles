@@ -8,20 +8,19 @@ cover: "assets/cover.jpg"
 
 ![](assets/cover.jpg)
 
-Blazium Game Engine adds powerful native support for **Luau**, a fast, safe, and modern version of Lua developed by Roblox. The new Luau module lets you write game logic in Luau alongside (or instead of) GDScript, giving developers more choice and performance options.
+We have added native support for **Luau**, a fast, safe, and modern version of Lua developed by Roblox. The new Luau module lets you write game logic in Luau alongside (or instead of) GDScript, giving developers more choice and performance options.
 
-Luau brings performance improvements, type checking, and safety features while staying familiar to anyone who knows Lua. Blazium integrates it deeply as a first-class scripting language.
+Luau brings performance improvements, and safety features while staying familiar to anyone who knows Lua.
 
 ## Key Features
 
 - **Full Script Support**: Create `.luau` or `.lua` files that attach to nodes just like GDScript.
 - **Fast Execution**: Luau's optimized runtime and bytecode compilation for better performance.
 - **Engine Integration**: Access Blazium classes, signals, properties, and the full API from Luau scripts.
-- **Editor Tools**: Syntax highlighting, code completion, debugging support, and formatter.
 - **Hybrid Workflows**: Mix Luau and GDScript in the same project.
 - **Compilation & Bytecode**: Built-in tools to compile scripts and work with pre-compiled bytecode.
 
-## Why Use the Luau Module in Your Blazium Project?
+## Why Use Luau in Your Blazium Project?
 
 ![](assets/luau_code.jpg)
 
@@ -29,13 +28,10 @@ Luau is a great fit for many types of projects:
 
 **For Games**
 - Write high-performance gameplay code, especially for logic-heavy systems.
-- Enjoy Lua's clean syntax with modern safety improvements.
 - Leverage Roblox-inspired patterns if your team is familiar with them.
 - Prototype and iterate quickly with a lightweight scripting language.
 
 **For Developers & Teams**
-- Choose the best language for each part of your game.
-- Use advanced editor features like language server support and formatting.
 - Benefit from Luau's strong focus on performance and error prevention.
 - Experiment with new scripting approaches while keeping full engine access.
 
