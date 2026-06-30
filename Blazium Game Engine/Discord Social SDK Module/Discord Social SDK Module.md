@@ -6,7 +6,7 @@ cover: "assets/cover.jpg"
 
 # Introducing the Discord Social SDK Module
 
-![](assets/cover.jpg)
+![](assets/discord_code.jpg)
 
 Blazium Game Engine now includes a native **Discord Social SDK** module. It brings official Discord features straight into your games with a simple `Discord` singleton.
 
@@ -21,9 +21,9 @@ The module offers two modes: a lightweight version for rich presence and a full 
 - **User Info**: Access basic player details like username and status.
 - **Helpful Extras**: Built-in logging and automatic updates for reliable performance.
 
-## Why Use the Discord Social SDK Module in Your Blazium Project?
+## Why Use the Discord Social SDK in Your Project?
 
-![](assets/discord_code.jpg)
+![](assets/discord_code2.jpg)
 
 This module makes your game feel more connected and modern on Discord:
 
