@@ -193,7 +193,7 @@ Fixed Texture2D Image Cache not updating Inspector Preview when image file chang
 
 [Download release 0.6.725 on blazium.app](https://blazium.app/download)
 
-For the complete list of changes, see the [changelog](https://blazium.app/changelog?v=release_0.6.X).
+For the complete list of changes, see the [changelog](https://blazium.app/changelog?v=release_0.6.725).
 
 ---
 
