@@ -21,9 +21,9 @@ continuing to improve engine stability and runtime performance.
 ### MCP Integration
 ![](../JustAMCP%20Module/assets/mcp_prompts.jpg)
 
-This release adds **MCP** support through the **JustAMCP** module, improving interoperability with external tools, automation workflows, and
-AI-assisted development pipelines.
-This connects the editor to external utilities, automation tools, and development environments.
+This release adds an **MCP** server to the editor through the **JustAMCP** module.
+Integrate your favourite AI agent into you workflow with up to *308 tools* available to agents
+to create and modify your project.
 
 Learn more about the MCP module in the
 [dedicated article](https://www.indiedb.com/engines/blazium-engine/news/mcp-module).
