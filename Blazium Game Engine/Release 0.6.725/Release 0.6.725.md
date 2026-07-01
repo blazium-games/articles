@@ -1,14 +1,14 @@
 ---
-title: "Blazium Engine Release 0.6.X"  
+title: "Blazium Engine Release 0.6.725"  
 description:
     "A major update introducing new modules, workflow improvements, tooling integrations, and performance optimizations across the engine."  
 cover: "assets/cover.jpg"
 changes: https://github.com/blazium-games/blazium/milestone/1?closed=1
 ---
 
-# Blazium Engine Release 0.6.X
+# Blazium Engine Release 0.6.725
 
-Blazium Engine 0.6.X is one of the biggest updates to the engine so far, bringing a wide range of new modules,
+Blazium Engine 0.6.725 is one of the biggest updates to the engine so far, bringing a wide range of new modules,
 workflow improvements, tooling integrations, and performance upgrades.
 
 This release focuses heavily on developer productivity, data handling, automation, and modern tooling support while
@@ -190,7 +190,7 @@ Fixed Texture2D Image Cache not updating Inspector Preview when image file chang
 
 ## Download
 
-[Download the latest release on blazium.app](https://blazium.app/download)
+[Download release 0.6.725 on blazium.app](https://blazium.app/download)
 
 For the complete list of changes, see the [changelog](https://blazium.app/changelog?v=release_0.6.X).
 
@@ -200,8 +200,8 @@ For the complete list of changes, see the [changelog](https://blazium.app/change
 
 Or follow us everywhere else:
 
+- **[X / Twitter](https://x.com/BlaziumGames)**
 - **[GitHub](https://github.com/blazium-games)**
 - **[IndieDB](https://www.indiedb.com/engines/blazium-engine)**
-- **[X / Twitter](https://x.com/BlaziumGames)**
 - **[YouTube](https://www.youtube.com/@blazium)**
 - **[itch.io](https://blaziumengine.itch.io)**
