@@ -8,7 +8,8 @@ changes: https://github.com/blazium-games/blazium/milestone/1?closed=1
 
 # Blazium Engine Release 0.6.725
 
-Blazium Engine 0.6.725 is one of the biggest updates to the engine so far, bringing a wide range of new modules,
+Blazium Engine 0.6.725 is one of the biggest updates to the engine so far, with *479 commits*
+changing *2,172 files*, bringing a wide range of new modules,
 workflow improvements, tooling integrations, and performance upgrades.
 
 This release focuses heavily on developer productivity, data handling, automation, and modern tooling support while
