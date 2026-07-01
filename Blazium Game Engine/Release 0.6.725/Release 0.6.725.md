@@ -1,5 +1,5 @@
 ---
-title: "Blazium Engine Release 0.6.725"  
+title: "Blazium Game Engine: Release 0.6.725"  
 description:
     "A major update introducing new modules, workflow improvements, tooling integrations, and performance optimizations across the engine."  
 cover: "assets/cover.jpg"
