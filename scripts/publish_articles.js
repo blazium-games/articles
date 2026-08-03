@@ -12,6 +12,7 @@ import {
   loadArticle,
   markdownToBbcode,
   mediaCdnLocation,
+  normalizeDate,
   resolveMediaPath,
   rewriteMarkdownMedia,
   walkMarkdownFiles,
@@ -49,7 +50,7 @@ async function main() {
     const title = asString(article.frontmatter.title);
     const description = asString(article.frontmatter.description);
     const coverRel = asString(article.frontmatter.cover);
-    const date = asString(article.frontmatter.date) || gitDateForFile(filePath);
+    const date = normalizeDate(article.frontmatter.date, filePath)
     const slug = article.slug;
     const outDir = path.join(distRoot, slug);
     await ensureDir(outDir);

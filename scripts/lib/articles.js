@@ -235,6 +235,20 @@ export function gitDateForFile(filePath) {
   return new Date().toISOString().slice(0, 10);
 }
 
+
+/**
+ * @param {string|Date} rawDate
+ * @param {string} filePath
+ * @returns {string} YYYY-MM-DD
+ */
+export function normalizeDate(rawDate, filePath) {
+  if (rawDate instanceof Date) {
+    return rawDate.toISOString().slice(0, 10);
+  }
+  const dateString = typeof rawDate === "string" ? rawDate.trim() : asString(rawDate);
+  return dateString || gitDateForFile(filePath);
+}
+
 /**
  * @param {unknown} value
  * @returns {string}
