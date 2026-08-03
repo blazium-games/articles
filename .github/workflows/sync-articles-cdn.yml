@@ -20,8 +20,8 @@ jobs:
           fetch-depth: 0
 
       - name: Log sync reason
-        if: ${{ inputs.reason != '' }}
-        run: echo "Sync reason: ${{ inputs.reason }}"
+        if: inputs.reason != ''
+        run: 'echo "Sync reason: ${{ inputs.reason }}"'
 
       - uses: actions/setup-node@v4
         with:
