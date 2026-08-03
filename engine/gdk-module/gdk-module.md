@@ -5,6 +5,7 @@ description: >-
   tooling, live services, and a test suite
 cover: assets/cover.jpg
 deployed: true
+date: 2026-06-27
 slug: gdk-module
 hosts:
   - name: IndieDB

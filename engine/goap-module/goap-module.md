@@ -5,6 +5,7 @@ description: >-
   agents, dynamic goals, and inspectable AI behavior in Blazium Game Engine.
 cover: assets/cover.jpg
 deployed: true
+date: 2026-05-07
 slug: goap-module
 hosts:
   - name: IndieDB

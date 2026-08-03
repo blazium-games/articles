@@ -5,6 +5,7 @@ description: >-
   managing .env files and runtime variables.
 cover: assets/cover.jpg
 deployed: true
+date: 2026-05-05
 slug: dotenv-module
 hosts:
   - name: IndieDB

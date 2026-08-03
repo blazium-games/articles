@@ -5,6 +5,7 @@ description: >-
   for Blazium Game Engine
 cover: assets/cover.jpg
 deployed: true
+date: 2026-04-02
 slug: socketio-client-module
 hosts:
   - name: IndieDB

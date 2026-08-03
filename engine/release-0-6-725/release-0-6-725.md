@@ -6,6 +6,7 @@ description: >-
 cover: assets/cover.jpg
 changes: 'https://github.com/blazium-games/blazium/milestone/1?closed=1'
 deployed: true
+date: 2026-07-01
 slug: release-0-6-725
 hosts:
   - name: IndieDB

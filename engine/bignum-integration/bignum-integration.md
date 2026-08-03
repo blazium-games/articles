@@ -5,6 +5,7 @@ description: >-
   simulation-heavy games.
 cover: assets/cover.jpg
 deployed: true
+date: 2026-04-29
 slug: bignum-integration
 hosts:
   - name: IndieDB

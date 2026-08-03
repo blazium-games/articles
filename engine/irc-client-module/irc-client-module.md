@@ -5,6 +5,7 @@ description: >-
   Game Engine
 cover: assets/cover.jpg
 deployed: true
+date: 2026-04-02
 slug: irc-client-module
 hosts:
   - name: IndieDB

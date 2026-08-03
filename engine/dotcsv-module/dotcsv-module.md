@@ -5,6 +5,7 @@ description: >-
   structured text data in your projects.
 cover: assets/cover.jpg
 deployed: true
+date: 2026-05-06
 slug: dotcsv-module
 hosts:
   - name: IndieDB

@@ -5,6 +5,7 @@ description: >-
   permissions, and live presence in the editor.
 cover: assets/cover.jpg
 deployed: true
+date: 2026-06-29
 slug: multiuser-editor-module
 hosts:
   - name: IndieDB

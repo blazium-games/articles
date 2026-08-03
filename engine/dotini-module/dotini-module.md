@@ -5,6 +5,7 @@ description: >-
   Engine for configuration-style data in your projects.
 cover: assets/cover.jpg
 deployed: true
+date: 2026-05-03
 slug: dotini-module
 hosts:
   - name: IndieDB

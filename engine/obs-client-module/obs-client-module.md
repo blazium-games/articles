@@ -3,6 +3,7 @@ title: OBS Client Module
 description: 'Introducing the OBS Client Module: Full Control of OBS Studio from Blazium'
 cover: assets/cover.jpg
 deployed: true
+date: 2026-04-02
 slug: obs-client-module
 hosts:
   - name: IndieDB

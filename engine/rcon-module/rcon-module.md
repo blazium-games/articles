@@ -3,6 +3,7 @@ title: RCON Module
 description: 'Introducing the RCON Module: Remote Console Control for Blazium Game Engine'
 cover: assets/cover.jpg
 deployed: true
+date: 2026-04-02
 slug: rcon-module
 hosts:
   - name: IndieDB

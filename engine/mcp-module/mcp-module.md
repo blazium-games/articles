@@ -5,6 +5,7 @@ description: >-
   resource tools for AI-driven automation.
 cover: assets/cover.jpg
 deployed: true
+date: 2026-06-29
 slug: mcp-module
 hosts:
   - name: IndieDB

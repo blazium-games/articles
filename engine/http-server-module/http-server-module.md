@@ -5,6 +5,7 @@ description: >-
   file serving, and Server-Sent Events (SSE).
 cover: assets/cover.jpg
 deployed: true
+date: 2026-04-02
 slug: http-server-module
 hosts:
   - name: IndieDB

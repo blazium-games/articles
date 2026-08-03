@@ -5,6 +5,7 @@ description: >-
   reliable unit, integration, and simulation testing.
 cover: assets/cover.jpg
 deployed: true
+date: 2026-05-02
 slug: autowork-testing-framework
 hosts:
   - name: IndieDB

@@ -5,6 +5,7 @@ description: >-
   Engine
 cover: assets/cover.jpg
 deployed: true
+date: 2026-05-02
 slug: kickapi-module
 hosts:
   - name: IndieDB

@@ -5,6 +5,7 @@ description: >-
   inventory, and server auth without external extensions.
 cover: assets/cover.jpg
 deployed: true
+date: 2026-06-28
 slug: steam-module
 hosts:
   - name: IndieDB

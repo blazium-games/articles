@@ -5,6 +5,7 @@ description: >-
   backups, BLOBs, and advanced query tools for Blazium Game Engine.
 cover: assets/cover.jpg
 deployed: true
+date: 2026-06-26
 slug: sqlite3-module
 hosts:
   - name: IndieDB

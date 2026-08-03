@@ -5,6 +5,7 @@ description: >-
   Engine
 cover: assets/cover.jpg
 deployed: true
+date: 2026-04-02
 slug: twitchapi-module
 hosts:
   - name: IndieDB

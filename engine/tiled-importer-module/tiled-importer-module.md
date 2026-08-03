@@ -5,6 +5,7 @@ description: >-
   tilesets, and animated tiles.
 cover: assets/cover.jpg
 deployed: true
+date: 2026-06-28
 slug: tiled-importer-module
 hosts:
   - name: IndieDB

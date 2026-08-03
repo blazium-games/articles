@@ -5,6 +5,7 @@ description: >-
   invites, and easy social features.
 cover: assets/cover.jpg
 deployed: true
+date: 2026-06-30
 slug: discord-social-sdk-module
 hosts:
   - name: IndieDB
