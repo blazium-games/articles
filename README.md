@@ -77,6 +77,7 @@ CDN target: DigitalOcean Spaces behind `https://cdn.blazium.app` (same bucket as
 | **Publish Articles** | PR opened / updated | Validate only |
 | **Publish Articles** | PR merged into `master`/`main` | Validate → build → upload to CDN |
 | **Sync Articles to CDN** | Manual (`workflow_dispatch`) | Full republish of all `deployed: true` articles |
+| **Publish Articles** (manual) | Manual (`workflow_dispatch`) | Same full CDN republish (bootstrap / ops) |
 
 Author flow: set `deployed: true` in a PR; merge to publish. Use **Actions → Sync Articles to CDN → Run workflow** for bootstrap or forced refresh.
 

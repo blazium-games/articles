@@ -6,6 +6,12 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches: [master, main]
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: Optional note for manual sync/bootstrap
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -16,7 +22,9 @@ defaults:
 
 jobs:
   validate:
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+    if: >-
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -34,12 +42,21 @@ jobs:
         run: node validate_articles.js
 
   publish:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' &&
+       github.event.action == 'closed' &&
+       github.event.pull_request.merged == true)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Log sync reason
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.reason != '' }}
+        run: echo "Sync reason: ${{ inputs.reason }}"
+        working-directory: .
 
       - uses: actions/setup-node@v4
         with:

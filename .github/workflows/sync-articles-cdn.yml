@@ -4,16 +4,12 @@ on:
   workflow_dispatch:
     inputs:
       reason:
-        description: "Optional note for the run log (e.g. bootstrap, fix missing asset)"
+        description: Optional note for the run log
         required: false
         type: string
 
 permissions:
   contents: read
-
-defaults:
-  run:
-    working-directory: scripts
 
 jobs:
   sync:
@@ -26,7 +22,6 @@ jobs:
       - name: Log sync reason
         if: ${{ inputs.reason != '' }}
         run: echo "Sync reason: ${{ inputs.reason }}"
-        working-directory: .
 
       - uses: actions/setup-node@v4
         with:
@@ -35,12 +30,15 @@ jobs:
           cache-dependency-path: scripts/package-lock.json
 
       - name: Install dependencies
+        working-directory: scripts
         run: npm ci
 
       - name: Validate articles
+        working-directory: scripts
         run: node validate_articles.js
 
       - name: Build publish tree
+        working-directory: scripts
         run: node publish_articles.js
 
       - name: Upload articles to CDN
