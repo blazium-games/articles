@@ -1,0 +1,54 @@
+name: Sync Articles to CDN
+
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: "Optional note for the run log (e.g. bootstrap, fix missing asset)"
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: scripts
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Log sync reason
+        if: ${{ inputs.reason != '' }}
+        run: echo "Sync reason: ${{ inputs.reason }}"
+        working-directory: .
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: scripts/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate articles
+        run: node validate_articles.js
+
+      - name: Build publish tree
+        run: node publish_articles.js
+
+      - name: Upload articles to CDN
+        uses: BetaHuhn/do-spaces-action@v2
+        with:
+          access_key: ${{ secrets.DO_ACCESS_KEY }}
+          secret_key: ${{ secrets.DO_SECRET_KEY }}
+          space_name: ${{ secrets.DO_SPACE_NAME }}
+          space_region: ${{ secrets.DO_SPACE_REGION }}
+          source: dist/articles
+          out_dir: articles
