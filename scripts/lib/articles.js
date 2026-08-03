@@ -193,31 +193,54 @@ export function asString(value) {
 
 /**
  * Minimal Markdown → BBCode for Hub RichTextLabel.
+ * Protects code/images/urls before emphasis so snake_case and font_size stay intact.
  * @param {string} markdown
  * @param {(href: string) => string} rewriteHref
  */
 export function markdownToBbcode(markdown, rewriteHref) {
   let text = markdown.replace(/\r\n/g, '\n');
+  const slots = [];
+  const protect = (value) => {
+    const token = `\u0000PROT${slots.length}\u0000`;
+    slots.push(value);
+    return token;
+  };
 
   // Fenced code blocks
   text = text.replace(/```[\w]*\n([\s\S]*?)```/g, (_m, code) => {
-    return `[code]${code.trimEnd()}[/code]`;
+    return protect(`[code]${code.trimEnd()}[/code]`);
   });
+
+  // Inline code (before emphasis — keeps app_id / snake_case intact)
+  text = text.replace(/`([^`]+)`/g, (_m, code) => protect(`[code]${code}[/code]`));
 
   // Images ![alt](src)
   text = text.replace(/!\[([^\]]*)]\(([^)]+)\)/g, (_m, alt, src) => {
     const href = rewriteHref(src.trim());
     const label = alt ? String(alt) : '';
-    return label ? `[img]${href}[/img]\n[i]${label}[/i]` : `[img]${href}[/img]`;
+    return protect(label ? `[img]${href}[/img]\n[i]${label}[/i]` : `[img]${href}[/img]`);
   });
 
   // Links [text](url)
   text = text.replace(/\[([^\]]+)]\(([^)]+)\)/g, (_m, label, url) => {
     const href = rewriteHref(url.trim());
-    return `[url=${href}]${inlineMarkdown(label)}[/url]`;
+    return protect(`[url=${href}]${inlineMarkdown(label)}[/url]`);
   });
 
-  // Headings
+  // Horizontal rules / lists before emphasis so markers are not eaten
+  text = text.replace(/^(-{3,}|\*{3,}|_{3,})\s*$/gm, '————————');
+  text = text.replace(/^(\s*)[-*+]\s+(.+)$/gm, '$1• $2');
+
+  // Bold / italic (asterisk forms). Underscore italics only when clearly delimited —
+  // never across identifiers like app_id or BBCode like font_size.
+  text = text.replace(/\*\*\*([^*]+)\*\*\*/g, '[b][i]$1[/i][/b]');
+  text = text.replace(/\*\*([^*]+)\*\*/g, '[b]$1[/b]');
+  text = text.replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '[i]$1[/i]');
+  text = text.replace(/(?<!\w)___([^_\n]+)___(?!\w)/g, '[b][i]$1[/i][/b]');
+  text = text.replace(/(?<!\w)__([^_\n]+)__(?!\w)/g, '[b]$1[/b]');
+  text = text.replace(/(?<!\w)_([^_\n]+)_(?!\w)/g, '[i]$1[/i]');
+
+  // Headings after emphasis so font_size tags are not mangled
   text = text.replace(/^######\s+(.+)$/gm, '[b]$1[/b]');
   text = text.replace(/^#####\s+(.+)$/gm, '[b]$1[/b]');
   text = text.replace(/^####\s+(.+)$/gm, '[b]$1[/b]');
@@ -225,22 +248,9 @@ export function markdownToBbcode(markdown, rewriteHref) {
   text = text.replace(/^##\s+(.+)$/gm, '[b][font_size=20]$1[/font_size][/b]');
   text = text.replace(/^#\s+(.+)$/gm, '[b][font_size=22]$1[/font_size][/b]');
 
-  // Horizontal rules
-  text = text.replace(/^(-{3,}|\*{3,}|_{3,})\s*$/gm, '————————');
-
-  // Unordered lists
-  text = text.replace(/^(\s*)[-*+]\s+(.+)$/gm, '$1• $2');
-
-  // Bold / italic (order matters)
-  text = text.replace(/\*\*\*([^*]+)\*\*\*/g, '[b][i]$1[/i][/b]');
-  text = text.replace(/\*\*([^*]+)\*\*/g, '[b]$1[/b]');
-  text = text.replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '[i]$1[/i]');
-  text = text.replace(/___([^_]+)___/g, '[b][i]$1[/i][/b]');
-  text = text.replace(/__([^_]+)__/g, '[b]$1[/b]');
-  text = text.replace(/(?<!_)_([^_]+)_(?!_)/g, '[i]$1[/i]');
-
-  // Inline code
-  text = text.replace(/`([^`]+)`/g, '[code]$1[/code]');
+  for (let i = 0; i < slots.length; i++) {
+    text = text.replace(`\u0000PROT${i}\u0000`, slots[i]);
+  }
 
   return text.trim() + '\n';
 }
