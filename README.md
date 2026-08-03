@@ -1,29 +1,101 @@
 # Blazium Articles
 
 This repository serves as a centralized space for all articles written by the team to publish on
-the various platform we are active on (X, IndieDB, itch.io, Patreon).
+the various platform we are active on (X, IndieDB, itch.io, Patreon), and on the Blazium CDN for
+Blazium Hub News.
 
 ## Structure
 
-The directories should follow the following structure:
+Engine articles must use this layout (slug = folder name = file name, no spaces):
 
 ```
-- Main Topic
-| - Article Topic
-  | - Article.md
-  | - assets (optional folder)
-    | - image1.jpg
-    | - image2.png
-    | - image3.gif
-    | - video1.mp4
+engine/
+  <slug>/
+    <slug>.md
+    assets/          (optional)
+      cover.jpg
+      image1.png
 ```
+
+Example: `engine/steam-module/steam-module.md`
+
+## Frontmatter
+
+```yaml
+---
+title: "Article Title"
+description: "Short summary for listings and RSS."
+cover: "assets/cover.jpg"
+slug: "steam-module"
+deployed: true
+# optional:
+# date: "2025-01-15"
+# changes: https://github.com/...
+---
+```
+
+| Field | Required | Notes |
+|-------|----------|-------|
+| `title` | yes | Display title |
+| `description` | yes | Summary / RSS description |
+| `cover` | yes | Relative path to cover image |
+| `slug` | **yes** | kebab-case `[a-z0-9-]+` only — **no spaces**. Must match path `engine/<slug>/<slug>.md` |
+| `deployed` | yes for CDN | `true` publishes to CDN; `false` / missing skips publish |
+| `date` | no | `YYYY-MM-DD`; defaults to git last-commit date at publish |
+| `changes` | no | Changelog / milestone URL |
+
+Only articles with `deployed: true` are validated for media completeness and uploaded to
+`https://cdn.blazium.app/articles/`.
 
 ## Scripts
 
-Under the `/scripts` directory you can fine `md_to_html.js`, use it to convert a
-markdown file to HTML to make the process of publishing for IndieDB and itch.io easier,
-**images/videos will still need to be added manually**.
+Under `/scripts`:
+
+| Script | Purpose |
+|--------|---------|
+| `validate_articles.js` | Check frontmatter (incl. required slug/path) and deployed media |
+| `publish_articles.js` | Build `dist/articles/` (RSS, index.json, per-slug meta/content/assets) |
+| `md_to_html.js` | Convert markdown to IndieDB-friendly HTML (manual publish helper) |
 
 ```bash
-node scripts/md_to_html.js "Blazium Game Engine/Release 0.6.X/Release 0.6.X.md"
+cd scripts
+npm ci
+node validate_articles.js
+node publish_articles.js
+node md_to_html.js "engine/release-0-6-725/release-0-6-725.md"
+```
+
+For IndieDB/itch.io, **images/videos still need to be added manually** after `md_to_html.js`.
+
+## CI / CDN
+
+CDN target: DigitalOcean Spaces behind `https://cdn.blazium.app` (same bucket as CLI/Hub).
+
+| Workflow | When | What |
+|----------|------|------|
+| **Publish Articles** | Push to `master`/`main` | Validate only |
+| **Publish Articles** | PR opened / updated | Validate only |
+| **Publish Articles** | PR merged into `master`/`main` | Validate → build → upload to CDN |
+| **Sync Articles to CDN** | Manual (`workflow_dispatch`) | Full republish of all `deployed: true` articles |
+
+Author flow: set `deployed: true` in a PR; merge to publish. Use **Actions → Sync Articles to CDN → Run workflow** for bootstrap or forced refresh.
+
+### Repository secrets
+
+| Secret | Purpose |
+|--------|---------|
+| `DO_ACCESS_KEY` | DigitalOcean Spaces access key |
+| `DO_SECRET_KEY` | DigitalOcean Spaces secret |
+| `DO_SPACE_NAME` | Spaces bucket name |
+| `DO_SPACE_REGION` | e.g. `nyc3` |
+
+### CDN layout
+
+```
+articles/rss.xml
+articles/index.json
+articles/{slug}/meta.json
+articles/{slug}/content.bbcode
+articles/{slug}/content.md
+articles/{slug}/assets/...
 ```

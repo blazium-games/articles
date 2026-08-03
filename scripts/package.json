@@ -4,7 +4,9 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "validate": "node validate_articles.js",
+    "publish": "node publish_articles.js",
+    "test": "npm run validate"
   },
   "keywords": [],
   "author": "",
