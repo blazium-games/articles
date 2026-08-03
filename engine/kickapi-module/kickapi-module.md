@@ -6,8 +6,10 @@ description: >-
 cover: assets/cover.jpg
 deployed: true
 slug: kickapi-module
+hosts:
+  - name: IndieDB
+    url: 'https://www.indiedb.com/engines/blazium-engine/features/kickapi-module'
 ---
-
 # Introducing the KickAPI Module
 
 ![](assets/kick_code.jpg)

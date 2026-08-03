@@ -6,8 +6,10 @@ description: >-
 cover: assets/cover.jpg
 deployed: true
 slug: http-server-module
+hosts:
+  - name: IndieDB
+    url: 'https://www.indiedb.com/engines/blazium-engine/features/http-server-module'
 ---
-
 # Introducing the HTTP Server Module
 
 ![](assets/http_demo.gif)

@@ -6,8 +6,10 @@ description: >-
 cover: assets/cover.jpg
 deployed: true
 slug: twitchapi-module
+hosts:
+  - name: IndieDB
+    url: 'https://www.indiedb.com/engines/blazium-engine/features/twitchapi-module'
 ---
-
 # Introducing the TwitchAPI Module
 
 ![](assets/twitch_code.jpg)

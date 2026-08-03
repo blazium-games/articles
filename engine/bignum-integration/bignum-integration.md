@@ -6,8 +6,10 @@ description: >-
 cover: assets/cover.jpg
 deployed: true
 slug: bignum-integration
+hosts:
+  - name: IndieDB
+    url: 'https://www.indiedb.com/engines/blazium-engine/features/bignum-integration'
 ---
-
 # BigNum++ Integration
 
 ![](assets/bignum_test.jpg)

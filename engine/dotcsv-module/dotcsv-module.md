@@ -6,8 +6,10 @@ description: >-
 cover: assets/cover.jpg
 deployed: true
 slug: dotcsv-module
+hosts:
+  - name: IndieDB
+    url: 'https://www.indiedb.com/engines/blazium-engine/features/dotcsv-module'
 ---
-
 # Introducing the DotCSV Module
 
 ![](assets/dotcsv.jpg)

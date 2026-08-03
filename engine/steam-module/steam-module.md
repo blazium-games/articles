@@ -6,8 +6,10 @@ description: >-
 cover: assets/cover.jpg
 deployed: true
 slug: steam-module
+hosts:
+  - name: IndieDB
+    url: 'https://www.indiedb.com/engines/blazium-engine/news/steam-module'
 ---
-
 # Introducing the Steam Module
 
 ![](assets/cover.jpg)

@@ -31,6 +31,11 @@ deployed: true
 # optional:
 # date: "2025-01-15"
 # changes: https://github.com/...
+hosts:
+  - name: IndieDB
+    url: https://www.indiedb.com/engines/blazium-engine/news/steam-module
+  # - name: itch.io
+  #   url: https://...
 ---
 ```
 
@@ -43,9 +48,11 @@ deployed: true
 | `deployed` | yes for CDN | `true` publishes to CDN; `false` / missing skips publish |
 | `date` | no | `YYYY-MM-DD`; defaults to git last-commit date at publish |
 | `changes` | no | Changelog / milestone URL |
+| `hosts` | no | Array of `{ name, url }` external places the article is hosted (IndieDB, itch.io, …). Shown in Hub News. May be empty, added before first CDN publish, or updated later and republished via sync. |
 
 Only articles with `deployed: true` are validated for media completeness and uploaded to
-`https://cdn.blazium.app/articles/`.
+`https://cdn.blazium.app/articles/`. `hosts` is optional for every article and is written into
+CDN `meta.json` / `index.json` when present.
 
 ## Scripts
 
@@ -95,8 +102,10 @@ Author flow: set `deployed: true` in a PR; merge to publish. Use **Actions → S
 ```
 articles/rss.xml
 articles/index.json
-articles/{slug}/meta.json
+articles/{slug}/meta.json   # includes hosts: [{name,url}, ...]
 articles/{slug}/content.bbcode
 articles/{slug}/content.md
 articles/{slug}/assets/...
 ```
+
+Hub News lists articles from `rss.xml`, then loads `meta.json` (for `hosts`) and `content.bbcode` when an article is opened.

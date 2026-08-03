@@ -6,8 +6,11 @@ description: >-
 cover: assets/cover.jpg
 deployed: true
 slug: socketio-client-module
+hosts:
+  - name: IndieDB
+    url: >-
+      https://www.indiedb.com/engines/blazium-engine/features/socketio-client-module
 ---
-
 # Introducing the SocketIO Client Module
 
 ![](assets/socketio_code.jpg)

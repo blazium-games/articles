@@ -6,8 +6,10 @@ description: >-
 cover: assets/cover.jpg
 deployed: true
 slug: mcp-module
+hosts:
+  - name: IndieDB
+    url: 'https://www.indiedb.com/engines/blazium-engine/news/mcp-module'
 ---
-
 # Introducing the MCP Module
 
 ![](assets/mcp_prompts.jpg)

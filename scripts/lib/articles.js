@@ -140,6 +140,52 @@ export function checkArticlePath(filePath, repoRoot, slug) {
 }
 
 /**
+ * Normalize optional frontmatter `hosts` to `{ name, url }[]`.
+ * Throws if the value is present but invalid.
+ * @param {unknown} value
+ * @returns {{ name: string, url: string }[]}
+ */
+export function normalizeHosts(value) {
+  if (value == null || value === '') return [];
+  if (!Array.isArray(value)) {
+    throw new Error('hosts must be an array of { name, url } objects');
+  }
+  const seen = new Set();
+  const out = [];
+  for (let i = 0; i < value.length; i++) {
+    const entry = value[i];
+    if (entry == null || typeof entry !== 'object' || Array.isArray(entry)) {
+      throw new Error(`hosts[${i}] must be an object with name and url`);
+    }
+    const name = asString(/** @type {{ name?: unknown }} */ (entry).name);
+    const url = asString(/** @type {{ url?: unknown }} */ (entry).url);
+    if (!name) throw new Error(`hosts[${i}]: missing name`);
+    if (!url) throw new Error(`hosts[${i}]: missing url`);
+    if (!/^https?:\/\//i.test(url)) {
+      throw new Error(`hosts[${i}]: url must be absolute http(s) (got "${url}")`);
+    }
+    const key = url.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push({ name, url });
+  }
+  return out;
+}
+
+/**
+ * @param {unknown} value
+ * @returns {string|null} error message or null if ok
+ */
+export function validateHosts(value) {
+  try {
+    normalizeHosts(value);
+    return null;
+  } catch (err) {
+    return err instanceof Error ? err.message : String(err);
+  }
+}
+
+/**
  * @param {string} filePath
  * @param {string} repoRoot
  */
@@ -151,12 +197,20 @@ export async function loadArticle(filePath, repoRoot) {
   const slugRaw = asString(data.slug);
   const slug = slugRaw;
   const deployed = data.deployed === true || data.deployed === 'true';
+  let hosts = [];
+  try {
+    hosts = normalizeHosts(data.hosts);
+  } catch {
+    // Keep empty; validate_articles reports the error with path context.
+    hosts = [];
+  }
   return {
     filePath,
     articleDir,
     folderName,
     slug,
     deployed,
+    hosts,
     frontmatter: data,
     content,
     relativePath: path.relative(repoRoot, filePath).replace(/\\/g, '/'),

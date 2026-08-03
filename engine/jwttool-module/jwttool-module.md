@@ -6,8 +6,10 @@ description: >-
 cover: assets/cover.jpg
 deployed: true
 slug: jwttool-module
+hosts:
+  - name: IndieDB
+    url: 'https://www.indiedb.com/engines/blazium-engine/features/jwttool-module'
 ---
-
 # Introducing the JWTTool Module
 
 ![](assets/jwttool_code_hero.jpg)

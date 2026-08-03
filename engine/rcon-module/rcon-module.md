@@ -4,8 +4,10 @@ description: 'Introducing the RCON Module: Remote Console Control for Blazium Ga
 cover: assets/cover.jpg
 deployed: true
 slug: rcon-module
+hosts:
+  - name: IndieDB
+    url: 'https://www.indiedb.com/engines/blazium-engine/features/rcon-module'
 ---
-
 # Introducing the RCON Module
 
 ![](assets/rcon_demo.gif)

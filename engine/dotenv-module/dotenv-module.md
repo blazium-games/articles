@@ -6,8 +6,10 @@ description: >-
 cover: assets/cover.jpg
 deployed: true
 slug: dotenv-module
+hosts:
+  - name: IndieDB
+    url: 'https://www.indiedb.com/engines/blazium-engine/features/dotenv-module'
 ---
-
 # Introducing the DotENV Module  
 
 ![](assets/dotenv.jpg)

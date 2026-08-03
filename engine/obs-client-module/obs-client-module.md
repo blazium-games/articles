@@ -4,8 +4,10 @@ description: 'Introducing the OBS Client Module: Full Control of OBS Studio from
 cover: assets/cover.jpg
 deployed: true
 slug: obs-client-module
+hosts:
+  - name: IndieDB
+    url: 'https://www.indiedb.com/engines/blazium-engine/features/obs-client-module'
 ---
-
 # Introducing the OBS Client Module
 
 ![](assets/obs_code.jpg)

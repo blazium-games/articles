@@ -6,8 +6,10 @@ description: >-
 cover: assets/cover.jpg
 deployed: true
 slug: irc-client-module
+hosts:
+  - name: IndieDB
+    url: 'https://www.indiedb.com/engines/blazium-engine/features/irc-client-module'
 ---
-
 # Introducing the IRC Client Module
 
 ![](assets/irc_client_code.jpg)

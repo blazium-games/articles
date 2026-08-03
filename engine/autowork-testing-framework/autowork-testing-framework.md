@@ -6,8 +6,11 @@ description: >-
 cover: assets/cover.jpg
 deployed: true
 slug: autowork-testing-framework
+hosts:
+  - name: IndieDB
+    url: >-
+      https://www.indiedb.com/engines/blazium-engine/features/autowork-testing-framework-module
 ---
-
 # Introducing Autowork
 
 ![](assets/autowork.jpg)

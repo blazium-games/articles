@@ -6,7 +6,7 @@
   "scripts": {
     "validate": "node validate_articles.js",
     "publish": "node publish_articles.js",
-    "test": "node test_bbcode.mjs && npm run validate"
+    "test": "node test_bbcode.mjs && node test_hosts.mjs && npm run validate"
   },
   "keywords": [],
   "author": "",

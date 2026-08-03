@@ -6,8 +6,10 @@ description: >-
 cover: assets/cover.jpg
 deployed: true
 slug: goap-module
+hosts:
+  - name: IndieDB
+    url: 'https://www.indiedb.com/engines/blazium-engine/features/goap-module'
 ---
-
 # Introducing the GOAP Module
 
 ![](assets/planning_showcase.gif)

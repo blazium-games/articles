@@ -9,6 +9,7 @@ import {
   extractLocalMediaPaths,
   isValidSlug,
   loadArticle,
+  validateHosts,
   resolveMediaPath,
   walkMarkdownFiles,
 } from './lib/articles.js';
@@ -63,6 +64,9 @@ async function main() {
       }
       seenSlugs.add(slug);
     }
+
+    const hostsErr = validateHosts(article.frontmatter.hosts);
+    if (hostsErr) errors.push(`${label}: ${hostsErr}`);
 
     if (!article.deployed) {
       console.log(`skip media checks (deployed: false): ${label}`);

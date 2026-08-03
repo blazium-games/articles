@@ -6,8 +6,10 @@ description: >-
 cover: assets/cover.jpg
 deployed: true
 slug: tiled-importer-module
+hosts:
+  - name: IndieDB
+    url: 'https://www.indiedb.com/engines/blazium-engine/news/tiled-importer-module'
 ---
-
 # Introducing the Tiled Importer Module
 
 ![](assets/cover.jpg)

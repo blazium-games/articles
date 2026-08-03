@@ -6,8 +6,11 @@ description: >-
 cover: assets/cover.jpg
 deployed: true
 slug: crowd-control-module
+hosts:
+  - name: IndieDB
+    url: >-
+      https://www.indiedb.com/engines/blazium-engine/features/crowd-control-module
 ---
-
 # Introducing the Crowd Control Module
 
 ![](assets/cc_code.jpg)

@@ -6,8 +6,11 @@ description: >-
 cover: assets/cover.jpg
 deployed: true
 slug: discord-social-sdk-module
+hosts:
+  - name: IndieDB
+    url: >-
+      https://www.indiedb.com/engines/blazium-engine/news/discord-social-sdk-module
 ---
-
 # Introducing the Discord Social SDK Module
 
 ![](assets/discord_code.jpg)

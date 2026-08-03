@@ -6,8 +6,10 @@ description: >-
 cover: assets/cover.jpg
 deployed: true
 slug: dotini-module
+hosts:
+  - name: IndieDB
+    url: 'https://www.indiedb.com/engines/blazium-engine/features/dotini-module'
 ---
-
 # Introducing the DotINI Module
 
 ![](assets/dotini.jpg)

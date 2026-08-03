@@ -6,8 +6,10 @@ description: >-
 cover: assets/cover.jpg
 deployed: true
 slug: sqlite3-module
+hosts:
+  - name: IndieDB
+    url: 'https://www.indiedb.com/engines/blazium-engine/features/sqlite3-module'
 ---
-
 # Introducing the SQLite3 Module
 
 ![](assets/cover.jpg)

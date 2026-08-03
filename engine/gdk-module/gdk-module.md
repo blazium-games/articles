@@ -6,8 +6,10 @@ description: >-
 cover: assets/cover.jpg
 deployed: true
 slug: gdk-module
+hosts:
+  - name: IndieDB
+    url: 'https://www.indiedb.com/engines/blazium-engine/news/gdk-module'
 ---
-
 # Introducing the GDK Module
 
 ![](assets/cover.jpg)

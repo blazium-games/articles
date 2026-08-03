@@ -36,7 +36,7 @@ async function main() {
   await fs.rm(path.join(repoRoot, 'dist'), { recursive: true, force: true });
   await ensureDir(distRoot);
 
-  /** @type {Array<{slug:string,title:string,description:string,cover:string,date:string,link:string,guid:string}>} */
+  /** @type {Array<{slug:string,title:string,description:string,cover:string,date:string,link:string,guid:string,hosts:Array<{name:string,url:string}>}>} */
   const catalog = [];
 
   for (const filePath of files) {
@@ -94,6 +94,7 @@ async function main() {
     const coverUrl = coverRel ? rewriteHref(coverRel) : '';
     const metaLink = `${CDN_BASE}/${ARTICLES_PREFIX}/${slug}/meta.json`;
 
+    const hosts = article.hosts;
     const meta = {
       slug,
       title,
@@ -101,6 +102,7 @@ async function main() {
       cover: coverUrl,
       date,
       changes: asString(article.frontmatter.changes) || null,
+      hosts,
       link: metaLink,
       content_bbcode: `${CDN_BASE}/${ARTICLES_PREFIX}/${slug}/content.bbcode`,
       content_md: `${CDN_BASE}/${ARTICLES_PREFIX}/${slug}/content.md`,
@@ -116,6 +118,7 @@ async function main() {
       description,
       cover: coverUrl,
       date,
+      hosts,
       link: metaLink,
       guid: metaLink,
     });

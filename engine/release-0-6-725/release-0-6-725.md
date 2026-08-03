@@ -7,8 +7,11 @@ cover: assets/cover.jpg
 changes: 'https://github.com/blazium-games/blazium/milestone/1?closed=1'
 deployed: true
 slug: release-0-6-725
+hosts:
+  - name: IndieDB
+    url: >-
+      https://www.indiedb.com/engines/blazium-engine/news/blazium-game-engine-release-06725
 ---
-
 # Blazium Engine Release 0.6.725
 
 Blazium Engine 0.6.725 is one of the biggest updates to the engine so far, with *479 commits*

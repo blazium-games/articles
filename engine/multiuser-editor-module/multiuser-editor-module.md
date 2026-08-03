@@ -6,8 +6,11 @@ description: >-
 cover: assets/cover.jpg
 deployed: true
 slug: multiuser-editor-module
+hosts:
+  - name: IndieDB
+    url: >-
+      https://www.indiedb.com/engines/blazium-engine/news/multiuser-editor-module
 ---
-
 # Introducing the Multiuser Editor Module
 
 ![](assets/cover.jpg)

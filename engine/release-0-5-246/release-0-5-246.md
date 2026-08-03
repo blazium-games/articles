@@ -8,8 +8,10 @@ changes: >-
   https://github.com/blazium-games/blazium/commits/blazium-dev/?since=2025-05-04&until=2026-04-01
 deployed: true
 slug: release-0-5-246
+hosts:
+  - name: IndieDB
+    url: 'https://www.indiedb.com/engines/blazium-engine/news/blazium-release-05246'
 ---
-
 # Blazium Engine Release 0.5.246
 
 This marks the **last release based on Godot 4.3** and will serve as

@@ -6,8 +6,10 @@ description: >-
 cover: assets/cover.jpg
 deployed: true
 slug: new-enet-module
+hosts:
+  - name: IndieDB
+    url: 'https://www.indiedb.com/engines/blazium-engine/features/new-enet-module'
 ---
-
 # Introducing the New ENet Module
 
 ![](assets/enet_client_code.jpg)
