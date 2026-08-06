@@ -10,6 +10,7 @@ cover: assets/cover.jpg
 deployed: true
 date: 2025-09-04
 slug: new-colorbutton-node
+author: sshiiden
 hosts:
   - name: IndieDB
     url: >-

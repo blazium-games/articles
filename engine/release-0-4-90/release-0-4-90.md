@@ -12,6 +12,7 @@ changes: >-
 deployed: true
 date: 2025-04-01
 slug: release-0-4-90
+author: sshiiden
 hosts:
   - name: IndieDB
     url: >-

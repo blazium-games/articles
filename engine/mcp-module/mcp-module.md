@@ -7,6 +7,7 @@ cover: assets/cover.jpg
 deployed: true
 date: 2026-06-29
 slug: mcp-module
+author: Bioblaze Payne
 hosts:
   - name: IndieDB
     url: 'https://www.indiedb.com/engines/blazium-engine/news/mcp-module'

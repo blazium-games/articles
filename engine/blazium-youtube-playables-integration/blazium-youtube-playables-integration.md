@@ -8,6 +8,7 @@ cover: assets/cover.jpg
 deployed: true
 date: 2025-09-05
 slug: blazium-youtube-playables-integration
+author: sshiiden
 hosts:
   - name: IndieDB
     url: >-

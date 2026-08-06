@@ -7,6 +7,7 @@ cover: assets/cover.jpg
 deployed: true
 date: 2026-06-27
 slug: gdk-module
+author: TheKingScott
 hosts:
   - name: IndieDB
     url: 'https://www.indiedb.com/engines/blazium-engine/news/gdk-module'

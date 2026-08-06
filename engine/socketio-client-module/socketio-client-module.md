@@ -7,6 +7,7 @@ cover: assets/cover.jpg
 deployed: true
 date: 2026-04-02
 slug: socketio-client-module
+author: sshiiden
 hosts:
   - name: IndieDB
     url: >-

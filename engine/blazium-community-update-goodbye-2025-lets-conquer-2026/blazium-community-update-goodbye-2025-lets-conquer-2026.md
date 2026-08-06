@@ -9,6 +9,7 @@ cover: assets/cover.jpg
 deployed: true
 date: 2025-12-31
 slug: blazium-community-update-goodbye-2025-lets-conquer-2026
+author: Bioblaze Payne
 hosts:
   - name: IndieDB
     url: >-

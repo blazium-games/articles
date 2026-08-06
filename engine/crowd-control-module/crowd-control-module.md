@@ -7,6 +7,7 @@ cover: assets/cover.jpg
 date: 2026-04-02
 deployed: true
 slug: crowd-control-module
+author: sshiiden
 hosts:
   - name: IndieDB
     url: >-

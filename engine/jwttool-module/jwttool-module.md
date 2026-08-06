@@ -7,6 +7,7 @@ cover: assets/cover.jpg
 deployed: true
 date: 2026-05-02
 slug: jwttool-module
+author: Bioblaze Payne
 hosts:
   - name: IndieDB
     url: 'https://www.indiedb.com/engines/blazium-engine/features/jwttool-module'

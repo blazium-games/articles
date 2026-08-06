@@ -6,6 +6,7 @@ description: >-
 cover: assets/cover.jpg
 deployed: false
 slug: luau-module
+author: sshiiden
 ---
 
 # Introducing the Luau Module

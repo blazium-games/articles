@@ -10,6 +10,7 @@ cover: assets/cover.png
 deployed: true
 date: 2025-09-05
 slug: blazium-deploy-games-on-discord
+author: dragos
 hosts:
   - name: IndieDB
     url: >-

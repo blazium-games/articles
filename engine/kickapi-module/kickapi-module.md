@@ -7,6 +7,7 @@ cover: assets/cover.jpg
 deployed: true
 date: 2026-05-02
 slug: kickapi-module
+author: sshiiden
 hosts:
   - name: IndieDB
     url: 'https://www.indiedb.com/engines/blazium-engine/features/kickapi-module'

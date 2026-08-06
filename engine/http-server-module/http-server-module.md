@@ -7,6 +7,7 @@ cover: assets/cover.jpg
 deployed: true
 date: 2026-04-02
 slug: http-server-module
+author: sshiiden
 hosts:
   - name: IndieDB
     url: 'https://www.indiedb.com/engines/blazium-engine/features/http-server-module'

@@ -6,6 +6,7 @@ description: >-
 cover: assets/cover.jpg
 deployed: false
 slug: town-sdk-module
+author: Bioblaze Payne
 ---
 
 # Introducing the Town SDK Module

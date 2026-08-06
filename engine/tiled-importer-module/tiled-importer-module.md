@@ -7,6 +7,7 @@ cover: assets/cover.jpg
 deployed: true
 date: 2026-06-28
 slug: tiled-importer-module
+author: Bioblaze Payne
 hosts:
   - name: IndieDB
     url: 'https://www.indiedb.com/engines/blazium-engine/news/tiled-importer-module'

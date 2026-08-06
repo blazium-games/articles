@@ -7,6 +7,7 @@ cover: assets/cover.jpg
 deployed: true
 date: 2026-06-30
 slug: discord-social-sdk-module
+author: sshiiden
 hosts:
   - name: IndieDB
     url: >-

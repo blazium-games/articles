@@ -103,6 +103,7 @@ async function main() {
       cover: coverUrl,
       date,
       changes: asString(article.frontmatter.changes) || null,
+      author: asString(article.frontmatter.author) || null,
       hosts,
       link: metaLink,
       content_bbcode: `${CDN_BASE}/${ARTICLES_PREFIX}/${slug}/content.bbcode`,

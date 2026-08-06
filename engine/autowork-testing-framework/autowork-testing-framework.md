@@ -7,6 +7,7 @@ cover: assets/cover.jpg
 deployed: true
 date: 2026-05-02
 slug: autowork-testing-framework
+author: sshiiden
 hosts:
   - name: IndieDB
     url: >-

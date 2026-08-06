@@ -9,6 +9,7 @@ changes: >-
 deployed: true
 date: 2025-05-03
 slug: release-0-5-246
+author: sshiiden
 hosts:
   - name: IndieDB
     url: 'https://www.indiedb.com/engines/blazium-engine/news/blazium-release-05246'
