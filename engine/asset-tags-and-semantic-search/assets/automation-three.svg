@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img">
+  <title>Three ways to drive the editor</title>
+  <desc>Tests, CLI JSON, and MCP agents. Do not collapse them.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a7aa8"/>
+    </marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#e070ff"/>
+    </marker>
+  </defs>
+  <rect width="1920" height="1080" fill="#121018"/>
+  <text x="64" y="72" fill="#e070ff" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" letter-spacing="2">BLAZIUM</text>
+  <text x="64" y="118" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="42" font-weight="700">Three ways to drive the editor</text>
+  <rect x="100" y="320" width="520" height="560" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="360.0" y="588.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="28" font-weight="600" text-anchor="middle">Autowork</text>
+<text x="360.0" y="622.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">AutoworkTest  ·  headless CI
+asserts, spies, signals</text>  <rect x="700" y="320" width="520" height="560" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="960.0" y="588.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="28" font-weight="600" text-anchor="middle">remote_control</text>
+<text x="960.0" y="622.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">127.0.0.1 JSON  /v1/*
+blazium-cli remote</text>  <rect x="1300" y="320" width="520" height="560" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="1560.0" y="588.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="28" font-weight="600" text-anchor="middle">JustAMCP</text>
+<text x="1560.0" y="622.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">MCP server in the editor
+scene / script / docs tools</text><text x="360" y="620" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18" text-anchor="middle">prove the project</text><text x="960" y="620" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18" text-anchor="middle">script the editor</text><text x="1560" y="620" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18" text-anchor="middle">agent the editor</text><text x="80" y="1040" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="start">OS blazium://open is CLI/Hub. MCP blazium://scene is JustAMCP. Same scheme, two owners.</text></svg>

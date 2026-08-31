@@ -1,0 +1,4 @@
+{"version":2,"width":100,"height":28,"timestamp":1788212113,"title":"blazium-cli install-path","env":{"SHELL":"powershell","TERM":"xterm-256color"}}
+[0.15,"o","$ blazium-cli install-path\r\n"]
+[0.4,"o","install_path: C:\\Users\\Bioblaze\\AppData\\Local\\Blazium\\Editors\r\n"]
+[0.612,"o","$ "]

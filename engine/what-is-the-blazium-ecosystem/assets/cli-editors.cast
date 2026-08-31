@@ -1,0 +1,12 @@
+{"version":2,"width":100,"height":28,"timestamp":1788212113,"title":"blazium-cli editors","env":{"SHELL":"powershell","TERM":"xterm-256color"}}
+[0.15,"o","$ blazium-cli editors\r\n"]
+[0.4,"o","default_editor: \r\n"]
+[0.412,"o","default_editor_channel: release\r\n"]
+[0.424,"o","default_editor_version: latest\r\n"]
+[0.436,"o","editors: [map[arch:x86_64 channel:release default:true dir:C:\\Users\\Bioblaze\\App"]
+[0.448,"o","Data\\Local\\Blazium\\Editors\\0.6.725 mono:false path:C:\\Users\\Bioblaze\\AppData\\Loc"]
+[0.46,"o","al\\Blazium\\Editors\\0.6.725\\BlaziumEditor_v0.6.725_windows.64bit.exe platform:win"]
+[0.472,"o","dows version:0.6.725]]\r\n"]
+[0.484,"o","install_path: C:\\Users\\Bioblaze\\AppData\\Local\\Blazium\\Editors\r\n"]
+[0.496,"o","resolved_default: 0.6.725\r\n"]
+[0.708,"o","$ "]
