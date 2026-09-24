@@ -10,7 +10,7 @@ cover: assets/cover.jpg
 deployed: true
 date: 2025-09-04
 slug: new-colorbutton-node
-author: WhalesState
+author: "WhalesState"
 hosts:
   - name: IndieDB
     url: >-
