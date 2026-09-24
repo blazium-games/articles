@@ -7,7 +7,7 @@ cover: assets/cover.jpg
 changes: 'https://github.com/blazium-games/blazium/milestone/1?closed=1'
 deployed: true
 date: 2026-07-01
-slug: release-0-6-725
+slug: blazium-game-engine-release-06725
 author: sshiiden
 hosts:
   - name: IndieDB
@@ -38,7 +38,7 @@ Learn more about the MCP module in the
 [dedicated article](https://www.indiedb.com/engines/blazium-engine/news/mcp-module).
 
 ### Autowork Module
-![](../autowork-testing-framework/assets/autowork.jpg)
+![](../autowork-testing-framework-module/assets/autowork.jpg)
 
 **Autowork** is a built-in testing framework for game and application development.
 It provides an easy way to automate gameplay testing, validation workflows, regression testing, and project verification directly inside the engine.

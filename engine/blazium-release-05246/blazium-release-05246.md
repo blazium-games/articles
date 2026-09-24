@@ -8,7 +8,7 @@ changes: >-
   https://github.com/blazium-games/blazium/commits/blazium-dev/?since=2025-05-04&until=2026-04-01
 deployed: true
 date: 2025-05-03
-slug: release-0-5-246
+slug: blazium-release-05246
 author: sshiiden
 hosts:
   - name: IndieDB
