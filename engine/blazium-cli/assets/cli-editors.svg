@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1648" height="336" viewBox="0 0 1648 336" role="img">
+<svg xmlns="http://www.w3.org/2000/svg" width="1648" height="248" viewBox="0 0 1648 248" role="img">
   <title>blazium-cli editors</title>
-  <rect width="1648" height="336" rx="10" fill="#121018"/>
+  <rect width="1648" height="248" rx="10" fill="#121018"/>
   <text x="24" y="28" fill="#e070ff" font-family="Consolas, Cascadia Mono, monospace" font-size="13">asciinema</text>
   <text x="24" y="64" fill="#e070ff" font-family="Consolas, Cascadia Mono, monospace" font-size="16">$ blazium-cli editors</text>
   <text x="24" y="86" fill="#f4eefc" font-family="Consolas, Cascadia Mono, monospace" font-size="16">default_editor: </text>

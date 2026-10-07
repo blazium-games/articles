@@ -1,8 +1,6 @@
 ---
 title: "The Blazium Games Ecosystem"
-description: >-
-  How Blazium Games tools and services work together to give developers
-  everything they need to create, build, ship, and maintain games and applications.
+description: "How the engine, Hub, CLI, CDN, toolchain, and crash reporter fit together on the blazium-dev line."
 cover: "assets/cover.png"
 slug: "the-blazium-games-ecosystem"
 deployed: false
@@ -10,144 +8,65 @@ date: "2026-09-08"
 author: "sshiiden"
 hosts: []
 ---
+
 # The Blazium Games Ecosystem
 
-Since Project Hangman, Blazium Games has built a connected set of tools and services.
-The goal is simple: give developers everything required to create, build, ship, and
-maintain games without fragmented third-party stacks or restrictive platforms.
+Project Hangman needed more than an editor binary. It needed a place to download a known build, a way to open that project again next week, a crash dump that did not upload itself, and a web build Discord would actually load. Those needs turned into separate tools. They share a CDN and a CLI. They do not share one repo.
 
-What started as a community-driven Godot fork is now a full ecosystem: the engine,
-automated build and distribution pipelines, a CDN, internal build tracking, crash
-reporting, editor management tools, specialized export toolchains, reusable GitHub
-Actions, multiplayer services, and a storefront at blazium.games.
+This article is the map of why each piece exists. The file-level walk is [The Blazium engine stack](../what-is-the-blazium-ecosystem/what-is-the-blazium-ecosystem.md). The engine line this describes is `blazium-dev` (Godot 4.3 compatible, product version `0.6.x`). Hub's own executable is built from `blazium_4.8`. Do not treat those as one branch.
 
-These pieces form a practical loop. Develop in the engine, pull exact builds via
-CLI or Hub, automate with Actions and CI/CD, target modern and specialized
-platforms, add multiplayer through the services, and close the quality loop with
-crash reporting.
+## The engine
 
-## Blazium Game Engine
+[Blazium](https://github.com/blazium-games/blazium) is the MIT editor and the export templates. Modules that matter for the rest of this page live in that tree on `blazium-dev`: crash reporter, analytics, remote control, JustAMCP, GIF, asset tags, Steam, Discord, the data-format modules, and Interactive DVD. If a class is not registered there, this article does not call it a feature.
 
-Blazium Engine is a free, open-source, multi-platform 2D and 3D game engine forked from
-Godot in late 2024. It keeps full compatibility with Godot projects and GDExtensions
-while adding quality-of-life improvements, extra modules, platform integrations, and
-services built for shipping games.
+## Crash reporter and analytics
 
-It receives frequent updates and ships 38 custom modules (SQLite, RCON, IRC,
-crash reporting, platform integrations, MCP/AI tooling, and more). Everything else in
-the ecosystem exists to serve this engine.
+We wanted dumps before we wanted charts. The crash reporter writes a Breakpad minidump and a JSON file, then a sidecar asks before anything is uploaded. Analytics is a second module on the same app id and build id, and it stays silent until consent is given. Hub CI bakes both at `https://crash.blazium.app` (`/v1/reports` and `/v1/events`).
 
-Learn more at [blazium.app](https://blazium.app).
+[Crash Reporter & Analytics](../crash-reporter-and-analytics/crash-reporter-and-analytics.md).
 
-## The Engine CI/CD
+## Hub and CLI
 
-Blazium runs a full CI/CD pipeline that produces nightlies and official releases.
-Builds are published to GitHub Releases, the public CDN, and itch.io. The pipeline
-handles editor binaries, export templates, multi-platform packaging, signing, and
-version tracking.
+Hub is the window. The CLI is the program that installs editors, registers projects, and opens them. The Hub installer is also how most people get the CLI: one setup, three binaries (Hub, `blazium-cli`, crash sidecar). CI uses the CLI without Hub.
 
-Open-source reusable actions and scripts power much of the automation so both the
-core team and external developers can reproduce the same flow. Once a build finishes,
-the pipeline notifies Cerebro and publishes artifacts to the CDN.
+Deep links (`blazium://`) are registered to the CLI. Hub listens on loopback port 39218. The token file is `hub_remote.json`. Leave it alone.
 
-Browse the CI/CD at [blazium-games/cicd](https://github.com/blazium-games/cicd).
+[Blazium Hub & Blazium CLI](../blazium-hub-and-cli/blazium-hub-and-cli.md).
 
-## Our CDN
+## CDN
 
-cdn.blazium.app serves static files for the ecosystem: JSON metadata, editor binaries,
-export templates, tools, and other artifacts. It is the primary distribution point used
-by the CLI, GitHub Actions, the website, and internal tooling. Versioned nightlies and
-releases, checksums, and efficient delivery let developers fetch exact builds quickly.
+`cdn.blazium.app` is the public bucket: editor zips, export templates, `cli.json`, Hub installers, the crash sidecar catalog, the toolchain catalog, and Hub News. Release CI fills it. Hub only reads that host. The CLI will also ask `blazium.app` for template metadata when the CDN manifests are missing.
 
-## Cerebro
+Templates follow the Blazium version (`0.6.x`), not a Godot `4.3.2.stable` directory. [Export templates and the CDN](../export-templates-and-cdn/export-templates-and-cdn.md).
 
-Cerebro is the internal system that securely tracks editor build data and binaries:
-state, metadata, checksums, deployment type (nightly vs release), platforms, and
-production status. CI/CD notifies it at key stages, providing a controlled source of
-truth separate from the public CDN.
+## Toolchain
 
-## Crash Reporter
+Console compilers are GPL or otherwise not MIT. They live in [blazium-toolchain](https://github.com/blazium-games/blazium-toolchain), which the editor spawns for Interactive DVD and which you run yourself for PS1, PS2, and N64. `ps3` and `ps4` exit 2. They are not a hidden shipping target.
 
-The Crash Reporter works with the engine module to provide stability insights. Built
-around Breakpad-style dump collection, it supports in-engine reporting, sidecar upload,
-or both. Features include configurable upload behavior, metadata enrichment,
-consent-aware sidecars, and example ingest servers (with optional Discord webhooks).
+Web export is not part of that CLI. It is the editor preset `Web`, and optionally the Docker template when Discord needs `/.proxy/`. Windows screensaver and live wallpaper are engine export platforms (`screensaver`, `livewallpaper`), also not the toolchain.
 
-It closes the feedback loop so crashes in the engine, tools, or shipped games can be
-diagnosed and fixed quickly.
-
-Learn more in the
-[dedicated article](../crash-reporter-and-analytics/crash-reporter-and-analytics.md).
-
-## Blazium Hub & Blazium CLI
-
-Blazium Hub manages editor versions and templates in a consistent local layout. The
-CLI is its command-line counterpart and the foundation for both local workflows and
-GitHub Actions. It downloads the engine, templates, and tools from the CDN, supports
-pinning exact versions or nightlies, and makes installation scriptable.
-
-Learn more in the [dedicated article](../blazium-hub-and-cli/blazium-hub-and-cli.md).
-
-## Blazium Toolchain
-
-The Toolchain adds specialized and retro export pipelines beyond standard desktop,
-mobile, and web targets. Current support includes:
-
-- PlayStation 1 (PS1)
-- PlayStation 2 (PS2)
-- Nintendo 64 (N64)
-- Interactive DVD authoring
-- Windows Screensaver exports
-
-PS3 and PS4 support are planned. These targets use the same editor, project format,
-and CI/CD flow as regular exports.
-
-Learn more in the [dedicated article](../blazium-toolchain/blazium-toolchain.md).
+[The Blazium Toolchain](../the-blazium-toolchain/the-blazium-toolchain.md).
 
 ## GitHub Actions
 
-Reusable Actions lower the barrier to automated builds and deployments:
+Four repositories, not a folder in this articles checkout:
 
-- [**setup-blazium-engine**](https://github.com/blazium-games/setup-blazium-engine):
-Installs a chosen engine version (and optionally templates) via CLI and CDN.
-- [**setup-blazium-cli**](https://github.com/blazium-games/setup-blazium-cli):
-Installs the CLI itself.
-- [**export-blazium-game**](https://github.com/blazium-games/export-blazium-game):
-Builds, signs, and prepares games for multiple platforms.
-- [**deploy-blazium-game**](https://github.com/blazium-games/deploy-blazium-game):
-Pushes builds to a store.
+- [setup-blazium-cli](https://github.com/blazium-games/setup-blazium-cli) at `v0.2.1`
+- [setup-blazium-engine](https://github.com/blazium-games/setup-blazium-engine) at `v0.3.0`
+- [export-blazium-game](https://github.com/blazium-games/export-blazium-game) at `v0.3.2`
+- [deploy-blazium-game](https://github.com/blazium-games/deploy-blazium-game) at `v0.0.2`
 
-These power the team’s own pipelines and let any project achieve consistent
-multi-platform exports with minimal custom scripting.
+Pin the tag you intend to run. `version: latest` on setup-engine tracks the nightly channel. [GitHub Actions for Blazium](../github-actions-for-blazium/github-actions-for-blazium.md).
 
-## Blazium Services
+## What we did not ship as engine nodes
 
-Blazium Services is a lightweight suite of backend services for multiplayer and online
-features, born from the needs of Project Hangman and designed to scale toward larger
-experiences.
+Lobby, scripted lobby, login, and master-server clients show up as GDScript templates under `modules/gdscript/editor/script_templates/`. The classes they extend are not registered in `blazium-dev`. Networking you can compile is ENet (`ENetServer`, `ENetClient`), the WebRTC signaling client (`SignalClient`, `WebRTCEnetSession` in `games_enet_webrtc`), and Discord's own `create_or_join_lobby`. The draft that describes the missing nodes is left as it was. Do not treat it as the API.
 
-Available and planned capabilities include:
+## Where to start
 
-- Lobby / matchmaking (with Luau scripting)
-- Login / authentication (including social providers)
-- Master server (tracking dedicated game servers)
-- Leaderboards
-- Additional networking, VoIP, and game-server services
+Install Hub if you are making a game on a desktop. Install the CLI if you are writing a script. Export `Web` and use the Docker template if the game has to run inside Discord. Read the crash article before you turn uploads on.
 
-Services appear as engine nodes with a free hosted endpoint so developers can start
-immediately. They emphasize low resource usage and cross-platform reach (desktop,
-mobile, web, consoles).
-
-Documentation is at [docs.blazium.app](https://docs.blazium.app).
-
-# Conclusion
-
-Develop in the engine, add multiplayer through the services, automate builds and
-distribution with the CLI, Hub, CI/CD and Actions, target modern and specialized
-platforms via the toolchain, and improve stability with the crash reporter.
-
-The same infrastructure that ships the team’s games is available to every developer.
-Start today at [blazium.app](https://blazium.app) or join the [Discord](https://blazium.app/chat).
+[blazium.app](https://blazium.app) · [Discord](https://blazium.app/chat)
 
 ---
 

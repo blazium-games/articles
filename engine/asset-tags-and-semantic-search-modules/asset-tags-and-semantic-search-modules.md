@@ -1,8 +1,6 @@
 ---
 title: "Asset Tags & Semantic Search Modules"
-description: >-
-    A modern, agent-friendly asset management layer that remains fully under the
-    control of the engine and the project’s own tag dictionary.
+description: "Two editor modules that keep a project's tag dictionary in the project, and let your AI agents search it."
 cover: "assets/cover.png"
 slug: "asset-tags-and-semantic-search-modules"
 deployed: false
@@ -10,59 +8,50 @@ date: "2026-09-03"
 author: "sshiiden"
 hosts: []
 ---
+
 # Asset Tags & Semantic Search
 
-Introducing two closely related modules, **Asset Tags** and **Semantic Search**, that give projects a
-structured way to organize and find assets.
+A project collects files faster than a folder tree can explain them. We added two editor modules so the explanation lives next to the files, in a format the editor and your AI agents can both read.
 
-Asset Tags provides a hierarchical tagging system, while Semantic Search builds a fast index over
-those tags so both exact and similarity-based queries are quick and reliable.
-The editor’s MCP server exposes both modules to AI agents, letting them organize, search, and
-maintain assets without leaving the editor.
+**Asset Tags** is the dictionary and the per-file assignments. **Semantic Search** is an index over those tags. Exact lookup and similarity lookup share that index. The editor's MCP server (JustAMCP) exposes both modules so your AI agents can organize, search, and maintain assets without leaving the editor.
 
-## The Asset Tags Module
+Both exist on `blazium-dev`. Both build only when the target is the editor. Semantic Search refuses to build without Asset Tags.
 
-The Asset Tags module maintains a project-wide tag dictionary and tracks which assets use which tags.
+## What you edit
 
-<!-- image showing the tag manager window -->
+The filesystem dock context menu tags the resource under the cursor. The Project Settings "Asset Tags" tab is the dictionary: names, comments, renames. Storage is plain JSON in the project, not a hidden editor cache:
 
-Tags are hierarchical (for example `character/enemy/boss`), and matching is parent-aware:
-searching for `character` also returns assets tagged more specifically under that path.
-Optional strict modes can reject unknown tags or invalid paths, and a configurable list of
-file extensions determines what can be tagged.
+- `res://.blazium/asset_tags/tags.json`
+- `res://.blazium/asset_tags/asset_index.json`
 
-<!-- image showing a tag search in the filesystem dock -->
+Commit those files if the tags are part of the project. `blazium/assettags/strict_tags` rejects a name that is not in the dictionary. `blazium/assettags/strict_paths` rejects a path that is not on disk. `blazium/assettags/taggable_extensions` is the extension list the dock will offer.
 
-Data is stored in sidecar files with recovery mechanisms for corrupted dictionaries, and batch operations keep the editor responsive while allowing atomic updates across multiple assets.
+`AssetTagCoordinator` batches a change so undo works. The classes are editor objects. Gameplay code does not own them. On export, `EditorExportAssetTags` bakes the tags the build needs. The running game does not include the module.
 
-## The Semantic Search Module
+## What search does
 
-Semantic Search builds a lightweight, persistent index over asset tags and metadata.
-The index stays in sync with the Asset Tags registry through rebuilds or incremental updates,
-ensuring both modules remain consistent.
-This design keeps queries fast whether you’re looking for exact matches or similar assets.
+`SemanticAssetIndex` is what JustAMCP calls. The default backend is lexical: tag tokens, no network. Set `blazium/semanticsearch/backend` to `embedding` or `hybrid` when you want a vector. Providers are `hash_vector` (default, local), `ngram`, and `http`. An empty HTTP URL or a failed request falls back to `hash_vector`. Changing the backend or the provider requires an editor restart.
 
-## Integration with the editor MCP
+`scan_filesystem` defaults to false, so the index does not walk the project until you turn that on or an agent asks for a rebuild.
 
-JustAMCP, Blazium’s MCP server, exposes dedicated tool sets for both modules.
-Agents can create and manage tag hierarchies, assign or remove tags from assets, run hierarchical
-or similarity searches, generate unused-tag reports, and rebuild the index.
+## What an agent can call
 
-<!-- image showing the ai chat using the mcp -->
+Your AI agents use the JustAMCP tools, not a private socket:
 
-A ready-made workflow prompt is also available to guide agents through safe, step-by-step tagging.
-Because the tools operate on the same live systems used by the editor UI, any changes an agent makes
-appear immediately in the Asset Tags panel, FileSystem context menus, and active searches.
-Tag updates automatically keep the semantic index consistent, or an explicit rebuild can be
-triggered when needed.
+| Tool | Job |
+|---|---|
+| `blazium_tags_list` | Dictionary |
+| `blazium_tags_set_on_asset` | Assign tags |
+| `blazium_tags_find_assets` | Exact tag |
+| `blazium_tags_search_assets` | Tag query |
+| `semantic_search` / `blazium_semantic_search` | Index query |
+| `blazium_asset_tagging_workflow` | Prompt that walks the steps |
 
-## Next Steps
+`blazium://tags/dictionary` is the MCP resource for the same dictionary. The how-to with settings and limits is [Asset tags and search](../asset-tags-and-semantic-search/asset-tags-and-semantic-search.md). The server those tools sit on is [Drive the editor](../remote-control-and-mcp/remote-control-and-mcp.md).
 
-Both modules are available in the [latest nightly of Blazium](https://blazium.app/download).
+## Why it stays in-engine
 
-Together with JustAMCP, Asset Tags and Semantic Search give projects a modern, agent-friendly
-asset management layer that remains fully under the control of the engine and the project’s
-own tag dictionary.
+A sidecar database would drift from the files the moment someone renames a texture outside the tool. The dictionary is a JSON file beside the assets, the dock writes it, and the agent reads the same file through MCP. That is the whole loop.
 
 ---
 

@@ -9,29 +9,62 @@ author: "Blazium"
 hosts: []
 ---
 
-Import a gif onto a sprite. Record the editor or a game viewport back out to a gif. This module is how Hub News gifs can be captured from inside Blazium.
+Import a gif onto a sprite. Record a viewport, a window, or the screen back out to a gif. `modules/gif` is how those two directions work, including clips you drop into Hub News.
 
 ## Import
 
-Drop a `.gif` into the project. `GIFTexture` plays it. Frame importer exists for sprite sheets (`ResourceImporterGIFFrames`).
+Drop a `.gif` into the project. The importer produces a `GIFTexture`. `ResourceImporterGIFFrames` is the path that turns a gif into frames for a sprite sheet.
 
-<!-- CAPTURE: assets/gif-playback.gif | Editor | GIFTexture on a Sprite2D, animating -->
-<!-- CAPTURE: assets/cover.png | Editor | Sprite playing a gif, output file in the filesystem dock -->
+`GIFTexture` is a `Texture2D`. Each instance keeps its own playhead (`resource_local_to_scene` defaults to true). `play`, `loop`, `current_frame`, and `speed_scale` (on the importer) control playback. `get_frame_count`, `get_frame_delay`, and `get_frame_delay_sec` read one frame. `get_active_texture(frame)` is the composited texture.
+
+```gdscript
+var gif: GIFTexture = load("res://sprites/coin.gif")
+$Sprite2D.texture = gif
+gif.play = true
+gif.loop = true
+```
+
+`GIFTexture.from_sprite_frames(frames, &"default")` builds a gif from an existing SpriteFrames animation. `to_sprite_frames()` goes back. `save_to_path` writes the encoded file.
+
+Canvas and frame caps are `blazium/gif/max_canvas_pixels` (16777216) and `blazium/gif/max_frames` (4096).
 
 ## Record
 
 ```gdscript
-var err := GIFRecorder.record_viewport($Viewport, "user://clip.gif", 4.0, 12)
+var err := GIFRecorder.record_viewport($SubViewport, "user://clip.gif", 4.0, 12)
 if err != OK:
     push_error(err)
 ```
 
-`GIFRecorder` also has `start_viewport`, `start_window`, `start_screen`, `add_frame`, `stop`, `save`. Works in the editor and in exported templates.
+`record_viewport` takes the viewport, the output path, a duration in seconds, and an fps (the C++ default is 12). For a clip you start and stop yourself:
 
-<!-- CAPTURE: assets/gif-record.gif | Editor | Recorder running, file appears in the filesystem -->
+```gdscript
+GIFRecorder.start_viewport($SubViewport, "user://clip.gif")
+# later
+GIFRecorder.stop()
+GIFRecorder.save()
+```
+
+Also `start_window`, `start_screen`, and `add_frame`. `is_recording` and `paused` are the state. `dither`, `fps`, `loop_count`, `max_frames`, and `max_size` are the encode knobs.
+
+A Project Settings hotkey toggles capture when `blazium/gif/capture_hotkey` is not zero. `blazium/gif/capture_source` is Viewport (`0`) or Window (`1`). Files go to `blazium/gif/capture_output_dir` (default `user://`).
+
+This works in the editor and in an exported game. The module is not tools-only.
 
 ## Movie writer
 
-GIF is a movie-writer target (`MovieWriter`). Use it when you want a clip of a running scene without the recorder API.
+`MovieWriterGIF` registers GIF as a movie-writer target. Use it when you want the engine's built-in movie recorder to write a `.gif` without calling `GIFRecorder`. Keep the fps in the 10 to 15 range for a Hub News loop, and keep the clip short. A long full-screen capture will hit `max_frames` or `max_canvas_pixels` and fail the encode.
 
-Record other Hub articles' UI loops at 10–15 fps, under eight seconds, then keep the mp4 master beside the gif.
+Class reference and the why-we-added-it writeup: [GIF Module](../gif-module/gif-module.md). Tests: [gif_module_tests](https://github.com/blazium-games/gif_module_tests).
+
+---
+
+**[Jump into our Discord](https://blazium.app/chat)** for real-time chats, dev support and feedback
+
+Or follow us everywhere else:
+
+- **[GitHub](https://github.com/blazium-games)**
+- **[IndieDB](https://www.indiedb.com/engines/blazium-engine)**
+- **[X / Twitter](https://x.com/BlaziumGames)**
+- **[YouTube](https://www.youtube.com/@blazium)**
+- **[itch.io](https://blaziumengine.itch.io)**

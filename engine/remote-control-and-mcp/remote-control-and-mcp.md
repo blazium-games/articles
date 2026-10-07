@@ -1,6 +1,6 @@
 ---
 title: "Drive the editor: CLI remote and MCP"
-description: "Two doors into one editor. blazium-cli remote is localhost JSON. JustAMCP is MCP for agents. Autowork is how both prove they work."
+description: "Two doors into one editor: blazium-cli Remote is localhost JSON, JustAMCP is MCP for agents, and Autowork is how both prove they work."
 cover: "assets/cover.png"
 slug: "remote-control-and-mcp"
 deployed: false
@@ -15,69 +15,82 @@ Three tools, three jobs. Do not collapse them.
 
 ## remote_control
 
-Localhost JSON HTTP on `/v1/*`. Default bind `127.0.0.1:6507`. Token required. Enable with Project Settings `blazium/remote_control/server_enabled` or `--enable-remote-control`. Port: `--remote-control-port` or `blazium/remote_control/server_port`. Token: `--remote-control-token` or `blazium/remote_control/token`.
+Localhost JSON over HTTP, routes under `/v1/`. Default bind is `127.0.0.1:6508`. Port 6507 is the game JustAMCP default (editor MCP is 6506, and a game port of 0 means editor port + 1). Do not point the CLI at 6507 and expect remote control.
 
-Routes worth knowing:
+Enable with Project Settings `blazium/remote_control/server_enabled` (default `false`) or `--enable-remote-control`. Port: `--remote-control-port` or `blazium/remote_control/server_port`. Token: `--remote-control-token` or `blazium/remote_control/token`. Bind: `blazium/remote_control/bind_address` (default `127.0.0.1`).
+
+`blazium/remote_control/allow_eval` defaults to false. `blazium/remote_control/allow_runtime` defaults to false. `remote eval` does nothing useful until eval is allowed. A token, when set, is `Authorization: Bearer` or the `X-Remote-Control-Token` header.
+
+The class is `RemoteControlServer`. Routes registered in `remote_control_server.cpp`:
 
 | Route | Job |
 |---|---|
 | `GET /v1/health` | Liveness |
 | `GET /v1/status` | Project, pid, instance id |
-| `POST /v1/exec` | Built-in commands (play, pause, snapshot) |
-| `POST /v1/eval` | GDScript or Luau expression |
-| `GET /v1/logs` | Paginated engine log |
+| `POST /v1/instance` | Assign the short instance id |
+| `GET /v1/commands` | What `exec` accepts |
+| `POST /v1/exec` | Built-in commands |
+| `POST /v1/eval` | Expression, if `allow_eval` |
+| `GET /v1/logs` | Engine log |
 
-Play commands: `play_main_scene`, `play_current_scene`, `play_custom_scene`, `pause_playing`, `resume_playing`, `stop_playing`, `play_status`. Snapshots `snapshot_editor` / `snapshot_scene` return PNG as `png_base64`.
-
-<!-- CAPTURE: assets/health-browser.png | Browser | GET http://127.0.0.1:6507/v1/health -->
+Built-in exec names include `play_main_scene`, `play_current_scene`, `stop_playing`, `pause_playing`, `resume_playing`, `play_status`, `snapshot_editor`, `snapshot_scene`, `get_logs`, `debugger_info`, `autowork_run`, and `mcp_status`. Snapshots return a PNG as `png_base64`.
 
 ## CLI is the client
 
 ```text
-blazium-cli remote ping
+blazium-cli remote status --format json
+blazium-cli remote exec ping
 blazium-cli remote eval-gdscript "2 + 2"
-blazium-cli remote snapshot editor -o editor.png
+blazium-cli remote logs --since 0 --limit 200
 blazium-cli remote autowork run --wait
-blazium-cli remote config set enable-mcp-on-load true
 blazium-cli remote doctor
 ```
 
-`open` / `load` start remote_control by default and assign a 6-character instance id after `/v1/health`. Two editors: pass `--instance` or `--project`.
+`open` and `load` start remote control by default (`remote.enable_on_open`) and assign a 6-character instance id after `/v1/health`. One editor: it is selected for you. Two editors: the newest is the default, and you pass `--instance` or `--project` to pick. Env: `BLAZIUM_REMOTE_HOST`, `BLAZIUM_REMOTE_PORT`, `BLAZIUM_REMOTE_TOKEN`.
 
 ![remote --help](assets/cli-remote-help.svg)
 <!-- ASCIINEMA: assets/cli-remote-help.cast | blazium-cli remote --help -->
 
-<!-- ASCIINEMA: assets/cli-remote-ping.cast | blazium-cli remote ping -->
-<!-- CAPTURE: record with asciinema rec while an editor is running -->
-<!-- CAPTURE: assets/cli-snapshot.png | Filesystem | editor.png written by remote snapshot -->
+`blazium-cli remote config set enable-mcp-on-load true` turns JustAMCP on when the CLI loads a project.
 
 ## JustAMCP
 
-Native MCP server in the editor. Streamable HTTP. Tool groups: scene, script, shaders, tilemaps, themes, docs. `JustAMCPRuntime` keeps a port up across scene switches. `blazium-cli remote config set enable-mcp-on-load true` turns it on when CLI loads a project.
+Native MCP server in the editor (`modules/justamcp`). Streamable HTTP on `POST /mcp`, `GET /mcp`, and `DELETE /mcp`, plus the legacy `/sse` and `/message` routes and the OAuth discovery paths. `JustAMCPRuntime` is the object that stays up across scene changes.
+
+Editor settings: `blazium/justamcp/server_enabled`, `blazium/justamcp/server_port` (default **6506**), `blazium/justamcp/project_mcp_dir` (default `res://mcp`). Game export: `blazium/justamcp/export_port` (default **0**, which becomes 6507). CLI: `--enable-mcp`, `--mcp-port`, `--mcp-client-id`, `--mcp-client-secret`.
+
+Tool categories include editor, scene, script, resource, docs, autowork, export, and runtime. Names you will see in tests and guides: `blazium_get_project_info`, `blazium_scene_tree_dump`, `blazium_logs_read`, `docs_list_classes`, `blazium_autowork_run_all_tests`. Asset tags and semantic search are `blazium_tags_*` and `semantic_search` / `blazium_semantic_search`. Prompt `blazium_asset_tagging_workflow` is the tagging walk.
 
 ![JustAMCP settings](assets/mcp-settings.png)
 
 ![MCP prompts / tools](assets/mcp-prompts.png)
-
-<!-- CAPTURE: assets/mcp-agent.gif | Editor + agent | Agent creates a Node2D, scene tree updates. Master mp4 15s. -->
-<!-- CAPTURE: assets/cover.png | Editor + terminal | Replace diagram cover: editor, terminal remote ping, MCP settings -->
 
 ## Two `blazium://` owners
 
 | Owner | Example |
 |---|---|
 | CLI / Hub (OS protocol) | `blazium://open?path=C:\game` |
-| JustAMCP (MCP resource) | `blazium://scene/…`, `blazium://docs/…`, `blazium://tags/…` |
+| JustAMCP (MCP resource) | `blazium://scene/…`, `blazium://docs/…`, `blazium://tags/dictionary` |
 
 ## Autowork
 
-Run the suite in the editor panel, or:
+`Autowork` is the in-engine test node: directories of test scripts, asserts, spies, and a JSON or JUnit dump. Run it from the editor panel, headless, or through remote control:
 
 ```text
 blazium --headless --path . -s run_tests.gd
 blazium-cli remote autowork run --wait
 ```
 
-Hub's own repo runs Autowork in CI. Full write-up belongs with the Autowork module article. This piece only needs: a failing assert in the panel, then the CLI command going green.
+Hub's repo runs that headless entry in CI. Remote control's `autowork_run` and JustAMCP's autowork tools call the same module. A failing assert in the panel and a green CLI run are the same suite.
 
-<!-- CAPTURE: assets/autowork-panel.png | Editor | Autowork pass/fail in the panel -->
+---
+
+**[Jump into our Discord](https://blazium.app/chat)** for real-time chats, dev support and feedback
+
+Or follow us everywhere else:
+
+- **[GitHub](https://github.com/blazium-games)**
+- **[IndieDB](https://www.indiedb.com/engines/blazium-engine)**
+- **[X / Twitter](https://x.com/BlaziumGames)**
+- **[YouTube](https://www.youtube.com/@blazium)**
+- **[itch.io](https://blaziumengine.itch.io)**

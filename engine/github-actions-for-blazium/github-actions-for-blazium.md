@@ -1,6 +1,6 @@
 ---
 title: "GitHub Actions for Blazium"
-description: "setup-blazium-cli, setup-blazium-engine, export-blazium-game, and deploy-blazium-game: install the toolchain in CI and ship a build."
+description: "setup-blazium-cli, setup-blazium-engine, export-blazium-game, and deploy-blazium-game: install the tools in CI and ship a build."
 cover: "assets/cover.png"
 slug: "github-actions-for-blazium"
 deployed: false
@@ -9,18 +9,18 @@ author: "Blazium"
 hosts: []
 ---
 
-Four Actions. They live in this ecosystem checkout under `github_actions/`. CI talks to the CDN through [blazium-cli](../blazium-cli/blazium-cli.md).
+Four Actions. Each one is its own repository under [blazium-games](https://github.com/blazium-games). CI talks to the CDN through [blazium-cli](../blazium-cli/blazium-cli.md).
 
-![setup-cli → setup-engine → export → deploy](assets/github-actions-flow.png)
+![setup-cli, then setup-engine, then export, then deploy](assets/github-actions-flow.png)
 
-| Action | Folder | Job |
+| Action | Repository | Job |
 |---|---|---|
-| Setup Blazium CLI | `github_actions/setup-blazium-cli` | Download CLI from `cdn.blazium.app/cli/cli.json` onto PATH |
-| Setup Blazium Engine | `github_actions/setup-blazium-engine` | `blazium-cli install`, optional `--templates` |
-| Export Blazium Game | `github_actions/export-blazium-game` | Export a project. `platform-name` must match an editor export preset |
-| Deploy Blazium Game | `github_actions/deploy-blazium-game` | Push an already-exported artifact (Docker, itch, Play Store, iOS/macOS stores, Steam) |
+| Setup Blazium CLI | `blazium-games/setup-blazium-cli` | Download CLI from `cdn.blazium.app/cli/cli.json` and put it on `PATH` |
+| Setup Blazium Engine | `blazium-games/setup-blazium-engine` | `blazium-cli install`, optional templates |
+| Export Blazium Game | `blazium-games/export-blazium-game` | Export a project. `platform-name` must match an editor export preset |
+| Deploy Blazium Game | `blazium-games/deploy-blazium-game` | Push an already-exported artifact |
 
-Published names: `blazium-games/setup-blazium-cli@v0.2.1`, `blazium-games/setup-blazium-engine@v0.3.0`. Export/deploy reusable workflows are still referenced from the older `blazium-engine/` org in some READMEs. Pin what you actually run.
+Current tags: `setup-blazium-cli@v0.2.1`, `setup-blazium-engine@v0.3.0` (that composite action calls `setup-blazium-cli@v0.2.1`), `export-blazium-game@v0.3.2`, `deploy-blazium-game@v0.0.2`. Use those tags, or a newer one you have read. Older README examples still say `blazium-engine/export-blazium-game@master`. That org name is not the repository you should pin.
 
 ![blazium-cli --help](assets/cli-help.svg)
 <!-- ASCIINEMA: assets/cli-help.cast | blazium-cli --help -->
@@ -40,55 +40,69 @@ jobs:
           version: latest-release
           download_template: true
       - name: Autowork
-        run: Blazium --headless --path . -s run_tests.gd
-      - uses: blazium-engine/export-blazium-game@master
+        run: "${BLAZIUM_EDITOR} --headless --path . -s run_tests.gd"
+      - uses: blazium-games/export-blazium-game@v0.3.2
         with:
           blazium-version: latest-release
           game-name: MyGame
           platform-name: Linux x86_64
 ```
 
-`setup-blazium-engine` calls `setup-blazium-cli` for you.
+`setup-blazium-engine` calls `setup-blazium-cli` for you. After a successful install it exports `BLAZIUM_EDITOR`, `BLAZIUM_INSTALLED_VERSION`, and `BLAZIUM_TEMPLATE`.
 
-## Version pins
+## Version input
+
+`setup-blazium-engine` `version` (default `latest`):
 
 | Input | Meaning |
 |---|---|
 | `0.6.725` | That release |
-| `latest-release` | Current release channel |
-| `nightly` / `latest` / `latest-nightly` | Nightly channel |
+| `latest-release` | Highest version on the release channel |
+| `nightly`, `latest`, `latest-nightly` | Nightly channel. `latest` tracks nightly |
 | `0.6.751-nightly` | That nightly |
-| `latest-0.6` | Highest 0.6.x across nightly + release |
-| `lts` | LTS alias |
+| `latest-0.6` | Highest 0.6.x across nightly and release |
+| `latest-release-0.6` | Highest 0.6.x on release |
+| `lts` | LTS alias handled by the CLI |
 
-`latest` on setup-engine tracks **nightly**. If you wanted a release, say `latest-release`. Same trap as [export templates](../export-templates-and-cdn/export-templates-and-cdn.md): Blazium `0.6.x`, not Godot `4.3.2`.
+If you wanted a release and you wrote `latest`, you get a nightly. Same version trap as [export templates](../export-templates-and-cdn/export-templates-and-cdn.md): Blazium `0.6.x`, not Godot `4.3.2`.
 
-CLI-only:
+Other inputs: `download_template` (default `false`), `download_mono`, `platform`, `arch`, `use-cache`, `cli-version`. The cache key includes the resolved version, platform, arch, and whether Mono was requested.
+
+CLI only:
 
 ```yml
 - uses: blazium-games/setup-blazium-cli@v0.2.1
-- run: blazium-cli install 0.6.725 --templates --json
+- run: blazium-cli install 0.6.725 --templates --json --quiet
 ```
 
-Empty `version` on setup-cli uses `latest` from `cli.json`.
+Empty `version` on setup-cli uses `.latest` from `cli.json`. The action verifies SHA-256 when the manifest has one. Host arch is preferred. It falls back to `x86_64` when the CDN has no build for the runner arch.
 
 ## Export
 
-`platform-name` must match the export preset name in the editor (examples: `Linux x86_64`, `Windows Desktop x86_64`, `Web`, `Android`, `macOS`, `iOS`). The action rewrites `export_presets.cfg`. Signing secrets are optional until you export Apple or Android store builds. Steam: `store-name: steam` plus `steam-app-id`.
+`platform-name` must match the export preset name in the editor. Examples from the engine: `Web` (`EditorExportPlatformWeb.get_name()`), plus the desktop preset names in your `export_presets.cfg` (`Linux x86_64`, `Windows Desktop x86_64`, and the rest). The action rewrites `export_presets.cfg`. Apple and Android signing secrets stay empty until you export a store build. Steam uses `store-name: steam` plus `steam-app-id`.
 
 ## Deploy
 
-Runs on an artifact from export. Targets documented in `github_actions/deploy-blazium-game/README.md`: Docker registry, itch.io, Play Store, iOS App Store, macOS App Store, Steam. Do not paste secrets into the article. Name the kinds: Apple certs, Android keystore, butler credentials, Docker token, Steam.
+Deploy runs on an artifact from export. Targets in the deploy README: Docker registry, itch.io, Play Store, iOS App Store, macOS App Store, Steam. Steam and itch.io reusable workflows in that repo are marked deprecated. The replacement is `blazium-cli deploy steam` and `blazium-cli deploy itch`. Docker, Play, iOS, and macOS workflows in the repo are unchanged.
+
+Do not paste secrets into the workflow file in a way that lands in the log. The kinds are Apple certificates, an Android keystore, a butler API key, a Docker token, and Steam publisher credentials.
 
 ## Autowork in CI
 
 ```text
-Blazium --headless --path . -s run_tests.gd
+"$BLAZIUM_EDITOR" --headless --path . -s run_tests.gd
 ```
 
-Or, if an editor is up with remote_control: `blazium-cli remote autowork run --wait`. See [Drive the editor](../remote-control-and-mcp/remote-control-and-mcp.md).
+Or, if an editor is already up with remote control: `blazium-cli remote autowork run --wait`. See [Drive the editor](../remote-control-and-mcp/remote-control-and-mcp.md).
 
-<!-- CAPTURE: assets/cover.png | GitHub | Green Actions run, export job -->
-<!-- CAPTURE: assets/workflow-yml.png | GitHub | Workflow file in the GitHub UI (YAML is also fenced above) -->
-<!-- CAPTURE: assets/setup-cli-log.png | GitHub | setup-blazium-cli step log -->
-<!-- CAPTURE: assets/export-artifacts.png | GitHub | Uploaded zip / apk / web artifacts -->
+---
+
+**[Jump into our Discord](https://blazium.app/chat)** for real-time chats, dev support and feedback
+
+Or follow us everywhere else:
+
+- **[GitHub](https://github.com/blazium-games)**
+- **[IndieDB](https://www.indiedb.com/engines/blazium-engine)**
+- **[X / Twitter](https://x.com/BlaziumGames)**
+- **[YouTube](https://www.youtube.com/@blazium)**
+- **[itch.io](https://blaziumengine.itch.io)**

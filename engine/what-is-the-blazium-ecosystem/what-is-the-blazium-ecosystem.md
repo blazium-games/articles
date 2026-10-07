@@ -1,6 +1,6 @@
 ---
 title: "The Blazium engine stack"
-description: "How website, Hub, CLI, CDN, editor, and crash reports fit together, from download to a running project."
+description: "How the website, Hub, CLI, CDN, editor, and crash reports fit together, from download to a running project."
 cover: "assets/cover.png"
 slug: "what-is-the-blazium-ecosystem"
 deployed: false
@@ -9,9 +9,9 @@ author: "Blazium"
 hosts: []
 ---
 
-You install Hub. Hub asks CLI to fetch an editor from the CDN. The editor is the engine. The News tab in Hub is this articles repo.
+You install Hub. Hub asks the CLI to fetch an editor from the CDN. The editor is the engine. The News tab in Hub is this articles repo, once an article is marked deployed and published.
 
-That is the whole stack. Everything else hangs off those four pieces.
+That is the stack people touch. Everything else is a module inside the editor, or a separate repo the CLI and the editor know how to call.
 
 ## The map
 
@@ -19,37 +19,34 @@ That is the whole stack. Everything else hangs off those four pieces.
 
 | Box | Job |
 |---|---|
-| blazium.app | Download pages, docs, changelog |
-| cdn.blazium.app | Editor builds, export templates, CLI, Hub installers, crash sidecar, Hub News |
-| Hub | Desktop launcher: Projects, Editors, News, Settings |
-| CLI | The binary Hub shells. Also the OS handler for `blazium://` |
-| Editor | Blazium 0.6.x. Speaks `remote_control` so CLI can talk to it |
+| [blazium.app](https://blazium.app) | Download pages, docs, changelog |
+| cdn.blazium.app | Editor builds, export templates, CLI, Hub installers, crash sidecar, toolchain catalog, Hub News |
+| Hub | Desktop launcher: Projects, Editors, News, Settings. Shells the CLI |
+| CLI | Installs editors, registers projects, handles `blazium://` |
+| Editor | Blazium `0.6.x` on the `blazium-dev` line (Godot 4.3 compatible). Speaks remote control so the CLI can talk to it |
 | Crash sidecar | Shows the dump. Uploads only after you confirm |
-| Cerebro | Internal. CI publishes catalogs here. Hub never calls it at runtime |
+| Cerebro | Internal. Release CI publishes catalogs. Hub never calls it. The CLI can, for template metadata, via `BLAZIUM_CEREBRO_URL` |
+
+There is a second engine line, `blazium_4.8`. Hub's own executable is built from that branch. The editors you install from the CDN are whatever channel you picked. This article stays on what `blazium-dev` and the tool repos actually contain.
 
 ## Two version numbers
 
 ![Godot compatibility line 4.3.2 vs Blazium product line 0.6.x](assets/dual-version.png)
 
-Godot compatibility is `4.3.2` stable. The product you download is Blazium `0.6.x` (current release: `0.6.725`). Export templates install under the Blazium version folder, not `4.3.2.stable`. Mixing those two numbers is the usual "templates missing" failure.
+Godot compatibility for `blazium-dev` is 4.3.2. The product you download is Blazium `0.6.x`. A recorded CLI session on one machine showed default editor `0.6.725` under `C:\Users\Bioblaze\AppData\Local\Blazium\Editors`. Export templates install under the Blazium version, not `4.3.2.stable`. Mixing those folders is the usual "templates missing" failure.
 
 ## The walk
 
-1. Get Hub from [blazium.app](https://blazium.app/download) or the installer on `/dev-tools`. Windows is Inno (machine-wide). Linux is a `.deb`.
+1. Get Hub from the [dev-tools download page](https://blazium.app/dev-tools/download?tool=hub). Windows is Inno, machine-wide, admin. Linux is a `.deb`. The installer also lays down `blazium-cli` and `crash_reporter`.
 2. Hub opens with four tabs.
 
 ![Hub tabs: Projects, Editors, News, Settings](assets/hub-tabs.png)
 
-<!-- CAPTURE: assets/blazium-app-home.png | Website | blazium.app home or download tab -->
-<!-- CAPTURE: assets/hub-annotated.png | Hub | Live window with the four tabs labeled -->
+3. Editors tab. Channel `release`, `prerelease`, or `nightly`. Install. The CLI downloads from `cdn.blazium.app` into `{install-path}/{channel}/{version}`.
+4. Projects tab. Add a `project.godot`, or scan a folder. Open runs `blazium-cli open`.
+5. The editor starts with remote control on port **6508** (unless you turned `enable-on-open` off), so `blazium-cli remote` can reach it.
 
-3. Editors tab. Channel `release` or `nightly`. Install. CLI downloads from `cdn.blazium.app` into `%LOCALAPPDATA%\Blazium\Editors\{version}` (Windows).
-4. Projects tab. Add a `project.godot`, or Scan a folder. Open.
-5. The editor starts with `remote_control` enabled so `blazium-cli remote` can reach it.
-
-<!-- CAPTURE: assets/first-run.gif | Hub | 20-30s: Hub open, install an editor, open a project. Master as mp4, publish gif. -->
-
-Replay the CLI side of that walk locally:
+Replay the CLI side locally:
 
 ```text
 asciinema play assets/cli-editors.cast
@@ -58,25 +55,27 @@ asciinema play assets/cli-editors.cast
 ![blazium-cli editors, recorded with asciinema](assets/cli-editors.svg)
 <!-- ASCIINEMA: assets/cli-editors.cast | blazium-cli editors -->
 
-## The other pieces, one sentence each
+## The other pieces
 
-- **Crash sidecar.** The engine writes a minidump. A small UI asks you. Nothing leaves the machine until Send. See [Crash reports](../crash-reporter/crash-reporter.md).
-- **Blazium Services.** `LobbyClient`, `ScriptedLobbyClient`, `LoginClient`, `MasterServerClient` talk HTTP/WebSocket to hosted (or self-hosted) services. See [Blazium Services](../blazium-services/blazium-services.md).
-- **CLI remote and MCP.** Localhost JSON for scripts. Model Context Protocol for agents. Autowork is how both prove they work. See [Drive the editor](../remote-control-and-mcp/remote-control-and-mcp.md).
-- **Toolchain.** A GPLv3 sidecar the editor spawns for PS1 and Interactive DVD. Never merged into `blazium.git`. See [Console toolchain](../blazium-toolchain/blazium-toolchain.md).
+- **Crash sidecar.** The engine writes a minidump and a JSON file. A small UI asks you. Nothing leaves the machine until Send. Editor HTTP upload is not implemented. See [Crash reports](../crash-reporter/crash-reporter.md).
+- **Analytics.** Off until consent is given. Same app id and build id as crash reports. See [Opt-in analytics](../analytics-opt-in/analytics-opt-in.md).
+- **CLI remote and MCP.** Localhost JSON for scripts on port 6508. JustAMCP for agents on port 6506. Autowork is the test runner both can start. See [Drive the editor](../remote-control-and-mcp/remote-control-and-mcp.md).
+- **Toolchain.** A GPL-3.0 CLI. The editor spawns it for Interactive DVD (`export/inter_dvd/toolchain`). PS1, PS2, and N64 are terminal commands in that same binary. Compilers are not in `blazium.git`. See [Console toolchain](../blazium-toolchain/blazium-toolchain.md).
+- **Web.** A normal editor preset named `Web`, plus the [Docker template](../docker-web-export/docker-web-export.md) if you need Discord `.proxy` paths. Web is not a toolchain target.
+- **Multiplayer that compiles on `blazium-dev`.** `ENetServer` / `ENetClient`, WebRTC signaling (`SignalClient`, `WebRTCEnetSession`), and `Discord.create_or_join_lobby`. `LobbyClient`, `LoginClient`, and `MasterServerClient` are not registered classes in this tree. Script templates with those names are still in the editor template folder. They do not run.
 
 ## Two meanings of `blazium://`
 
 | Who | Example | Job |
 |---|---|---|
-| OS / CLI | `blazium://open?path=…` | Open Hub or a project |
-| JustAMCP | `blazium://scene/…` | MCP resource inside the editor |
+| OS / CLI | `blazium://open?path=` | Open Hub or a project. Hub's remote port is **39218** |
+| JustAMCP | `blazium://scene/…`, `blazium://tags/dictionary` | MCP resource inside the editor |
 
-Same scheme. Two owners. Do not mix them in copy or in tools.
+Same scheme. Two owners.
 
 ## License split
 
-The engine is MIT. `blazium-toolchain` is GPL-3.0-or-later so it can fetch GCC and SDK zips. The editor only spawns that binary.
+The engine is MIT. `blazium-toolchain` is GPL-3.0-or-later so it can fetch GCC and the console SDKs. The editor process stays MIT and only executes that binary. Fetching the SDK into the engine repo would be the thing the split exists to avoid.
 
 ## Next
 
@@ -84,3 +83,15 @@ The engine is MIT. `blazium-toolchain` is GPL-3.0-or-later so it can fetch GCC a
 - [Blazium CLI](../blazium-cli/blazium-cli.md)
 - [Crash reports](../crash-reporter/crash-reporter.md)
 - [Download and dev tools](../download-and-dev-tools/download-and-dev-tools.md)
+
+---
+
+**[Jump into our Discord](https://blazium.app/chat)** for real-time chats, dev support and feedback
+
+Or follow us everywhere else:
+
+- **[GitHub](https://github.com/blazium-games)**
+- **[IndieDB](https://www.indiedb.com/engines/blazium-engine)**
+- **[X / Twitter](https://x.com/BlaziumGames)**
+- **[YouTube](https://www.youtube.com/@blazium)**
+- **[itch.io](https://blaziumengine.itch.io)**

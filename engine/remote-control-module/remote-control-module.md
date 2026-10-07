@@ -1,7 +1,6 @@
 ---
 title: "The Remote Control module"
-description: >-
-    Remote Control lets the CLI and tools talk to a running Blazium editor for status, commands, and logs.
+description: "A local HTTP server so the CLI and other tools can query a running editor without driving the UI."
 cover: "assets/cover.png"
 slug: "remote-control-module"
 deployed: false
@@ -9,63 +8,61 @@ date: "2026-09-03"
 author: "sshiiden"
 hosts: []
 ---
+
 # The Remote Control Module
 
-A new **Remote Control** module has been added to the Blazium Game Engine, allowing external tools to talk to
-a running editor, or when explicitly enabled, a running game.
-It exposes a lightweight local HTTP server that other applications, most notably the 
-[Blazium CLI](../blazium-hub-and-cli/blazium-hub-and-cli.md),
-can use to query status, execute commands, evaluate expressions, inspect logs, and drive editor
-workflows without needing to interact with the UI directly.
+We needed the CLI to open a project and then prove the editor was actually up: health, logs, a screenshot, a test run. Clicking the window does not survive CI, and it does not survive a second machine. The Remote Control module is that socket.
 
-<!-- image showing.. idk -->
+It is `modules/remote_control` on `blazium-dev`. `RemoteControlServer` is a small HTTP server. The usual client is [Blazium CLI](../blazium-hub-and-cli/blazium-hub-and-cli.md) (`blazium-cli remote`). Anything else that can send HTTP to loopback can use the same routes. The server is off until you enable it.
 
-At the centre of the module is **RemoteControlServer**, a singleton that listens on a configurable
-local port (default to `127.0.0.1:6507`).
-Requests can be protected with an optional token.
-The server supports status queries, command execution through a registry of built-in actions,
-expression evaluation (GDScript by default, with optional Luau support),
-log and error retrieval, debugger information, and integration with
-[Autowork](../autowork-testing-framework/autowork-testing-framework.md) jobs.
-Evaluation is disabled by default and blocked from dangerous operations for safety.
+## Why it is local
 
-<!-- image showing remote control project settings -->
+The default bind is `127.0.0.1:6508`. It is not a public API. `blazium/remote_control/bind_address` can be changed, and you should not point it at a LAN address unless you also set a token and you understand that `allow_eval` can run code. `allow_eval` and `allow_runtime` both default to false. Token auth is `Authorization: Bearer <token>` or `X-Remote-Control-Token`.
 
-The module is available in editor builds and in Hub-capable export templates.
-It can be enabled via Project Settings or the command-line flag.
-Additional settings control the port, bind address, authentication token, and whether evaluation is allowed.
+Hub uses the same idea on a different port. Hub listens on **39218** with `hub_remote.json`. That file is not the editor token. Do not mix them.
 
-## Using Remote Control with Blazium CLI
+## Turn it on
 
-[Blazium CLI](../blazium-hub-and-cli/blazium-hub-and-cli.md) provides a convenient `remote`
-command that communicates with any running editor that has the module enabled.
-Typical usage includes:
+Project Settings:
 
-```bash
+| Key | Default |
+|---|---|
+| `blazium/remote_control/server_enabled` | `false` |
+| `blazium/remote_control/server_port` | `6508` |
+| `blazium/remote_control/bind_address` | `127.0.0.1` |
+| `blazium/remote_control/token` | empty |
+| `blazium/remote_control/allow_eval` | `false` |
+| `blazium/remote_control/allow_runtime` | `false` |
+
+Or start the editor with `--enable-remote-control`, `--remote-control-port=<port>`, and `--remote-control-token=<token>`.
+
+`blazium-cli open` and `blazium-cli load` pass those flags for you when `remote.enable_on_open` is true (the default). After `GET /v1/health` succeeds, the CLI `POST`s `/v1/instance` and stores a 6-character id. `blazium-cli run` starts the game and does not enable this server.
+
+## What you can ask
+
+| Route | Use |
+|---|---|
+| `GET /v1/health` | Is the process listening? |
+| `GET /v1/status` | Project, pid, instance id |
+| `GET /v1/commands` | Built-in command names |
+| `POST /v1/exec` | Run one of those commands |
+| `POST /v1/eval` | GDScript or Luau, only if eval is allowed |
+| `GET /v1/logs` | Log lines |
+
+Commands worth knowing: `play_main_scene`, `play_current_scene`, `stop_playing`, `pause_playing`, `play_status`, `snapshot_editor`, `snapshot_scene`, `autowork_run`, `mcp_status`. A snapshot comes back as `png_base64`.
+
+```text
 blazium-cli remote status --format json
-blazium-cli remote instances
-blazium-cli remote list
-blazium-cli remote eval "2 + 2"
-blazium-cli remote eval-lua "1 + 1"
-blazium-cli remote logs --since 0 --limit 200
-blazium-cli remote errors --limit 100
-blazium-cli remote debugger info
+blazium-cli remote exec ping
 blazium-cli remote autowork run --wait
-blazium-cli remote autowork results
-blazium-cli remote --instance AB3K7M status
-blazium-cli remote --project ./MyProject status
-blazium-cli remote config set enable-mcp-on-load true
+blazium-cli remote doctor
 ```
 
-## Documentation & Next Steps
+Two editors at once: `--instance <id>` or `--project <path>`. The newest instance is the default, and the CLI warns you.
 
-The module is available in the [latest nightly of Blazium](https://blazium.app/download)
-and a dedicated tests project is available at
-[remote_control_module_tests](https://github.com/blazium-games/remote_control_module_tests).
+JustAMCP is a second server (port 6506 in the editor) for agent tools. Remote control can report MCP status. It is not the MCP server. The split is written up in [Drive the editor](../remote-control-and-mcp/remote-control-and-mcp.md).
 
-The Remote Control module form a practical bridge between the editor and external tooling,
-making it easier to automate checks, inspect running sessions, and integrate Blazium into
-larger development workflows.
+Tests: [remote_control_module_tests](https://github.com/blazium-games/remote_control_module_tests).
 
 ---
 

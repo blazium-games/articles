@@ -73,10 +73,13 @@ def write_cast(path: Path, command: str, output: str) -> None:
 def write_svg(path: Path, command: str, output: str) -> None:
     lines = [f"$ {command}"] + output.replace("\r", "").splitlines()
     lines = lines[:ROWS]
-    while len(lines) < 8:
-        lines.append("")
+    while lines and lines[-1] == "":
+        lines.pop()
+    # One blank row under the output. Do not force a 12-row canvas:
+    # short commands were rendering as 336px of empty terminal.
+    lines.append("")
     width = 16 * COLS + 48
-    height = 22 * max(len(lines), 12) + 72
+    height = 22 * len(lines) + 72
     parts = [
         f'''<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img">

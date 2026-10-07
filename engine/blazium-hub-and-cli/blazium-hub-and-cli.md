@@ -1,7 +1,6 @@
 ---
 title: "Blazium Hub & Blazium CLI"
-description: >-
-    Easy Blazium Engine versions and projects managment with Blazium Hub and Blazium CLI.
+description: "Why Hub and the CLI exist, and how the installer makes the CLI the easy path."
 cover: "assets/cover.png"
 slug: "blazium-hub-and-cli"
 deployed: false
@@ -9,64 +8,56 @@ date: "2026-09-03"
 author: "sshiiden"
 hosts: []
 ---
+
 # Blazium Hub & Blazium CLI
 
-We have worked on two complementary tools designed to simplify engine and project management:
-**Blazium Hub**, a graphical application for managing engine versions and projects,
-and **Blazium CLI**, the command-line foundation that powers the Hub and provides additional
-capabilities on its own.
-Together they give developers a consistent way to install, organize, and launch Blazium projects while keeping full control over versions and workflows.
+Engine versions used to be a folder you unpacked yourself, and projects were a path you typed into a shortcut. That breaks as soon as two games need two builds, or a CI job needs the same layout as a laptop.
 
-# Blazium Hub
+We built two tools for that. **Blazium Hub** is the window. **Blazium CLI** is the program that actually installs, registers, and launches. Hub is a front end for the CLI. The CLI also runs on its own, which is what scripts and GitHub Actions call.
 
-Blazium Hub is a desktop application that combines engine version management and project management
-in a single interface.
-You can scan your projects folder and manage each project with per-project engine versioning,
-favourites, and tags.
+## Why the installer bundles the CLI
 
-<!-- image of various projects, some with different versions, tags and from a separate folder -->
+Downloading Hub is the install path that also installs the CLI. The Windows Inno setup and the Linux `.deb` put three binaries down together: Hub, `blazium-cli`, and the crash sidecar. You do not hunt for a second download to get a working `PATH` entry. That is the point of the bundle. People who already live in a terminal can still take the CLI alone from npm (`@blazium-engine/cli`), GitHub Releases, or `https://cdn.blazium.app/cli/cli.json`.
 
-Download and track the engine versions your projects require, including custom local builds.
+Hub: [blazium.app/dev-tools/download?tool=hub](https://blazium.app/dev-tools/download?tool=hub)
 
-<!-- image of the engine version manager view, with a custom local build in the list -->
+CLI only: [blazium.app/dev-tools/download?tool=cli](https://blazium.app/dev-tools/download?tool=cli)
 
-The Hub is built on top of the CLI, so everything you do in the interface is backed by the
-same reliable command-line tooling.
+## What Hub is for
 
-A news page is also included, pulling the latest articles from Blazium Games through the
-official RSS feed so you can stay up to date without leaving the application.
+Hub lists projects and editor builds in one window. Scan a folder for `project.godot`. Favorite pins a card. Remove drops it from the registry. The card has a version control in the scene, and the open button still calls the CLI with the project path only, so the editor you get is the CLI default until you change that default. Custom local binaries show up after `blazium-cli editors add`.
 
-<!-- image of the news -->
+The News tab reads `https://cdn.blazium.app/articles/rss.xml` and renders the article in the window. You do not need a browser to see what shipped.
 
-You can download Blazium Hub at [blazium.app](https://blazium.app/dev-tools/download?tool=hub).
+Everything that changes disk goes through the CLI. Hub and the CLI share `%APPDATA%\blazium\hub.json` (or `~/.config/blazium/hub.json`). If the registry is right in one, it is right in the other.
 
-# Blazium CLI
+The longer walk of tabs, the tray, and port 39218 is in [Blazium Hub](../blazium-hub/blazium-hub.md).
 
-Blazium CLI is the command-line tool responsible for downloading and managing engine versions and
-export templates, as well as registering and managing projects and more.
-Blazium Hub serves as its official graphical front-end.
+## What the CLI is for
 
-<!-- image of --help output -->
+The CLI downloads editor builds and export templates, registers projects, and opens them. Channels are `release`, `prerelease`, and `nightly`. A version lives at `{install-path}/{channel}/{version}`.
 
-The CLI can be controlled through deep links using the `blazium://` scheme.
-For example, `blazium://open?path=` opens a project, and `blazium://install?version=` installs
-a specific editor version.
+```text
+blazium-cli install 0.6.725 --templates
+blazium-cli projects add ./MyProject
+blazium-cli open ./MyProject
+```
 
-<!-- image of deep link example -->
+`open` starts the editor and, by default, turns on remote control so a later `blazium-cli remote` command can reach that window. `run` starts the game instead, and leaves remote control off.
 
-When used with an editor that includes the Remote Control module, the `remote` command allows you
-to trigger selected engine features directly from the terminal.
+Deep links use the `blazium://` scheme. The OS handler is the CLI, not Hub. `blazium://open?path=` opens a project. `blazium://install?version=` installs an editor. `blazium://hub` focuses Hub over the loopback port the installer wrote into `hub_remote.json`. Leave that file alone.
 
-<!-- image of remote --help output -->
+When the editor was built with the Remote Control module, `blazium-cli remote` can query status, run a command, read logs, and kick Autowork without clicking the UI. Details: [The Remote Control module](../remote-control-module/remote-control-module.md).
 
-Read [The Remote Control module](../remote-control-module/remote-control-module.md) article for more info.
+Command reference: [Blazium CLI](../blazium-cli/blazium-cli.md).
 
-You can download Blazium CLI at [blazium.app](https://blazium.app/dev-tools/download?tool=cli).
+## Why both
 
-## Next Steps
+Hub is how a person picks a version and a project. The CLI is how that choice is repeatable: the same flags in a terminal, in a deep link, and in `setup-blazium-engine`. We did not want a launcher that hides a private install format. If Hub can do it, the CLI command is the thing that happened.
 
-For more details on how the Hub, CLI, and other tools work together, see
-[The Blazium Ecosystem](../what-is-the-blazium-ecosystem/what-is-the-blazium-ecosystem.md).
+## Next steps
+
+[The Blazium engine stack](../what-is-the-blazium-ecosystem/what-is-the-blazium-ecosystem.md) is the map of website, CDN, Hub, CLI, and the editor.
 
 ---
 

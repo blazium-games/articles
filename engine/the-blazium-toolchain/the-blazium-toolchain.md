@@ -1,9 +1,6 @@
 ---
 title: "The Blazium Toolchain"
-description: >-
-    A focused CLI that fetches the right compilers and tools so you can build,
-    test, and package projects for PlayStation, PlayStation 2, Nintendo 64,
-    and Interactive DVD without the usual setup headaches.
+description: "Why console compilers live in a GPL sidecar instead of inside the MIT engine."
 cover: "assets/cover.png"
 slug: "the-blazium-toolchain"
 deployed: false
@@ -11,45 +8,48 @@ date: "2026-09-03"
 author: "sshiiden"
 hosts: []
 ---
+
 # Blazium Toolchain
 
-The **Blazium Toolchain** downloads the necessary compilers and supporting
-software into a local cache,
-keeps everything organized, and gives you clear commands to build, run, and package your projects.
-It works side-by-side with the Blazium editor and is designed to stay out of the way once the
-environment is ready.
+Console SDKs are large, GPL or otherwise incompatible with a single MIT tree, and they change on their own schedule. Putting GCC, PSn00bSDK, ps2dev, and libdragon inside `blazium.git` would force that license onto the editor. We did not want that.
 
-## Supported Platforms
+The **Blazium Toolchain** is a separate CLI. It downloads the compilers into a local cache, which keeps everything organized, and it gives you commands to build, run, and package. The engine stays MIT. The CLI is GPL-3.0-or-later. The editor only spawns the binary.
 
-The toolchain currently focuses on four targets:
+Repo: [blazium-games/blazium-toolchain](https://github.com/blazium-games/blazium-toolchain).
 
-- **PlayStation (PS1)**:
-compile, test in an emulator, and create disc images
-- **PlayStation 2 (PS2)**:
-build executables, run them, and produce ISO or CHD files
-- **Nintendo 64 (N64)**:
-produce ready-to-run ROM files with options for resolution, memory, and extras
-- **Interactive DVD**:
-master properly structured discs that include video folders and optional extra files
+## What it actually builds
 
-Each platform offers different setup profiles so you only install what you actually need.
+| Platform | Status on the current CLI |
+|---|---|
+| PlayStation 1 | `ps1 setup`, `build`, `run`, `iso` |
+| PlayStation 2 | `ps2 setup`, `build`, `run`, `iso`, `elf-info`, `chd` |
+| Nintendo 64 | `n64 setup`, `build`, `run`, `rom`. No ISO. Output is `.z64` |
+| Interactive DVD | `interdvd setup`, `ffmpeg`, `iso`. The editor export calls this |
+| PlayStation 3, PlayStation 4 | Reserved. Exit code `2` |
 
-Platform identifiers for **PlayStation 3** and **PlayStation 4** are already reserved,
-so future export and build support can slot in without breaking existing workflows.
+Windows screensaver, live wallpaper, and web export are engine modules (`screensaver`, `livewallpaper`, `platform/web`). They are not this CLI.
 
-## Building and Testing
+## Why the editor spawns it
 
-You can start from included sample projects or point the toolchain at your own source folders.
-Extra files can be overlaid on top of the base project, and the fully resolved source tree can be
-exported for inspection or further editing.
-Once built, programs can be launched in the appropriate emulator, headless for automated checks or
-with a full window when you want to see the result.
-Finished work can be packaged into the correct format, executable, ISO, ROM, or CHD, ready for
-distribution or real hardware.
+Interactive DVD export on `blazium-dev` is `EditorExportPlatformWindowsInterDVD`. Scene encode and ISO mastering run `blazium-toolchain`. The lookup is `export/inter_dvd/toolchain`, then `BLAZIUM_TOOLCHAIN`, then `PATH`. ISO mastering does not call mkisofs or oscdimg. The CLI writes ISO9660 and UDF 1.02 from a folder that already has `VIDEO_TS/`.
 
-## Documentation & Next Steps
+PS1, PS2, and N64 do not have editor export platforms in this tree. You run those commands in a terminal after `setup`. Profiles (`compile`, `dev`, `iso` or `rom`) decide how much to fetch. `--offline` refuses the network. `--prefix` is the cache root so two games do not share a half-upgraded SDK by accident.
 
-<!-- https://github.com/blazium-games/blazium-toolchain -->
+## Install
+
+```text
+npm install -g @blazium-engine/toolchain
+blazium-toolchain --json list
+blazium-toolchain ps1 setup --profile compile
+```
+
+Go 1.23.8 or later if you build from source. Published binaries are Linux and Windows, x86_64 and x86_32. The command list, cache layout, and the exact fetch pins are in [Blazium console toolchain](../blazium-toolchain/blazium-toolchain.md).
+
+## What we left out on purpose
+
+The CLI does not download Sony BIOS images or an N64 PIF ROM. `ps2 run` expects `PCSX2_EXE`. `n64 run` can use Ares (fetched on Windows x64 for the `dev` profile) or `PROJECT64_EXE`. A missing emulator is a skip, not a silent substitute.
+
+That split is the whole design. The MIT editor can call a GPL tool. It does not become one.
 
 ---
 

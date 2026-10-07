@@ -5,77 +5,88 @@ cover: "assets/cover.png"
 slug: "blazium-hub"
 deployed: false
 date: "2026-08-31"
-author: "Blazium"
+author: "Bioblaze Payne"
 hosts: []
 ---
 
-Hub is a 2D Blazium app. It does not download editors. It shells [blazium-cli](../blazium-cli/blazium-cli.md). The installer puts three things on disk: Hub, CLI, and the crash sidecar.
+Blazium Hub is a shell for [blazium-cli](../blazium-cli/blazium-cli.md). The installer puts Hub on disk and, with it, the CLI and the crash sidecar. Hub does not download editors itself. Install, uninstall, open, and project registration all go through the CLI.
 
 ![Install flow: installer, on-disk trio, blazium://, Hub remote, Editors, Open](assets/install-flow.png)
 
-Windows: Inno Setup, machine-wide `{autopf}\Blazium`, admin required. Linux: `.deb`. Both register `blazium://` to CLI, not to Hub.
+Windows uses Inno Setup. Setup is machine-wide under `{autopf}\Blazium` and requires admin. `BlaziumHub.exe` lands in `{autopf}\Blazium\Engine`. `blazium-cli.exe` and `crash_reporter.exe` stay in `{autopf}\Blazium`. Linux is an nfpm `.deb` that registers `x-scheme-handler/blazium`. Both installers point `blazium://` at the CLI, not at Hub.
+
+Hub itself is a 2D project (`gl_compatibility`, low processor mode, no XR). CI builds that binary from the engine branch `blazium_4.8` with a short module allowlist: GDScript, `httpserver`, `remote_control`, `crash_reporter`, and `analytics`, baked as `editor_app_id=blazium-hub`. That is the Hub executable, not the editor you install from the Editors tab.
 
 ## Projects
 
-Add a `project.godot`. Scan a folder. Open runs `blazium-cli open`. Remove unregisters. Favorite pins a card. A version option pins which installed editor opens that project.
+The Hub can import projects by scanning folders for `project.godot`. Opening a project through the Hub is the same as `blazium-cli open`.
 
-<!-- CAPTURE: assets/projects-empty.png | Hub | Empty Projects tab, Add and Scan visible -->
-<!-- CAPTURE: assets/projects-populated.png | Hub | 3+ project cards, one favorited -->
-<!-- CAPTURE: assets/project-card-menu.png | Hub | Card overflow: remove, version pin -->
-<!-- CAPTURE: assets/cover.png | Hub | Replace diagram cover with Projects tab, populated, 16:9 -->
+Once a project has been opened through the Hub it stays on the list. Favorite pins the card (`HubSettings.set_favorite_project`). Remove takes it off the list (`blazium-cli projects remove`). The card layout includes a version `OptionButton`, but `projects_view.gd` opens with `HubCli.open_project_async(path)` and does not pass a version. The editor that launches is the CLI default (latest installed release, unless you set `blazium-cli editors default`).
 
-## Editors
-
-Channel dropdown: `release`, `prerelease`, `nightly`. Installed list comes from CLI (`%APPDATA%\blazium\hub.json`). Available list comes from `cdn.blazium.app` only. Install / Uninstall / Refresh. A log console at the bottom of the tab.
+The shared registry is `%APPDATA%\blazium\hub.json` on Windows and `~/.config/blazium/hub.json` elsewhere. Hub and CLI read the same file.
 
 ![Hub's four tabs](assets/hub-tabs.png)
 
-<!-- CAPTURE: assets/editors-nightly.png | Hub | Editors tab, channel nightly, Installed and Available lists -->
-<!-- CAPTURE: assets/editors-install.gif | Hub | Click Install, log lines, row moves to Installed -->
+## Editors
 
-On this machine the CLI currently reports a default of `0.6.725` under `C:\Users\Bioblaze\AppData\Local\Blazium\Editors`.
+The channel dropdown is `release`, `prerelease`, and `nightly`. The installed list comes from the CLI registry. The available list is fetched from `https://cdn.blazium.app` only (`scripts/gdscript/cdn_client.gd` refuses any other host). Install, Uninstall, and Refresh shell the CLI. A log console at the bottom of the tab shows that output.
+
+Current CLI builds land editors under `{install-path}/{channel}/{version}` (`EditorInstallDir`). In the recorded session the install root is `C:\Users\Bioblaze\AppData\Local\Blazium\Editors` and the resolved default is `0.6.725`. That cast still shows the binary at `Editors\0.6.725` with no channel folder. That is the layout of the CLI that was recorded. New installs insert `release`, `prerelease`, or `nightly` between the root and the version. The root itself is per machine. Change it with `blazium-cli install-path`, or from the Settings tab, which calls the same command.
+
+If you never set a default, the CLI policy is the latest installed editor on the `release` channel.
 
 ## News
 
-Hub fetches `https://cdn.blazium.app/articles/rss.xml`, then `meta.json` and `content.bbcode` for the opened slug. External `hosts` (IndieDB, itch) show as links. BBCode is allowlisted before display. This article, once `deployed: true`, is what News lists.
+Hub fetches `https://cdn.blazium.app/articles/rss.xml`, then `meta.json` and `content.bbcode` for the opened slug. External `hosts` entries (IndieDB, itch.io, and the rest) show up as links. BBCode is allowlisted in `hub_sanitize.gd` before it is drawn. This article shows up in that list only after `deployed` is set to true and the publish workflow has uploaded it.
 
-<!-- CAPTURE: assets/news-list.png | Hub | News list -->
-<!-- CAPTURE: assets/news-open.png | Hub | Opened article, IndieDB host chip visible -->
+Untrusted CDN, News, URI, and CLI JSON all go through that sanitizer: HTTPS only for external opens, size caps on CDN responses, and loopback-only for remote control even if a config file has been edited.
 
 ## Settings
 
-CLI path, editor install path, Windows close-to-tray, Check for updates, log copy/clear.
+Settings is where Hub stores the two paths the CLI needs and a few window behaviors:
 
-<!-- CAPTURE: assets/settings.png | Hub | Settings: CLI path, install path, tray checkbox -->
+- CLI path. Hub will not install or open anything until this points at `blazium-cli`.
+- Editor install path. This is the root passed to `blazium-cli install-path`, not a single editor binary.
+- Close to tray (Windows). Hides the window instead of quitting.
+- Check for updates. A Hub update covers Hub plus the bundled CLI and crash sidecar. Under Program Files, `blazium-cli update apply` may raise a UAC prompt.
+
+The log under Settings can be copied or cleared. It is the same stream as the Editors tab console.
 
 ## Tray (Windows)
 
-Show Hub, recent projects, Quit. Optional hide-on-close.
-
-<!-- CAPTURE: assets/tray.png | Hub | Windows tray menu -->
+The tray menu can show Hub, open a recent project, or quit. Recent projects are the same registry as the Projects tab, so a favorite you set in the window is the one the tray lists first.
 
 ## Deep links
 
-CLI is the OS protocol handler. Hub listens on loopback port **39218**. `hub_remote.json` is a shared token file. Installers create it. Do not hand-edit it.
+The CLI is the OS protocol handler. Hub listens on loopback port **39218**. The installers create `hub_remote.json` (token plus that port). We strongly recommend against editing it. A bad token or a non-loopback host will fail closed: Hub forces the bind host back to loopback.
+
+Load order is the user file (`%APPDATA%\blazium\hub_remote.json` or `~/.config/blazium/hub_remote.json`), then the machine file (`%ProgramData%\blazium\hub_remote.json` or `/etc/blazium/hub_remote.json`). `blazium-cli hub-remote ensure` creates a missing file and does not rotate a token that is already valid.
 
 | URI | Action |
 |---|---|
-| `blazium://hub` | Focus Hub |
-| `blazium://open?path=…` | Open / focus a project |
-| `blazium://load?path=…` | Load with full profile |
-| `blazium://project/<encoded-path>` | Shorthand open |
-| `blazium://install?version=…` | Download that editor |
-| `blazium://register?path=…` | Register a local editor binary |
+| `blazium://hub` | Focus Hub (`show_hub` / `focus_window` over remote control) |
+| `blazium://open?path=` | Open a project in the editor |
+| `blazium://load?path=` | Open a project and print the full profile |
+| `blazium://project/<encoded-path>` | Shorthand for open |
+| `blazium://install?version=` | Download that editor |
+| `blazium://register?path=` | Register a local editor binary |
 
-JustAMCP also uses `blazium://scene/…` inside the editor. That is not this table. See [Drive the editor](../remote-control-and-mcp/remote-control-and-mcp.md).
+`blazium://install/<uuid>`, `blazium://game/<uuid>`, and `blazium://buy/<uuid>` are forwarded to the Games launcher on port **39220** (`launcher_remote.json`). They do not install an editor.
 
-## Updates
-
-A Hub update covers Hub plus the bundled CLI and crash sidecar.
-
-<!-- CAPTURE: assets/hub-update.png | Hub | Update confirmation dialog -->
-<!-- CAPTURE: assets/installer-finish.png | Windows Inno | Finish page: launch Hub / visit blazium.app -->
+JustAMCP also uses `blazium://scene/…` inside the editor. That is a different owner of the same scheme. See [Drive the editor](../remote-control-and-mcp/remote-control-and-mcp.md).
 
 ## Next
 
 [The stack](../what-is-the-blazium-ecosystem/what-is-the-blazium-ecosystem.md) · [CLI](../blazium-cli/blazium-cli.md) · [Crash reports](../crash-reporter/crash-reporter.md)
+
+---
+
+**[Jump into our Discord](https://blazium.app/chat)** for real-time chats, dev support and feedback
+
+Or follow us everywhere else:
+
+- **[GitHub](https://github.com/blazium-games)**
+- **[IndieDB](https://www.indiedb.com/engines/blazium-engine)**
+- **[X / Twitter](https://x.com/BlaziumGames)**
+- **[YouTube](https://www.youtube.com/@blazium)**
+- **[itch.io](https://blaziumengine.itch.io)**
