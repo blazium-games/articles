@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img">
+  <title>Two Discord jobs</title>
+  <desc>Embedded Apps run inside Discord. Social SDK is presence and invites in a shipped game.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a7aa8"/>
+    </marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#e070ff"/>
+    </marker>
+  </defs>
+  <rect width="1920" height="1080" fill="#121018"/>
+  <text x="64" y="72" fill="#e070ff" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" letter-spacing="2">BLAZIUM</text>
+  <text x="64" y="118" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="42" font-weight="700">Two Discord jobs</text>
+  <rect x="100" y="260" width="820" height="680" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="510.0" y="600.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle"></text>
+<text x="510" y="330" fill="#e070ff" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="28" text-anchor="middle">Embedded App</text><text x="510" y="390" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="20" text-anchor="middle">DiscordEmbeddedAppClient</text><text x="510" y="450" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18" text-anchor="middle">socialexports  ·  web export</text><text x="510" y="530" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18" text-anchor="middle">Flag: blazium/discord_embed</text><text x="510" y="590" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18" text-anchor="middle">Docker .proxy  ·  discordsays.com</text><text x="510" y="650" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18" text-anchor="middle">Lobby / Login rewrite URLs</text><text x="510" y="740" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="20" text-anchor="middle">Play in a Discord activity</text>  <rect x="1000" y="260" width="820" height="680" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="1410.0" y="600.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle"></text>
+<text x="1410" y="330" fill="#7a5cff" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="28" text-anchor="middle">Social SDK</text><text x="1410" y="390" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="20" text-anchor="middle">Discord singleton</text><text x="1410" y="450" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18" text-anchor="middle">discord_module  ·  desktop / mobile</text><text x="1410" y="530" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18" text-anchor="middle">Rich presence</text><text x="1410" y="590" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18" text-anchor="middle">Friends, invites, lobbies</text><text x="1410" y="650" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18" text-anchor="middle">Lite presence  or  full social</text><text x="1410" y="740" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="20" text-anchor="middle">Ship a game that talks to Discord</text></svg>

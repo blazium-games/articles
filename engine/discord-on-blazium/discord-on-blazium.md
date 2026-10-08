@@ -1,0 +1,120 @@
+---
+title: "Discord: Embedded Apps and Social SDK"
+description: "Two jobs. Ship a game that runs inside Discord, or ship a desktop game with rich presence and invites."
+cover: "assets/cover.png"
+slug: "discord-on-blazium"
+deployed: false
+date: "2026-08-31"
+author: "Blazium"
+hosts: []
+---
+
+## Why we built it
+
+The Discord embed work started in 2025 while Hangman was in development, so the game could run inside Discord voice chat. The page talks to the Embedded App SDK without a separate install step. `YoutubePlayablesClient` came next, so a web export could call that SDK without each project binding the JavaScript object itself. The desktop `Discord` singleton is a different module. The 0.6.725 notes describe it as the Discord Social SDK for rich presence and social features. `Discord.xml` says `initialize_presence_only` is auth-less RPC, and `initialize` is the OAuth layer.
+
+## What Blazium Games uses it for
+
+Hangman is our example game. The embed work started while that game was in development, so it could run in Discord voice chat. Hangman has since shipped as a Discord app, and also on Steam, Google Play, and the Apple App Store. That set of releases is how export and deploy were checked end to end. It does not say that the Steam, Play, or Apple builds called `DiscordEmbeddedAppClient`.
+
+Blazium Games used the Embedded App client, `YoutubePlayablesClient`, and the desktop `Discord` singleton in-house to validate those three paths. No other title is named as a user of those classes.
+
+## What other projects get
+
+An activity inside the Discord client is the `Web` preset, `blazium/discord_embed/enabled`, a host that answers `/.proxy/`, and `DiscordEmbeddedAppClient`. A desktop build that shows presence and invites uses the `Discord` singleton. The two APIs are not interchangeable.
+
+Pick a job first.
+
+## Status
+
+Both paths are on `blazium-dev`. `DiscordEmbeddedAppClient` is `modules/socialexports` and talks to the Discord Embedded App SDK (the header notes v1.9.0). `Discord` is `modules/discord_module` and talks to the Discord Social SDK. `socialexports` also registers `YoutubePlayablesClient` and `ReactClient`. Those are other host pages. They are not the Social SDK.
+
+`blazium-dev` does not register `LoginClient`. The GDScript template with that name will not run. If the embed needs a session on your server, send the Discord token to an endpoint you run. The web host for an activity is [docker-webbuild-template](https://github.com/blazium-games/docker-webbuild-template): Nginx answers `/.proxy/` and sends COOP/COEP. On the desktop, `Discord.authenticate_with_server` returns a `DiscordAuthResult`. `get_jwt()` is a token your backend minted. `JWTBuilder` (`set_issuer`, `set_subject`, `set_algorithm`, `set_expiration`, `sign`) and `JWT.parse` cover HS256 and RS256.
+
+![Embedded App vs Social SDK](assets/discord-two-jobs.png)
+
+| | Embedded App | Social SDK |
+|---|---|---|
+| Environment | Web, inside Discord | Desktop game |
+| Class | `DiscordEmbeddedAppClient` | `Discord` singleton |
+| Module | `socialexports` | `discord_module` |
+| Export | `Web` preset plus `blazium/discord_embed/enabled` | Ordinary desktop export |
+| Auth helper | `authorize` / `authenticate` on the embed client | `authenticate_with_server` returns a JWT |
+
+`socialexports` also registers `YoutubePlayablesClient` and `ReactClient`. Those are the same "third party page" pattern. They are not the Social SDK.
+
+## Embedded Apps
+
+`DiscordEmbeddedAppClient` bridges the Discord Embedded App SDK (the header notes SDK v1.9.0). It is a `Node`. The page has to actually be running inside Discord. `is_discord_environment()` is the check. `is_ready` is the later gate.
+
+Web export writes `{name}.discord.embed.js` when `blazium/discord_embed/enabled` is set, and substitutes `$BLAZIUM_DISCORD_AUTODETECT` from `blazium/discord_embed/autodetect`. Host the export with [docker-webbuild-template](https://github.com/blazium-games/docker-webbuild-template) so Nginx answers `/.proxy/`. `docker compose up --build` serves `static/` on port 8080. In the Discord developer portal, create the application and set the URL mappings to that host.
+
+![DiscordEmbeddedAppClient in the tree](assets/embedded-nodes.png)
+
+![Discord URL mappings](assets/discord-admin-map.png)
+
+![Login next to the embed node](assets/login-client-discord.png)
+
+```gdscript
+@export var discord: DiscordEmbeddedAppClient
+
+func _ready() -> void:
+    if not discord.is_discord_environment():
+        return
+    var ready: DiscordEmbeddedAppResult = await discord.is_ready().finished
+    if ready.has_error():
+        push_error(ready.error)
+        return
+    var auth: DiscordEmbeddedAppResult = await discord.authorize("code", "", "none", ["identify", "guilds"]).finished
+    if auth.has_error():
+        push_error(auth.error)
+```
+
+Calls return a `DiscordEmbeddedAppResponse` (or a typed result) and you wait on `finished`. Other methods on the same class: `authenticate`, `get_channel`, `get_entitlements`, `get_instance_connected_participants`, `set_activity`, `open_invite_dialog`, `open_share_moment_dialog`, `start_purchase`. I am not listing a fake login-service node here. On `blazium-dev` there is no registered `LoginClient`. If the embed needs a session on your server, send the Discord token to your own endpoint.
+
+![Discord auth](assets/discord-auth.png)
+
+## Social SDK
+
+`Discord` is a singleton for a desktop (or similar) build, backed by the Discord Social SDK.
+
+- `initialize_presence_only` for rich presence.
+- `initialize(client_id)` when you need OAuth: friends, invites, and `authenticate_with_server`.
+- `run_callbacks()` pumps the SDK. After `initialize` it also runs once per frame on its own.
+- `authenticate_with_server(url, access_token, client_id)` returns `DiscordAuthResult`. `get_jwt()` is the token your backend minted. Build that token with `JWTBuilder` (`set_issuer`, `set_subject`, `set_algorithm`, `set_expiration`, `sign`) and check it with `JWT.parse`. The class reference documents HS256 and RS256.
+- `create_or_join_lobby(secret)` is a Discord lobby.
+
+```gdscript
+func _ready() -> void:
+    var err := Discord.initialize(client_id)
+    if err != OK:
+        push_error(err)
+```
+
+`initialize` returns an `Error`. `get_auth_state`, `get_access_token`, and `get_username` are the reads after the player finishes OAuth. `run_callbacks()` is public if you need to pump early. The module also calls it each frame once initialization has started.
+
+## Which one ships
+
+An activity inside the Discord client is the web export, the embed flag, the Docker `.proxy` host, and `DiscordEmbeddedAppClient`. A game installed on a PC that shows Discord presence and invites is `discord_module`. Building both into one desktop binary does not make the embed SDK work, and the embed SDK does not replace `initialize` on desktop.
+
+## Limits
+
+`is_discord_environment()` is false outside Discord. `is_ready()` returns a `DiscordEmbeddedAppResponse`. Wait on `.finished` and read `has_error()` before `authorize`. `authorize` takes the scope list as an `Array`. The sample in the class is `authorize("code", "", "none", ["identify", "guilds"])`.
+
+`Discord.initialize(client_id)` returns an `Error`. `run_callbacks()` is public, and the module also calls it once per frame after initialization has started. `authenticate_with_server` returns `DiscordAuthResult`. `get_jwt()` is the token your backend minted. It is not the Discord access token.
+
+`create_or_join_lobby(secret)` is a Discord SDK lobby. It is not a Blazium matchmaking service.
+
+The embed script is written only when the `Web` preset has `blazium/discord_embed/enabled`. URL mappings are configured in the Discord developer portal, not in the engine. Nginx in the Docker template is what answers `/.proxy/`. The template does not create the Discord application.
+
+---
+
+**[Jump into our Discord](https://blazium.app/chat)** for real-time chats, dev support and feedback
+
+Or follow us everywhere else:
+
+- **[GitHub](https://github.com/blazium-games)**
+- **[IndieDB](https://www.indiedb.com/engines/blazium-engine)**
+- **[X / Twitter](https://x.com/BlaziumGames)**
+- **[YouTube](https://www.youtube.com/@blazium)**
+- **[itch.io](https://blaziumengine.itch.io)**

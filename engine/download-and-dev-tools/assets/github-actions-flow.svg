@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img">
+  <title>GitHub Actions</title>
+  <desc>Four actions in github_actions/. CLI is how CI talks to the CDN.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a7aa8"/>
+    </marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#e070ff"/>
+    </marker>
+  </defs>
+  <rect width="1920" height="1080" fill="#121018"/>
+  <text x="64" y="72" fill="#e070ff" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" letter-spacing="2">BLAZIUM</text>
+  <text x="64" y="118" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="42" font-weight="700">GitHub Actions</text>
+  <rect x="80" y="360" width="400" height="200" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="280.0" y="448.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">setup-blazium-cli</text>
+<text x="280.0" y="482.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">cdn.blazium.app/cli/cli.json</text>  <rect x="540" y="360" width="400" height="200" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="740.0" y="448.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">setup-blazium-engine</text>
+<text x="740.0" y="482.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">blazium-cli install</text>  <rect x="1000" y="360" width="400" height="200" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="1200.0" y="448.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">export-blazium-game</text>
+<text x="1200.0" y="482.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">platform-name preset</text>  <rect x="1460" y="360" width="400" height="200" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="1660.0" y="448.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">deploy-blazium-game</text>
+<text x="1660.0" y="482.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">itch, Steam, stores</text>  <line x1="480" y1="460" x2="540" y2="460" stroke="#8a7aa8" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <line x1="940" y1="460" x2="1000" y2="460" stroke="#8a7aa8" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <line x1="1400" y1="460" x2="1460" y2="460" stroke="#8a7aa8" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="80" y="700" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="start">setup-engine calls setup-cli. Pin versions. latest tracks nightly. Use latest-release for the current release.</text></svg>

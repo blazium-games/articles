@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img">
+  <title>Networking layers</title>
+  <desc>Pick the layer that matches the job.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a7aa8"/>
+    </marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#e070ff"/>
+    </marker>
+  </defs>
+  <rect width="1920" height="1080" fill="#121018"/>
+  <text x="64" y="72" fill="#e070ff" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" letter-spacing="2">BLAZIUM</text>
+  <text x="64" y="118" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="42" font-weight="700">Networking layers</text>
+  <rect x="200" y="260" width="1520" height="120" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="960.0" y="308.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">Lobby / Login / Master Server</text>
+<text x="960.0" y="342.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">HTTP + WebSocket  ·  Blazium Services nodes</text>  <rect x="200" y="400" width="1520" height="120" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="960.0" y="448.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">HTTPServer</text>
+<text x="960.0" y="482.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">In-engine HTTP  ·  remote_control and JustAMCP bind here</text>  <rect x="200" y="540" width="1520" height="120" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="960.0" y="588.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">Socket.IO</text>
+<text x="960.0" y="622.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">SocketIOClient  ·  rooms, reconnect</text>  <rect x="200" y="680" width="1520" height="120" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="960.0" y="728.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">enet_server module</text>
+<text x="960.0" y="762.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">ENetServer / ENetClient  ·  dedicated servers</text>  <rect x="200" y="820" width="1520" height="120" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="960.0" y="868.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">MultiplayerAPI ENet</text>
+<text x="960.0" y="902.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">ENetMultiplayerPeer  ·  Godot high-level multiplayer</text></svg>
