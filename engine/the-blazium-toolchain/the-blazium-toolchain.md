@@ -49,7 +49,11 @@ Go 1.23.8 or later if you build from source. Published binaries are Linux and Wi
 
 The CLI does not download Sony BIOS images or an N64 PIF ROM. `ps2 run` expects `PCSX2_EXE`. `n64 run` can use Ares (fetched on Windows x64 for the `dev` profile) or `PROJECT64_EXE`. A missing emulator is a skip, not a silent substitute.
 
-That split is the whole design. The MIT editor can call a GPL tool. It does not become one.
+`ps3` and `ps4` exit `2`. That is a reserved id, not a milestone with a date. Windows screensaver, live wallpaper, and the `Web` export preset stay in the engine. They are not waiting on this CLI.
+
+Published binaries are Linux and Windows. Interactive DVD mastering works on a macOS build of the CLI. PS1, PS2, and N64 setup and build do not, on that host.
+
+That split is the whole design. The MIT editor can call a GPL tool. It does not become one. The command list is [Blazium console toolchain](../blazium-toolchain/blazium-toolchain.md). Engine docs: [docs.blazium.app](https://docs.blazium.app).
 
 ---
 

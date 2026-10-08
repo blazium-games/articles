@@ -11,6 +11,14 @@ hosts: []
 
 A store ticket or an OAuth code is not a session. Turn it into a JSON Web Token (JWT), then check it on your backend. The engine pieces on `blazium-dev` are `modules/jwttool`, `modules/steam`, `modules/discord_module`, and `modules/xbox_module`.
 
+## Status
+
+JWT, Steam, and Discord desktop auth are in the tree and build with the engine. `xbox_module` is off unless SCons gets `module_xbox_module_enabled=yes`. The stable script surface is `GDK` in the class reference (`initialize`, `shutdown`, `is_available`, `is_initialized`, `dispatch`). C++ getters for users, achievements, stats, leaderboards, store, and presence are in `modules/xbox_module/gdk/gdk.h`. Most of those sub-objects have no class-reference XML yet. Read the header before calling them. `EditorExportPlatformXbox` needs a GDK install on the machine. This is not a retail console-kit guide. Signed-in tests need `LIVE_TESTS=1`.
+
+Steam on `blazium-dev` covers `initialize`, achievements, stats, inventory, workshop items, and `authenticate_with_server`. It does not expose Steam leaderboards. [blazium#807](https://github.com/blazium-games/blazium/issues/807) asks for `ISteamUserStats` leaderboard calls. That issue is open. The methods are not in `modules/steam`.
+
+`LoginClient`, `LobbyClient`, and `MasterServerClient` are not registered. Script templates with those names are still under `modules/gdscript/editor/script_templates/` and will not run. GodotSteam was removed in 0.5.246. The published call list for achievements and inventory is the [Steam module](../steam-module/steam-module.md) article. Engine docs: [docs.blazium.app](https://docs.blazium.app).
+
 ![Identity flow](assets/identity-flow.png)
 
 ![JWT issue, kid, verify, grant or reject](assets/jwt-validate.png)
@@ -75,9 +83,9 @@ The export platform is `EditorExportPlatformXbox`. A GDK install has to be on th
 
 Tests in the module can require `LIVE_TESTS=1` for signed-in Xbox Live calls. Packaging checks run without that.
 
-## What is not in this tree
+## Networking that compiles
 
-`blazium-dev` does not register `LoginClient`, `LobbyClient`, or `MasterServerClient`. Script templates with those names still sit under `modules/gdscript/editor/script_templates/`, and they will not run until a class with that name exists. Matchmaking you can compile today is `ENetServer` / `ENetClient`, `SignalClient` plus `WebRTCEnetSession`, or `Discord.create_or_join_lobby`.
+Matchmaking you can compile on `blazium-dev` is `ENetServer` / `ENetClient`, `SignalClient` plus `WebRTCEnetSession` in `games_enet_webrtc`, or `Discord.create_or_join_lobby`. The missing login and lobby classes are in Status. They are not a later section of this article.
 
 ---
 

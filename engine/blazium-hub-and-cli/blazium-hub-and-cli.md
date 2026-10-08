@@ -25,7 +25,7 @@ CLI only: [blazium.app/dev-tools/download?tool=cli](https://blazium.app/dev-tool
 
 ## What Hub is for
 
-Hub lists projects and editor builds in one window. Scan a folder for `project.godot`. Favorite pins a card. Remove drops it from the registry. The card has a version control in the scene, and the open button still calls the CLI with the project path only, so the editor you get is the CLI default until you change that default. Custom local binaries show up after `blazium-cli editors add`.
+Hub lists projects and editor builds in one window. Scan a folder for `project.godot`. Favorite pins a card. Remove drops it from the registry. The card scene has a version `OptionButton`. The open path is still `HubCli.open_project_async(path)`, so that control is not consulted. There is no Hub issue that schedules wiring it. The editor you get is the CLI default until you run `blazium-cli editors default`. Custom local binaries show up after `blazium-cli editors add`.
 
 The News tab reads `https://cdn.blazium.app/articles/rss.xml` and renders the article in the window. You do not need a browser to see what shipped.
 
@@ -54,6 +54,14 @@ Command reference: [Blazium CLI](../blazium-cli/blazium-cli.md).
 ## Why both
 
 Hub is how a person picks a version and a project. The CLI is how that choice is repeatable: the same flags in a terminal, in a deep link, and in `setup-blazium-engine`. We did not want a launcher that hides a private install format. If Hub can do it, the CLI command is the thing that happened.
+
+## What is actually shipping
+
+Published CLI binaries and the Hub installers are Linux and Windows. A macOS CLI binary is not in the release set. You can still build the CLI on macOS and have it install a macOS editor. There is no official Flatpak. [blazium#428](https://github.com/blazium-games/blazium/issues/428) asks for one.
+
+Hub's window is built from `blazium_4.8`. The editors it downloads are the CDN `0.6.x` builds from the `blazium-dev` line. Remote control inside those editors is port 6508. Hub's own loopback port is 39218. They are not the same server.
+
+Engine docs: [docs.blazium.app](https://docs.blazium.app). CLI repo: [blazium-cli](https://github.com/blazium-games/blazium-cli). Hub repo: [blazium-hub](https://github.com/blazium-games/blazium-hub).
 
 ## Next steps
 

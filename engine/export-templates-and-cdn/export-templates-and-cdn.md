@@ -11,6 +11,14 @@ hosts: []
 
 Blazium on the `blazium-dev` line is a Godot 4.3.2-compatible engine with its own version number, currently in the `0.6.x` range. Export templates are stored under that Blazium version. They are not stored under a `4.3.2.stable` folder. If you copied a Godot template layout by hand, the export dialog will say the templates are missing even though the files are on disk.
 
+## Status
+
+Release CI publishes editor zips and template bundles to `cdn.blazium.app`. Hub, at runtime, only reads that host. The CLI falls through to `GET /api/v1/templates/{deploy_type}/{version}` on `https://blazium.app` when `template_files.json`, `templates.json`, and `details.json` are all missing. Override that API base with `BLAZIUM_CEREBRO_URL`. Hub does not call it.
+
+Mono is a second `.tpz` when you pass `--mono` or `download_mono` in CI. It is not a different version number. Web, Discord embed, and YouTube Playables flags live on the export preset named `Web`, not in a separate template product.
+
+Install templates for the same Blazium version as the editor you are running. `blazium-cli install 0.6.725 --templates` is the command that does both. The editor Export Template Manager keys off the running editor's Blazium version, so a nightly editor will not use a release template directory.
+
 ![Two version numbers](assets/dual-version.png)
 
 ## What a template is

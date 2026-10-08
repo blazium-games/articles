@@ -11,11 +11,23 @@ hosts: []
 
 # The GIF Module
 
-The GIF module (`modules/gif`) is always built. `config.py` returns true for both `can_build` and `is_enabled`. It covers decoding, resource import, runtime playback, encoding, recording, and a MovieWriter.
+A `.gif` file is a texture with a clock, a disposal method, and a loop count. Treating it as a pile of loose frames loses that. `modules/gif` is the native path: decode on import, play as a `Texture2D`, encode again from a viewport or from the engine movie recorder.
 
-At the center is **GIFTexture**, a `Texture2D` that stores the decoded frames and its own playback state. Importing a `.gif` produces a GIFTexture. Assign it to Sprite2D, Sprite3D, TextureRect, a material, or a shader uniform the same way you assign any other texture.
+The module is always built. `config.py` returns true for both `can_build` and `is_enabled`. It is in the editor and in export templates. There is no separate GIF download on the CDN.
 
-`Resource.resource_local_to_scene` is on by default, so each scene instance has its own playhead. Use Make Unique when two nodes in the same scene must play independently. Looping follows `netscape_loop_count` while `loop` is true. Playback starts on load when `autoplay_on_load` is true. `speed_scale` on the importer can run the clip faster, slower, or in reverse.
+The import and record steps, with the settings table, are in [GIF import and recording](../gif-texture-and-recorder/gif-texture-and-recorder.md). This page is what the module is for and what it will not do.
+
+## What landed
+
+| Class | Job |
+|---|---|
+| `GIFTexture` | `Texture2D` with its own playhead. `resource_local_to_scene` defaults to true |
+| `ResourceImporterGIF` | Drop a `.gif` in the filesystem dock |
+| `ResourceImporterGIFFrames` | The same file as frames for a sprite sheet |
+| `GIFRecorder` | Viewport, window, or screen back out to a `.gif` |
+| `MovieWriterGIF` | The engine movie recorder, when the output path ends in `.gif` |
+
+`GIFTexture.from_sprite_frames` and `to_sprite_frames` move a clip between this texture and `SpriteFrames`. `save_to_path` writes the encoded file. Delay on `add_source_frame` is in centiseconds.
 
 ```gdscript
 var gif := GIFTexture.new()
@@ -26,41 +38,27 @@ $Sprite2D.texture = gif
 gif.play = true
 ```
 
-`from_sprite_frames` builds a GIFTexture from a SpriteFrames animation. `to_sprite_frames` goes the other way. `add_source_frame(image, delay_cs, disposal, position)` appends a raw frame. Delay is in centiseconds. `bake_frames` composites disposal, offsets, and transparency into full-canvas frames. `save_to_path` / `save_to_buffer` encode.
-
-Importer options on `ResourceImporterGIF` include `autoplay_on_load`, `bake_compress`, `bake_storage`, `display_mode`, `dither`, `loop_count`, and `speed_scale`. `ResourceImporterGIFFrames` is the sprite-sheet style import.
+Playback follows `netscape_loop_count` while `loop` is true. `autoplay_on_load` and importer `speed_scale` are set at import. Use Make Unique when two nodes in one scene must not share a playhead.
 
 ## Limits
 
-Project Settings, registered in `register_types.cpp`:
+Project Settings cap the decode and the capture:
 
 | Key | Default |
 |---|---|
 | `blazium/gif/max_canvas_pixels` | `16777216` |
 | `blazium/gif/max_frames` | `4096` |
 | `blazium/gif/capture_hotkey` | `0` (off) |
-| `blazium/gif/capture_source` | `0` (Viewport; `1` is Window) |
+| `blazium/gif/capture_source` | `0` Viewport, `1` Window |
 | `blazium/gif/capture_output_dir` | `user://` |
 
-A file over those caps is rejected. The hotkey is read on `process_frame` and toggles `GIFRecorder` when it is not zero.
+A file over those caps is rejected. The hotkey is read on `process_frame` and toggles `GIFRecorder` only when it is not zero. A long full-screen capture hits `max_frames` and the encode fails. This is not a video codec. Hub News loops stay short, around 10 to 15 fps, because that is what the caps and the file size allow.
 
-## MovieWriter
+`MovieWriterGIF` and `GIFRecorder` share the encoder. They are not the same API. The movie writer is the engine's built-in recorder pointed at a `.gif` path. `record_viewport` is the one-shot on a `SubViewport`.
 
-`MovieWriterGIF` is a MovieWriter. Point the engine's movie recorder at a `.gif` path and the writer emits an animated GIF. That path does not use the `GIFRecorder` API. It uses the same encode path the rest of the module uses.
+## Status
 
-## Recording
-
-**GIFRecorder** captures a viewport, the main window, or the screen. `record_viewport(viewport, path, duration_sec, fps)` is the one-shot. The default fps in the C++ signature is 12. Manual control is `start_viewport`, `start_window`, `start_screen`, `add_frame`, `stop`, and `save`. Properties: `dither`, `fps`, `loop_count`, `max_frames`, `max_size`, `paused`.
-
-```gdscript
-var err := GIFRecorder.record_viewport($SubViewport, "user://clip.gif", 4.0, 12)
-if err != OK:
-    push_error(err)
-```
-
-It works in the editor and in exported templates, because the module is not editor-only.
-
-The field-level walk of import versus record is in [GIF import and recording](../gif-texture-and-recorder/gif-texture-and-recorder.md). Tests: [gif_module_tests](https://github.com/blazium-games/gif_module_tests).
+Shipped on `blazium-dev`. No SCons flag turns it off. Tests live in [gif_module_tests](https://github.com/blazium-games/gif_module_tests). Nothing in the module registers a follow-up format (APNG, WebP animation). Those are not a queued target in this tree.
 
 ---
 

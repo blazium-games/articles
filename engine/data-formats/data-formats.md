@@ -11,6 +11,12 @@ hosts: []
 
 One record: a display name, an API URL, a feature flag. Three modules on `blazium-dev` can hold it. Pick the format that matches the job. All three build on every platform. None of them registers Project Settings of its own.
 
+## Status
+
+`modules/dotenv`, `modules/dotini`, and `modules/dotcsv` are in the engine tree and are not behind a SCons opt-in. Godot's `ConfigFile` is still there. `DotIniFile` does not replace it. Translation CSV import from release 0.4.90 is still the translation path. `dotcsv` is any other table.
+
+Tests: [dotenv_module_tests](https://github.com/blazium-games/dotenv_module_tests), [dotini_module_tests](https://github.com/blazium-games/dotini_module_tests), [dotcsv_module_tests](https://github.com/blazium-games/dotcsv_module_tests).
+
 ![.env, .ini, .csv](assets/data-formats.png)
 
 ## `.env` / `ENV`
@@ -90,7 +96,17 @@ Release 0.4.90 already imported CSV for translations. This module is any table a
 | Bulk rows a designer edits | `.csv` via `CSVTable` or the import dock |
 | Crash upload URL, app id | `application/crash_reporter/*`, not `.env` |
 
-Tests and samples: [dotenv_module_tests](https://github.com/blazium-games/dotenv_module_tests), [dotini_module_tests](https://github.com/blazium-games/dotini_module_tests), [dotcsv_module_tests](https://github.com/blazium-games/dotcsv_module_tests).
+## Limits
+
+`ENV` is not a security boundary. The file is plain text, and `push_to_os_env` copies values into the process environment. Do not commit production secrets. `generate_example` writes `.env.example`. Gitignore the real file.
+
+`auto_config` loads `.env`, `.env.local`, `.env.{mode}`, and `.env.{mode}.local`. Mode defaults to `development` in the editor and `production` in an export. A key present in the OS environment wins when `get_prioritize_os_env` is on. `get_env` returns the default you passed when the key is missing. It does not raise.
+
+`DotIniFile.load` replaces the current document unless you pass append. `get_value` interpolates by default. Includes and macros are optional. A short settings file does not need them.
+
+`CSVTable.from_file` and `where_equals` return a `CSVTable`, not an array. Headers, delimiters, and true/false tokens are importer options. They are not Project Settings.
+
+Engine docs: [docs.blazium.app](https://docs.blazium.app). The streaming sample that reads `OBS_URL` from `ENV` is [Streaming tools](../streaming-stack/streaming-stack.md).
 
 ---
 

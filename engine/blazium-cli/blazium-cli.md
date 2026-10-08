@@ -9,7 +9,15 @@ author: "Blazium"
 hosts: []
 ---
 
-`blazium-cli` is the binary [Hub](../blazium-hub/blazium-hub.md) shells, CI calls, and Windows/Linux register for `blazium://`. It installs editors, keeps the project registry, fetches export templates, updates itself, talks to a running editor, and can deploy a finished build to Steam or itch.io. Blazium Games store uploads are a different tool (`chauffeur`), not this binary.
+`blazium-cli` is the binary [Hub](../blazium-hub/blazium-hub.md) shells, CI calls, and Windows/Linux register for `blazium://`. It installs editors, keeps the project registry, fetches export templates, updates itself, talks to a running editor, and can deploy a finished build to Steam or itch.io. Blazium Games store uploads are a different tool (`chauffeur`), not this binary. Store docs are [docs.blazium.games](https://docs.blazium.games). Engine docs are [docs.blazium.app](https://docs.blazium.app).
+
+## Status
+
+The CLI repo is [blazium-cli](https://github.com/blazium-games/blazium-cli). Published binaries are Linux and Windows, x86_64 and x86_32. A CLI you compile on macOS can still install a macOS editor. CI does not publish a macOS CLI binary. npm packages match that set: `@blazium-engine/cli-linux-x64`, `cli-linux-ia32`, `cli-win32-x64`, `cli-win32-ia32`.
+
+There is no official Flatpak. [blazium#428](https://github.com/blazium-games/blazium/issues/428) asks for one. It is an open request, not a download on [blazium.app](https://blazium.app).
+
+`go build` without CI stamps prints `0.0.0-dev` until `data/cliBuild.txt` exists. Go 1.25 or later.
 
 ## Get it
 
@@ -170,9 +178,21 @@ blazium-cli deploy itch push ./build --target user/game:windows
 
 Steam Guard setup is interactive. Do not run `deploy steam guard setup` on a CI runner. itch.io push uses butler as a Go module. It does not download broth.
 
+## Limits
+
+`open` and `load` start the editor. They do not run the game. `run` (alias `play`) starts the game and errors if `application/run/main_scene` is empty. Remote control stays off for `run`. `open` and `load` turn it on unless `remote.enable_on_open` is false.
+
+Current installs use `{install-path}/{channel}/{version}`. The `editors` cast in this article is an older CLI that stored the version directly under `Editors\` with the channel only as a field. Do not copy that path into a script that talks to a current binary.
+
+Two remote editors: the newest is the default, and the CLI warns unless `--quiet`. Pass `--instance` or `--project`.
+
+`deploy steam guard setup` is interactive. Do not run it on a CI runner. itch.io push uses butler as a Go module and does not download broth. `blazium-toolchain steam setup` only pin-fetches steamcmd. It is not this deploy command.
+
+`blazium-cli hub-remote ensure` writes `hub_remote.json` when neither the user file nor the machine file is valid. It does not rotate a valid token.
+
 ## CI
 
-[GitHub Actions for Blazium](../github-actions-for-blazium/github-actions-for-blazium.md) starts with `setup-blazium-cli`, then this binary.
+[GitHub Actions for Blazium](../github-actions-for-blazium/github-actions-for-blazium.md) starts with `setup-blazium-cli`, then this binary. Downloads: [Hub and CLI](https://blazium.app/dev-tools).
 
 ![Install flow](assets/install-flow.png)
 

@@ -11,11 +11,22 @@ hosts: []
 
 Import a gif onto a sprite. Record a viewport, a window, or the screen back out to a gif. `modules/gif` is how those two directions work, including clips you drop into Hub News.
 
-## Import
+## Status
 
-Drop a `.gif` into the project. The importer produces a `GIFTexture`. `ResourceImporterGIFFrames` is the path that turns a gif into frames for a sprite sheet.
+The module is always built on `blazium-dev`. `can_build` and `is_enabled` both return true. It runs in the editor and in exported games. There is no CDN package for it. Why it is one module, and what it will not grow into, is [GIF Module](../gif-module/gif-module.md).
 
-`GIFTexture` is a `Texture2D`. Each instance keeps its own playhead (`resource_local_to_scene` defaults to true). `play`, `loop`, `current_frame`, and `speed_scale` (on the importer) control playback. `get_frame_count`, `get_frame_delay`, and `get_frame_delay_sec` read one frame. `get_active_texture(frame)` is the composited texture.
+## Import a file
+
+1. Copy `coin.gif` into the project.
+2. The dock runs `ResourceImporterGIF` and produces a `GIFTexture`. `ResourceImporterGIFFrames` is the importer that splits the file into frames instead.
+3. Assign the texture to `Sprite2D`, `TextureRect`, or any other `Texture2D` slot.
+4. Set `play` and `loop`. `resource_local_to_scene` defaults to true, so each scene instance has its own playhead. Use Make Unique when two nodes in the same scene must not share one.
+
+Importer options include `autoplay_on_load`, `loop_count`, `speed_scale`, `dither`, `display_mode`, `bake_compress`, and `bake_storage`. Canvas and frame caps are `blazium/gif/max_canvas_pixels` (16777216) and `blazium/gif/max_frames` (4096). Over the cap, import fails.
+
+## Playback
+
+`GIFTexture` is a `Texture2D`. `play`, `loop`, and `current_frame` control the instance. `speed_scale` is an importer option. `get_frame_count`, `get_frame_delay`, and `get_frame_delay_sec` read one frame. `get_active_texture(frame)` is the composited texture. Delay on `add_source_frame` is in centiseconds.
 
 ```gdscript
 var gif: GIFTexture = load("res://sprites/coin.gif")
@@ -25,8 +36,6 @@ gif.loop = true
 ```
 
 `GIFTexture.from_sprite_frames(frames, &"default")` builds a gif from an existing SpriteFrames animation. `to_sprite_frames()` goes back. `save_to_path` writes the encoded file.
-
-Canvas and frame caps are `blazium/gif/max_canvas_pixels` (16777216) and `blazium/gif/max_frames` (4096).
 
 ## Record
 

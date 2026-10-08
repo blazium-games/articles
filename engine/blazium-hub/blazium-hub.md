@@ -17,11 +17,17 @@ Windows uses Inno Setup. Setup is machine-wide under `{autopf}\Blazium` and requ
 
 Hub itself is a 2D project (`gl_compatibility`, low processor mode, no XR). CI builds that binary from the engine branch `blazium_4.8` with a short module allowlist: GDScript, `httpserver`, `remote_control`, `crash_reporter`, and `analytics`, baked as `editor_app_id=blazium-hub`. That is the Hub executable, not the editor you install from the Editors tab.
 
+## Status
+
+Hub the application is [blazium-hub](https://github.com/blazium-games/blazium-hub). Installers exist for Windows (Inno, machine-wide, admin) and Linux (nfpm `.deb`). There is no Hub installer for macOS in that packaging tree. The editors it installs are whatever channel you pick on `cdn.blazium.app`. Those editor builds are the `0.6.x` line. Hub's own executable stays on the `blazium_4.8` CI branch. Those are two different binaries on purpose.
+
+The project card scene includes a version `OptionButton`. `projects_view.gd` opens with `HubCli.open_project_async(path)` and does not read that control. No Hub issue tracks wiring it. Until the script passes a version, Open is `blazium-cli open`, and the editor is the CLI default. Set that default with `blazium-cli editors default` if you need a pin. The button on the card does not do it.
+
 ## Projects
 
 The Hub can import projects by scanning folders for `project.godot`. Opening a project through the Hub is the same as `blazium-cli open`.
 
-Once a project has been opened through the Hub it stays on the list. Favorite pins the card (`HubSettings.set_favorite_project`). Remove takes it off the list (`blazium-cli projects remove`). The card layout includes a version `OptionButton`, but `projects_view.gd` opens with `HubCli.open_project_async(path)` and does not pass a version. The editor that launches is the CLI default (latest installed release, unless you set `blazium-cli editors default`).
+Once a project has been opened through the Hub it stays on the list. Favorite pins the card (`HubSettings.set_favorite_project`). Remove takes it off the list (`blazium-cli projects remove`). Open does not take a version argument. See Status.
 
 The shared registry is `%APPDATA%\blazium\hub.json` on Windows and `~/.config/blazium/hub.json` elsewhere. Hub and CLI read the same file.
 

@@ -11,6 +11,14 @@ hosts: []
 
 Repo: [blazium-games/docker-webbuild-template](https://github.com/blazium-games/docker-webbuild-template). A container plus the web exporter output. Use it for a public web build, a Discord activity, or a YouTube Playable.
 
+## Status
+
+The template serves a folder you already exported. It does not install Blazium and it does not run the export. `docker-compose.yaml` builds `Dockerfile` and publishes `8080:8080`. Nginx serves `/usr/share/nginx/html`. `static/` is that web root. The `.keep` file is not copied into the image.
+
+`make deploy-docker` is the registry path (`scripts/deploy.sh`, reading `.env`). Local preview is `docker compose up --build`. The GitHub workflow that deploys an already-exported artifact is `deploy-docker.yml` in [deploy-blazium-game](https://github.com/blazium-games/deploy-blazium-game). Steam and itch reusable workflows in that repo are deprecated. This Docker workflow is not.
+
+YouTube Playables wants the initial bundle under 15 MiB. That limit is YouTube's, and the template's answer is precompressed WASM plus `gzip_static`. Discord activities need the `/.proxy/` location and the COOP/COEP headers already in `nginx/nginx.conf`. `/ytgame` drops those two headers. Nothing in the template creates the Discord application or the YouTube Playable listing.
+
 The engine preset you export is named `Web` (`EditorExportPlatformWeb.get_name()` returns `"Web"`). Templates and the CDN layout: [Export templates and the CDN](../export-templates-and-cdn/export-templates-and-cdn.md).
 
 ![CDN tree](assets/cdn-tree.png)
@@ -65,7 +73,7 @@ The handshake class is `YoutubePlayablesClient`, same module as the Discord embe
 
 ## What this template does not do
 
-It does not install Blazium, and it does not run the export. It serves a folder you already exported. Login and lobby clients are not part of this image. If a game needs a backend, that is a separate host. The container is the static web build plus the Nginx rules above.
+Login and lobby clients are not part of this image. `blazium-dev` does not register those classes, and this repo does not add them. If a game needs a backend, that is a separate host. The container is the static web build plus the Nginx rules above.
 
 ---
 

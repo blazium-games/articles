@@ -58,9 +58,19 @@ Four repositories, not a folder in this articles checkout:
 
 Pin the tag you intend to run. `version: latest` on setup-engine tracks the nightly channel. [GitHub Actions for Blazium](../github-actions-for-blazium/github-actions-for-blazium.md).
 
-## What we did not ship as engine nodes
+## What is not an engine node on this line
 
-Lobby, scripted lobby, login, and master-server clients show up as GDScript templates under `modules/gdscript/editor/script_templates/`. The classes they extend are not registered in `blazium-dev`. Networking you can compile is ENet (`ENetServer`, `ENetClient`), the WebRTC signaling client (`SignalClient`, `WebRTCEnetSession` in `games_enet_webrtc`), and Discord's own `create_or_join_lobby`. The draft that describes the missing nodes is left as it was. Do not treat it as the API.
+Lobby, scripted lobby, login, and master-server clients show up as GDScript templates under `modules/gdscript/editor/script_templates/`. The classes they extend are not registered on `blazium-dev`. Networking you can compile is ENet (`ENetServer`, `ENetClient`), the WebRTC signaling client (`SignalClient`, `WebRTCEnetSession` in `games_enet_webrtc`), and Discord's own `create_or_join_lobby`. The services draft that names those missing nodes is unchanged. It is not the API.
+
+Other gaps that are explicit in the repos, not dates:
+
+- Crash reporting compiles on Windows and Linux/BSD only.
+- Hub installers and published CLI binaries are Linux and Windows. [blazium#428](https://github.com/blazium-games/blazium/issues/428) asks for a Flatpak. There is no package yet.
+- `ps3` and `ps4` in the toolchain exit `2`.
+- The Steam module has no leaderboard methods. [blazium#807](https://github.com/blazium-games/blazium/issues/807) asks for them.
+- The Hub project card has a version control in the scene. Open does not read it.
+
+Engine docs: [docs.blazium.app](https://docs.blazium.app). Downloads: [blazium.app](https://blazium.app).
 
 ## Where to start
 

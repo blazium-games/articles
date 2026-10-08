@@ -11,6 +11,14 @@ hosts: []
 
 If you make games, install [Hub](../blazium-hub/blazium-hub.md). If you already live in a terminal or CI, install [CLI](../blazium-cli/blazium-cli.md). Both can be found on the [website](https://blazium.app).
 
+## Status
+
+Published Hub installers and CLI binaries are Linux and Windows. Hub packaging in [blazium-hub](https://github.com/blazium-games/blazium-hub) is `packaging/windows` and `packaging/linux`. There is no macOS installer in that tree. A CLI built locally on macOS can still install a macOS editor. CI does not publish that CLI binary.
+
+There is no official Flatpak or Flathub package. [blazium#428](https://github.com/blazium-games/blazium/issues/428) asks for one. It is not a button on the download page.
+
+Hub's own executable is built from engine branch `blazium_4.8`. The editor zips on [blazium.app/download](https://blazium.app/download) are the product line you install, Blazium `0.6.x` (Godot 4.3 compatible, `blazium-dev`). Engine docs: [docs.blazium.app](https://docs.blazium.app). Dev tools index: [blazium.app/dev-tools](https://blazium.app/dev-tools).
+
 ![Stack map](assets/ecosystem-map.png)
 
 ## Hub

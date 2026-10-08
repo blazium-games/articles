@@ -29,6 +29,8 @@ That is the stack people touch. Everything else is a module inside the editor, o
 
 There is a second engine line, `blazium_4.8`. Hub's own executable is built from that branch. The editors you install from the CDN are whatever channel you picked. This article stays on what `blazium-dev` and the tool repos actually contain.
 
+Published Hub and CLI binaries are Linux and Windows. There is no Flatpak in the download set. [blazium#428](https://github.com/blazium-games/blazium/issues/428) is the open request. Engine docs are [docs.blazium.app](https://docs.blazium.app). The store at [blazium.games](https://blazium.games) is a different product. Uploads there go through `chauffeur`, documented at [docs.blazium.games](https://docs.blazium.games), not through `blazium-cli deploy`.
+
 ## Two version numbers
 
 ![Godot compatibility line 4.3.2 vs Blazium product line 0.6.x](assets/dual-version.png)

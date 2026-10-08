@@ -11,6 +11,27 @@ hosts: []
 
 Three tools, three jobs. Do not collapse them.
 
+## Status
+
+`modules/remote_control`, `modules/justamcp`, and Autowork are on `blazium-dev`. Remote control defaults to off in Project Settings and comes up when `blazium-cli open` or `load` passes `--enable-remote-control` (`remote.enable_on_open` defaults to true). JustAMCP stays off until `blazium/justamcp/server_enabled` or `--enable-mcp`. `blazium-cli remote config set enable-mcp-on-load true` is the CLI switch for that.
+
+Neither server is a cloud relay. Default binds are loopback. Remote control is port **6508**. Editor MCP is port **6506**. A game export port of `0` means editor port + 1, which is **6507**. Pointing the CLI at 6507 does not reach remote control.
+
+Why the HTTP server is local, and what eval is allowed to do, is [The Remote Control module](../remote-control-module/remote-control-module.md).
+
+## First check
+
+```text
+blazium-cli open ./MyProject
+blazium-cli remote status --format json
+blazium-cli remote doctor
+blazium-cli remote exec ping
+```
+
+`open` waits until `GET /v1/health` responds, then `POST /v1/instance` stores a 6-character id. `status` prints project, pid, and that id. One editor is selected for you. Two editors: the newest is the default, and the CLI warns unless `--quiet`. Select with `--instance` or `--project`.
+
+`remote eval-gdscript` returns nothing useful until `blazium/remote_control/allow_eval` is true. That setting defaults to false.
+
 ![Autowork, remote_control, JustAMCP](assets/automation-three.png)
 
 ## remote_control

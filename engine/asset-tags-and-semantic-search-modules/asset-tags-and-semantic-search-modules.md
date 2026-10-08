@@ -15,7 +15,9 @@ A project collects files faster than a folder tree can explain them. We added tw
 
 **Asset Tags** is the dictionary and the per-file assignments. **Semantic Search** is an index over those tags. Exact lookup and similarity lookup share that index. The editor's MCP server (JustAMCP) exposes both modules so your AI agents can organize, search, and maintain assets without leaving the editor.
 
-Both exist on `blazium-dev`. Both build only when the target is the editor. Semantic Search refuses to build without Asset Tags.
+Both exist on `blazium-dev`. Both build only when the target is the editor. Semantic Search refuses to build without Asset Tags. A running export does not include either module. `EditorExportAssetTags` bakes what the build needs at export time.
+
+Search that ships today is local unless you point `blazium/semanticsearch/embedding_http_url` at a server you run. The `http` provider falls back to `hash_vector` on failure. There is no Blazium-hosted embedding endpoint in these repos. Changing backend or provider needs an editor restart. `scan_filesystem` defaults to false, so the index does not walk the project until that is on or an agent asks for a rebuild.
 
 ## What you edit
 
@@ -52,6 +54,8 @@ Your AI agents use the JustAMCP tools, not a private socket:
 ## Why it stays in-engine
 
 A sidecar database would drift from the files the moment someone renames a texture outside the tool. The dictionary is a JSON file beside the assets, the dock writes it, and the agent reads the same file through MCP. That is the whole loop.
+
+The running game does not get the modules. Export baking is the only path into a build, and only for tags the export plugin wrote. HTTP embeddings are a URL you supply. There is no hosted index to wait on. The settings, the dock labels, and the failure cases are in [Asset tags and search](../asset-tags-and-semantic-search/asset-tags-and-semantic-search.md). Engine docs: [docs.blazium.app](https://docs.blazium.app).
 
 ---
 

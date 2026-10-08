@@ -11,6 +11,19 @@ hosts: []
 
 Tag a resource once. Search it later from the dock or from an agent. Two editor-only modules: `assettags` and `semanticsearch`. `semanticsearch` does not build unless `assettags` does. Neither module is in an export template. `config.py` limits both to editor builds.
 
+## Status
+
+Both modules are on `blazium-dev` and both build only for the editor. A shipped game does not load them. `EditorExportAssetTags` can bake tag data into the export. That bake is a file the export plugin writes. It is not the editor module running in the player.
+
+Search backends that exist today are `lexical` (default), `embedding`, and `hybrid`. Embedding providers are `hash_vector` (default), `ngram`, and `http`. HTTP uses `blazium/semanticsearch/embedding_http_url` and falls back to `hash_vector` when the request fails. Changing `backend` or `embedding_provider` needs an editor restart. There is no separate hosted embedding service in the Blazium repos. If you set `http`, you bring the URL.
+
+## Use it
+
+1. Project Settings, tab **Asset Tags**. Add a name. The placeholder in the editor is `Environment.Nature.Tree`. Comment, rename, and remove are on that tab. **Cleanup Unused** drops dictionary names nothing references.
+2. FileSystem dock, select the file, context menu **Edit Asset Tags...**. Apply writes the assignment. Multi-select applies only the tags you add or remove, to every selected file. The dialog lists tags shared by all of them.
+3. Commit `res://.blazium/asset_tags/tags.json` and `asset_index.json` if the tags belong to the project. They are not an editor cache.
+4. For an agent, enable JustAMCP and call the tools below. Search goes through `blazium_semantic_search`, not `resources/read`. The server tells the caller to switch.
+
 ![Automation: MCP is one consumer of tags](assets/automation-three.png)
 
 ## Where the data lives
@@ -57,7 +70,11 @@ JustAMCP itself is [Drive the editor](../remote-control-and-mcp/remote-control-a
 
 ## Limits
 
-Editor only. No CLI flag. Tags on a file the export plugin did not bake are not available in the running game. HTTP embeddings are not refreshed on the same frame as the first filesystem scan. A bad embedding dimension comes back empty and the fallback provider is used.
+Editor only. No CLI flag. Tags on a file the export plugin did not bake are not in the running game. HTTP embeddings are not refreshed on the same frame as the first filesystem scan. A bad embedding dimension comes back empty and the fallback provider is used.
+
+`strict_paths` rejects a tag on a path that is not on disk. `strict_tags` rejects a name that is not in the dictionary. Both default to false, so a typo is stored until you turn them on.
+
+The why these files live in the project, instead of a sidecar database, is [Asset Tags & Semantic Search Modules](../asset-tags-and-semantic-search-modules/asset-tags-and-semantic-search-modules.md). Engine docs: [docs.blazium.app](https://docs.blazium.app).
 
 ---
 

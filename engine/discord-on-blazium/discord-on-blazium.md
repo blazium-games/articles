@@ -11,6 +11,12 @@ hosts: []
 
 Pick a job first. The APIs are not interchangeable.
 
+## Status
+
+Both paths are on `blazium-dev`. `DiscordEmbeddedAppClient` is `modules/socialexports` and talks to the Discord Embedded App SDK (the header notes v1.9.0). `Discord` is `modules/discord_module` and talks to the Discord Social SDK. `socialexports` also registers `YoutubePlayablesClient` and `ReactClient`. Those are other host pages. They are not the Social SDK.
+
+`blazium-dev` does not register `LoginClient`. The GDScript template with that name will not run. If the embed needs a session on your server, send the Discord token to an endpoint you run. The web host for an activity is [Docker web export](../docker-web-export/docker-web-export.md). The desktop token exchange is [Identity, Steam, and Xbox](../online-identity-and-stores/online-identity-and-stores.md).
+
 ![Embedded App vs Social SDK](assets/discord-two-jobs.png)
 
 | | Embedded App | Social SDK |
@@ -76,6 +82,16 @@ func _ready() -> void:
 ## Which one ships
 
 An activity inside the Discord client is the web export, the embed flag, the Docker `.proxy` host, and `DiscordEmbeddedAppClient`. A game installed on a PC that shows Discord presence and invites is `discord_module`. Building both into one desktop binary does not make the embed SDK work, and the embed SDK does not replace `initialize` on desktop.
+
+## Limits
+
+`is_discord_environment()` is false outside Discord. `is_ready()` returns a `DiscordEmbeddedAppResponse`. Wait on `.finished` and read `has_error()` before `authorize`. `authorize` takes the scope list as an `Array`. The sample in the class is `authorize("code", "", "none", ["identify", "guilds"])`.
+
+`Discord.initialize(client_id)` returns an `Error`. `run_callbacks()` is public, and the module also calls it once per frame after initialization has started. `authenticate_with_server` returns `DiscordAuthResult`. `get_jwt()` is the token your backend minted. It is not the Discord access token.
+
+`create_or_join_lobby(secret)` is a Discord SDK lobby. It is not a Blazium matchmaking service.
+
+The embed script is written only when the `Web` preset has `blazium/discord_embed/enabled`. URL mappings are configured in the Discord developer portal, not in the engine. Nginx in the Docker template is what answers `/.proxy/`. The template does not create the Discord application.
 
 ---
 

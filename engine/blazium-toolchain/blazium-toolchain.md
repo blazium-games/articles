@@ -11,11 +11,19 @@ hosts: []
 
 The Blazium engine stays under the MIT license. This CLI is GPL-3.0-or-later so it can fetch GCC, PSn00bSDK, pcsx-redux, mkpsxiso, OpenBIOS, the ps2dev toolchain, and libdragon. Those trees are never merged into `blazium.git`. The editor looks up `blazium-toolchain` and runs it. It does not vendor the compilers.
 
+## Status
+
+Repo: [blazium-toolchain](https://github.com/blazium-games/blazium-toolchain). Catalog: `https://cdn.blazium.app/toolchain/toolchain.json`. Published binaries are Linux and Windows. A local macOS build can master Interactive DVD. PS1, PS2, and N64 setup and build exit `2` on that host. CI does not ship a macOS binary.
+
+On `blazium-dev` the editor spawn that exists is Interactive DVD (`modules/inter_dvd`). It runs `blazium-toolchain interdvd iso` and `blazium-toolchain interdvd ffmpeg`. There is no PS1, PS2, or N64 export platform class. Those are terminal commands after `setup`.
+
+`ps3` and `ps4` are reserved names. Commands exit `2`. They are not a shipping target and the CLI does not document a date for them.
+
+The license split, and why the compilers are not in the engine repo, is [The Blazium Toolchain](../the-blazium-toolchain/the-blazium-toolchain.md).
+
 ![MIT engine spawns GPLv3 toolchain](assets/mit-vs-gpl.png)
 
-On `blazium-dev` the spawn path that exists in the editor is Interactive DVD. `modules/inter_dvd` calls `blazium-toolchain interdvd iso` and `blazium-toolchain interdvd ffmpeg`. The preset key is `export/inter_dvd/toolchain`. Empty means `BLAZIUM_TOOLCHAIN`, then `PATH`. Dummy-VOB export works without the CLI. ISO export does not. PS1, PS2, and N64 are commands you run yourself. There is no PS1/PS2/N64 export platform class in the engine tree.
-
-Repo: [blazium-games/blazium-toolchain](https://github.com/blazium-games/blazium-toolchain). Catalog: `https://cdn.blazium.app/toolchain/toolchain.json`.
+The preset key is `export/inter_dvd/toolchain`. Empty means `BLAZIUM_TOOLCHAIN`, then `PATH`. Dummy-VOB export works without the CLI. ISO export does not. PS1, PS2, and N64 are commands you run yourself.
 
 ## Install
 

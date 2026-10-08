@@ -11,6 +11,14 @@ hosts: []
 
 Four Actions. Each one is its own repository under [blazium-games](https://github.com/blazium-games). CI talks to the CDN through [blazium-cli](../blazium-cli/blazium-cli.md).
 
+## Status
+
+Pin the tag you intend to run. Current tags: `setup-blazium-cli@v0.2.1`, `setup-blazium-engine@v0.3.0` (that composite calls `setup-blazium-cli@v0.2.1`), `export-blazium-game@v0.3.2`, `deploy-blazium-game@v0.0.2`. Older README examples still say `blazium-engine/export-blazium-game@master`. That org name is not the repository.
+
+`setup-blazium-engine` input `version: latest` tracks the nightly channel. `latest-release` is the release channel. Writing `latest` when you wanted a release build installs a nightly.
+
+Steam and itch.io reusable workflows in deploy-blazium-game are marked deprecated. The replacement in that README is `blazium-cli deploy steam` and `blazium-cli deploy itch`. Docker, Play, iOS, and macOS workflows in the repo are unchanged. `deploy steam guard setup` is interactive. Do not put it in a job.
+
 ![setup-cli, then setup-engine, then export, then deploy](assets/github-actions-flow.png)
 
 | Action | Repository | Job |
@@ -20,7 +28,7 @@ Four Actions. Each one is its own repository under [blazium-games](https://githu
 | Export Blazium Game | `blazium-games/export-blazium-game` | Export a project. `platform-name` must match an editor export preset |
 | Deploy Blazium Game | `blazium-games/deploy-blazium-game` | Push an already-exported artifact |
 
-Current tags: `setup-blazium-cli@v0.2.1`, `setup-blazium-engine@v0.3.0` (that composite action calls `setup-blazium-cli@v0.2.1`), `export-blazium-game@v0.3.2`, `deploy-blazium-game@v0.0.2`. Use those tags, or a newer one you have read. Older README examples still say `blazium-engine/export-blazium-game@master`. That org name is not the repository you should pin.
+Use the tags in Status, or a newer one you have read. The action list below is the job each repo does.
 
 ![blazium-cli --help](assets/cli-help.svg)
 <!-- ASCIINEMA: assets/cli-help.cast | blazium-cli --help -->
@@ -83,9 +91,11 @@ Empty `version` on setup-cli uses `.latest` from `cli.json`. The action verifies
 
 ## Deploy
 
-Deploy runs on an artifact from export. Targets in the deploy README: Docker registry, itch.io, Play Store, iOS App Store, macOS App Store, Steam. Steam and itch.io reusable workflows in that repo are marked deprecated. The replacement is `blazium-cli deploy steam` and `blazium-cli deploy itch`. Docker, Play, iOS, and macOS workflows in the repo are unchanged.
+Deploy runs on an artifact from export. Targets in the deploy README: Docker registry, itch.io, Play Store, iOS App Store, macOS App Store, Steam. See Status for which of those workflows are deprecated.
 
 Do not paste secrets into the workflow file in a way that lands in the log. The kinds are Apple certificates, an Android keystore, a butler API key, a Docker token, and Steam publisher credentials.
+
+A cache hit on `setup-blazium-engine` is keyed by resolved version, platform, arch, and whether Mono was requested. Changing only the game source does not invalidate that cache. The editor binary is what the cache holds.
 
 ## Autowork in CI
 

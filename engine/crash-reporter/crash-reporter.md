@@ -13,6 +13,23 @@ Confirm-before-upload is the product. The engine writes files. A sidecar UI asks
 
 ![Where the sidecar sits in the stack](assets/ecosystem-map.png)
 
+## Status
+
+`modules/crash_reporter` is on `blazium-dev`. `config.py` builds it on Windows and Linux/BSD only. macOS, web, Android, and iOS do not compile it. That is the current `can_build`, not a listed follow-up platform.
+
+Editor builds do not POST the dump. `is_http_upload_available()` is always false in the editor. A valid `--crash-reporter` path selects sidecar mode. Otherwise the editor writes `{id}.dmp` and `{id}.json` and stops. Export templates are the builds that can HTTP-upload, and `require_user_consent` defaults to true.
+
+The sidecar binary is [blazium_crash_reporter](https://github.com/blazium-games/blazium_crash_reporter). It does not contain Breakpad. Hub ships a copy next to itself, and `blazium-cli update apply --product crash_reporter` can refresh it. The example ingest is [example_crash_reporter_server](https://github.com/blazium-games/example_crash_reporter_server). Sidecar UI screenshots are not in this draft.
+
+## Ship it with a game
+
+1. Compile the export template with `crash_reporter=yes`, or the dump writer is absent.
+2. Place `crash_reporter.exe` (Windows) or `crash_reporter` (Linux) next to the game, or set the path. `reporter_sha256`, when set, is the expected lowercase hex of that binary.
+3. Set `application/crash_reporter/enabled` to true. Default is false.
+4. Set `upload_mode` to `2` (sidecar), `1` (in-engine HTTP), or `3` (both). `0` leaves files on disk. The editor never takes the HTTP path.
+5. Set `application/crash_reporter/endpoint` if the template bake left it empty. Hub's bake is `https://crash.blazium.app/v1/reports`. Your game does not inherit that URL unless you set it or bake it.
+6. Leave `require_user_consent` true unless you have another consent step. The sidecar still asks when it is the process that uploads.
+
 The module is `modules/crash_reporter`. It builds on Windows and Linux/BSD only (`config.py`). macOS, web, Android, and iOS do not compile it. Breakpad is the in-process client (`USE_BREAKPAD` when `crash_reporter=yes` or `editor_crash_reporter=yes`). The module does not ship the out-of-process `crash_generation_server`. The sidecar repo, [blazium_crash_reporter](https://github.com/blazium-games/blazium_crash_reporter), does not contain Breakpad. It only shows the two files and uploads them after you confirm.
 
 ## What the engine writes
@@ -75,7 +92,11 @@ SCons `editor_app_id` defaults to `custom_blazium_engine`. Official CI overrides
 
 Hub's baked endpoint is `https://crash.blazium.app/v1/reports`. The POST is multipart: the minidump plus the metadata JSON. Analytics, when enabled, uses `https://crash.blazium.app/v1/events` on that same host. They are different paths.
 
-Dumps are still written when the endpoint is empty. Upload is the part you turn on. Hub ships the sidecar next to itself, and a Hub update can refresh that binary (`blazium-cli update apply --product crash_reporter`).
+Dumps are still written when the endpoint is empty. Upload is the part you turn on. The crash directory for the editor is `{EditorPaths data}/crashes`, or `BLAZIUM_CRASH_REPORTER_CRASH_DIR`. Templates use `application/crash_reporter/crash_dir_name` (default `crashes`) under the user data directory.
+
+`induce_crash()` only does something when Breakpad was compiled in. Signals on a template that uploads in-engine: `upload_started`, `upload_progress`, `upload_succeeded`, `upload_failed`.
+
+The why these two modules are split, and what official Hub bakes, is [Crash Reporter & Analytics](../crash-reporter-and-analytics/crash-reporter-and-analytics.md). Engine docs: [docs.blazium.app](https://docs.blazium.app).
 
 ---
 

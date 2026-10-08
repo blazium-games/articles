@@ -11,6 +11,14 @@ hosts: []
 
 Chat comes in. The game changes. OBS cuts. Five modules on `blazium-dev` cover that path. They do not share a base class. You wire them.
 
+## Status
+
+`twitchapi`, `kickapi`, `ircclient`, `crowdcontrol`, and `obsclient` are in the engine tree. Each has its own module tests (links at the bottom). There is no scene template that connects all five, and no Blazium service that holds your Twitch, Kick, or OBS tokens. Tokens go in `.env` through the `ENV` singleton. See [ENV, INI, and CSV](../data-formats/data-formats.md).
+
+`CrowdControl` and `OBSClient` are `Object`, not `Node`. Both need `poll()` from `_process`. Crowd Control has no `trigger()` method. The viewer starts the effect on Crowd Control's side. The game answers with `respond_to_effect_instant` or `respond_to_effect_timed`.
+
+Per-service articles already on the site cover one module at a time: [Twitch](../twitchapi-module/twitchapi-module.md), [Kick](../kickapi-module/kickapi-module.md), [IRC](../irc-client-module/irc-client-module.md), [Crowd Control](../crowd-control-module/crowd-control-module.md), [OBS](../obs-client-module/obs-client-module.md). This page is the path across them.
+
 ![Twitch / Kick / IRC, then Crowd Control, then the game, then OBS](assets/streaming-stack.png)
 
 ## Chat inputs
