@@ -9,6 +9,22 @@ author: "Blazium"
 hosts: []
 ---
 
+## Why we built it
+
+The [Steam module article](../steam-module/steam-module.md) and the 0.6.725 notes say GodotSteam was removed in 0.5.246, and the native `Steam` singleton replaced it for achievements, stats, inventory, web API tickets, and backend auth. `Steam.xml` says the library loads at runtime and methods fail without crashing if it is missing. The 0.6.725 notes add the Discord Social SDK for presence, and the GDK module as Microsoft's kit in the editor with export tooling. The JWT notes say tokens can be built and checked in the engine for backends, multiplayer, and APIs. `JWTBuilder.xml` documents HS256 and RS256.
+
+The engine README separates this from the Blazium Games store. That store is Divine Games, Inc. Uploads use `chauffeur`. A game on the store does not have to be made with the engine. The Steam module is not the store uploader.
+
+## What Blazium Games uses it for
+
+The 2025 community update says the team learned to ship a game across storefronts, and names the Apple store as one of those lessons. It does not say which title calls `Steam.initialize`, `Discord.initialize`, `GDK.initialize`, or `JWTBuilder`.
+
+<!-- QUESTION FOR BIOBLAZE: Which first-party titles use the Steam module, the Discord Social SDK, GDK, or JWT? Does Demon Lord: Clicker? The articles describe the APIs and the GodotSteam removal. They do not name a shipping title. -->
+
+## What other projects get
+
+Steamworks calls stay in-engine, including a ticket exchange that returns a JWT from your backend. Discord desktop auth is the Social SDK, not the Embedded App client. Xbox stays off unless the template was built with `module_xbox_module_enabled=yes`. Leaderboard methods are not on the Steam singleton. [blazium#807](https://github.com/blazium-games/blazium/issues/807) asks for them.
+
 A store ticket or an OAuth code is not a session. Turn it into a JSON Web Token (JWT), then check it on your backend. The engine pieces on `blazium-dev` are `modules/jwttool`, `modules/steam`, `modules/discord_module`, and `modules/xbox_module`.
 
 ## Status

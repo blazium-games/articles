@@ -9,6 +9,20 @@ author: "Blazium"
 hosts: []
 ---
 
+## Why we built it
+
+Export templates follow the Blazium product version, not a Godot `4.3.2.stable` directory. The CLI README and the template resolver implement that: CDN files under `/{channel}/{version}/`, then a fallthrough `GET /api/v1/templates/{deploy_type}/{version}` on `blazium.app` when `template_files.json`, `templates.json`, and `details.json` are missing. Hub never calls that API. Release CI is what fills the bucket. The engine README points downloads at the same CDN.
+
+## What Blazium Games uses it for
+
+Official editor and template zips are published there so Hub and `blazium-cli install` resolve a version without a private file share. The two engine lines are not interchangeable. Hub's executable tracks `blazium_4.8`. The templates this article describes are the ones for the editor version you install.
+
+<!-- QUESTION FOR BIOBLAZE: Do first-party games, including Hangman or Demon Lord: Clicker, export against these CDN templates, or do they pin a different template build? -->
+
+## What other projects get
+
+`blazium-cli install <version> --templates` puts the bundle in the Blazium template root for that version. A Godot-shaped folder on disk does not satisfy the export dialog. Mono is a second `.tpz` (`--mono`), not a different version number. Discord and YouTube flags are preset options on the platform named `Web`.
+
 Blazium on the `blazium-dev` line is a Godot 4.3.2-compatible engine with its own version number, currently in the `0.6.x` range. Export templates are stored under that Blazium version. They are not stored under a `4.3.2.stable` folder. If you copied a Godot template layout by hand, the export dialog will say the templates are missing even though the files are on disk.
 
 ## Status

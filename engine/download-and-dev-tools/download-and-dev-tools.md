@@ -9,6 +9,20 @@ author: "Blazium"
 hosts: []
 ---
 
+## Why we built it
+
+The engine README says official binaries are on [blazium.app/download](https://blazium.app/download). The CLI and Hub READMEs point dev tools at [blazium.app/dev-tools](https://blazium.app/dev-tools). Hub's installer is the path that also lays down `blazium-cli` and the crash sidecar. The CLI is also published on its own, for machines that should not run Hub. The CDN catalogs in those READMEs (`cli.json`, Hub installers, `crash_reporter.json`, `toolchain.json`) are what those downloads resolve to.
+
+## What Blazium Games uses it for
+
+Release CI publishes those catalogs. Hub only fetches `https://cdn.blazium.app`. That is how the Hub binary, which is built from `blazium_4.8`, installs editor builds for the line you pick. The store is not this page. Store uploads are `chauffeur`.
+
+<!-- QUESTION FOR BIOBLAZE: Is the download site only the public distribution path, or do internal builds for Hangman, Demon Lord: Clicker, or other titles also come from these same CDN catalogs? -->
+
+## What other projects get
+
+The same pages. Published Hub and CLI binaries are Linux and Windows. There is no macOS installer in Hub's `packaging/` tree, and no Flatpak. [blazium#428](https://github.com/blazium-games/blazium/issues/428) asks for one.
+
 If you make games, install [Hub](../blazium-hub/blazium-hub.md). If you already live in a terminal or CI, install [CLI](../blazium-cli/blazium-cli.md). Both can be found on the [website](https://blazium.app).
 
 ## Status

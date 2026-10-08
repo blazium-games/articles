@@ -9,7 +9,7 @@ author: "Blazium"
 hosts: []
 ---
 
-Tag a resource once. Search it later from the dock or from an agent. Two editor-only modules: `assettags` and `semanticsearch`. `semanticsearch` does not build unless `assettags` does. Neither module is in an export template. `config.py` limits both to editor builds.
+Tag a resource once. Search it later from the dock or from an agent. Why the modules were added is in [Asset Tags & Semantic Search Modules](../asset-tags-and-semantic-search-modules/asset-tags-and-semantic-search-modules.md). Two editor-only modules: `assettags` and `semanticsearch`. `semanticsearch` does not build unless `assettags` does. Neither module is in an export template. `config.py` limits both to editor builds.
 
 ## Status
 

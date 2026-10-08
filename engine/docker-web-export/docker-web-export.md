@@ -9,6 +9,20 @@ author: "Blazium"
 hosts: []
 ---
 
+## Why we built it
+
+The template README says it hosts a Blazium web export as a Discord Embedded Application, including Nginx rules for Discord's `/.proxy/` asset prefix. A note dated 2025-02-22 in that README adds YouTube Playables: the initial bundle must be under 15 MiB, so WASM is precompressed and `gzip_static` serves it, and `/ytgame` drops the COOP and COEP headers. The committed `example.env` sets `PROJECT_NAME=hangman`.
+
+<!-- QUESTION FOR BIOBLAZE: Is `PROJECT_NAME=hangman` in `docker-webbuild-template` the Hangman game from the Discord article, or only a sample name? The README does not say. -->
+
+## What Blazium Games uses it for
+
+The Discord article ties Hangman to Embedded Apps, and this template is the host that README describes for that kind of export. Registry push is `make deploy-docker`, which reads `.env` for `DOCKER_REGISTRY`, `REGISTRY_PATH`, and `TAG`. The sample registry is `registry.digitalocean.com` and `REGISTRY_PATH=blazium`. The 2025 community update lists a DigitalOcean sponsorship. It does not say this image is what Hangman runs in production.
+
+## What other projects get
+
+Copy a `Web` export into `static/`, then `docker compose up --build`. The image does not install the engine and does not run the export. Discord URL mappings and a YouTube Playables listing are configured on those platforms, not in this repo.
+
 Repo: [blazium-games/docker-webbuild-template](https://github.com/blazium-games/docker-webbuild-template). A container plus the web exporter output. Use it for a public web build, a Discord activity, or a YouTube Playable.
 
 ## Status

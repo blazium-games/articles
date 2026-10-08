@@ -9,7 +9,7 @@ author: "Blazium"
 hosts: []
 ---
 
-Confirm-before-upload is the product. The engine writes files. A sidecar UI asks. Send is a decision, not a default.
+Confirm-before-upload is the product. The engine writes files. A sidecar UI asks. Send is a decision, not a default. Why the module and the analytics queue were added is in [Crash Reporter & Analytics](../crash-reporter-and-analytics/crash-reporter-and-analytics.md).
 
 ![Where the sidecar sits in the stack](assets/ecosystem-map.png)
 

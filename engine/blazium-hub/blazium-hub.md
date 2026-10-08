@@ -9,7 +9,7 @@ author: "Bioblaze Payne"
 hosts: []
 ---
 
-Blazium Hub is a shell for [blazium-cli](../blazium-cli/blazium-cli.md). The installer puts Hub on disk and, with it, the CLI and the crash sidecar. Hub does not download editors itself. Install, uninstall, open, and project registration all go through the CLI.
+Blazium Hub is a shell for [blazium-cli](../blazium-cli/blazium-cli.md). The installer puts Hub on disk and, with it, the CLI and the crash sidecar. Hub does not download editors itself. Install, uninstall, open, and project registration all go through the CLI. Why the pair exists, including the store launcher versus `chauffeur`, is in [Blazium Hub & Blazium CLI](../blazium-hub-and-cli/blazium-hub-and-cli.md).
 
 ![Install flow: installer, on-disk trio, blazium://, Hub remote, Editors, Open](assets/install-flow.png)
 

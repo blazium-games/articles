@@ -9,7 +9,21 @@ author: "Blazium"
 hosts: []
 ---
 
-One record: a display name, an API URL, a feature flag. Three modules on `blazium-dev` can hold it. Pick the format that matches the job. All three build on every platform. None of them registers Project Settings of its own.
+## Why we built it
+
+The 0.6.725 notes give the jobs. DotENV loads `.env` files so config and secrets stay out of source. DotINI reads and writes INI with type-checking, and `DotIniFile.xml` calls it a more capable alternative to `ConfigFile`, not a replacement you must migrate to. DotCSV reads and writes tables for game data, config exports, and spreadsheet imports. The dotenv commit is "Extract dotenv module." Godot's `ConfigFile` remains.
+
+## What Blazium Games uses it for
+
+The example analytics server tells you to copy `.env.example` and not commit `.env`. That is the reference server's own config. It is not evidence that Hangman or another game uses `ENV`.
+
+<!-- QUESTION FOR BIOBLAZE: Do official games, the crash or analytics hosts, or Demon Lord: Clicker use `ENV`, `DotIniFile`, or `CSVTable`? The release notes describe the modules. They do not name a caller. -->
+
+## What other projects get
+
+All three modules build on every platform on `blazium-dev`. None of them registers Project Settings. A script reads the file. The engine does not.
+
+One record: a display name, an API URL, a feature flag. Three modules on `blazium-dev` can hold it. Pick the format that matches the job.
 
 ## Status
 

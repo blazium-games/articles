@@ -9,6 +9,20 @@ author: "Blazium"
 hosts: []
 ---
 
+## Why we built it
+
+The [2025 community update](../blazium-community-update-goodbye-2025-lets-conquer-2026/blazium-community-update-goodbye-2025-lets-conquer-2026.md) lists an open-source deployment framework for Godot and Blazium CI, and "dozen+ GitHub Actions," next to learning how to launch a game across storefronts. The checklist it links is [blazium-game-checklist](https://github.com/blazium-engine/blazium-game-checklist). These four repositories are the public actions: put the CLI on a runner, install an editor from the CDN, export a preset, deploy an artifact. `deploy-blazium-game`'s README now says the Steam and itch reusable workflows are deprecated. The replacement it names is `blazium-cli deploy steam` and `blazium-cli deploy itch`.
+
+## What Blazium Games uses it for
+
+The update says the team shipped that framework and learned the storefront path, including the Apple store. It does not name the game repositories that call these actions today.
+
+<!-- QUESTION FOR BIOBLAZE: Which first-party repos, including Hangman or Demon Lord: Clicker, still call `setup-blazium-engine`, `export-blazium-game`, or `deploy-blazium-game`? The update lists the actions. It does not list callers. -->
+
+## What other projects get
+
+The actions are public. Pin a tag. `setup-blazium-engine` at `v0.3.0` installs an editor and can download templates. `version: latest` tracks nightly. Export `platform-name` has to match the preset name in the project, including `Web`.
+
 Four Actions. Each one is its own repository under [blazium-games](https://github.com/blazium-games). CI talks to the CDN through [blazium-cli](../blazium-cli/blazium-cli.md).
 
 ## Status

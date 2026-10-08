@@ -9,6 +9,20 @@ author: "Blazium"
 hosts: []
 ---
 
+## Why we built it
+
+The engine README lists Twitch, Kick, OBS, and IRC under live operations, as modules Blazium adds on top of Godot. The class references state the jobs: `TwitchAPI.xml` is a Helix client that polls responses every physics frame. `KickAPI.xml` is the Kick HTTP API. `IRCClient.xml` is RFC 1459, RFC 2812, and IRCv3. `CrowdControl.xml` says streamers can let viewers trigger in-game effects, instant or timed. `OBSClient.xml` speaks obs-websocket 5.x. The commits that add Crowd Control are "Add CrowdControl websocket support" and "Patched CC so its working." They do not name a channel or a game.
+
+## What Blazium Games uses it for
+
+No README, release note, or commit read for this pass names a Blazium Games stream, a first-party overlay, or Demon Lord: Clicker.
+
+<!-- QUESTION FOR BIOBLAZE: Which first-party titles or streams use Twitch, Kick, IRC, Crowd Control, or OBS? The class docs describe the protocols. They do not name a production user. -->
+
+## What other projects get
+
+Each module is in the engine tree and has its own test repo. Nothing connects them for you. Tokens stay in `.env`. `CrowdControl` and `OBSClient` are objects you `poll()`. Crowd Control has no `trigger()` method.
+
 Chat comes in. The game changes. OBS cuts. Five modules on `blazium-dev` cover that path. They do not share a base class. You wire them.
 
 ## Status

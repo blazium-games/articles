@@ -9,7 +9,7 @@ author: "Blazium"
 hosts: []
 ---
 
-You install Hub. Hub asks the CLI to fetch an editor from the CDN. The editor is the engine. The News tab in Hub is this articles repo, once an article is marked deployed and published.
+You install Hub. Hub asks the CLI to fetch an editor from the CDN. The editor is the engine. The News tab in Hub is this articles repo, once an article is marked deployed and published. Why the pieces are separate repos is in [The Blazium Games Ecosystem](../the-blazium-games-ecosystem/the-blazium-games-ecosystem.md).
 
 That is the stack people touch. Everything else is a module inside the editor, or a separate repo the CLI and the editor know how to call.
 

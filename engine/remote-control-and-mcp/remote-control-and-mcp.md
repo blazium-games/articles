@@ -9,7 +9,7 @@ author: "Blazium"
 hosts: []
 ---
 
-Three tools, three jobs. Do not collapse them.
+Three tools, three jobs. Do not collapse them. Why the HTTP server was added, including Hub registration from SCons, is in [The Remote Control module](../remote-control-module/remote-control-module.md).
 
 ## Status
 

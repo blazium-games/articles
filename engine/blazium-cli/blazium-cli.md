@@ -9,7 +9,7 @@ author: "Blazium"
 hosts: []
 ---
 
-`blazium-cli` is the binary [Hub](../blazium-hub/blazium-hub.md) shells, CI calls, and Windows/Linux register for `blazium://`. It installs editors, keeps the project registry, fetches export templates, updates itself, talks to a running editor, and can deploy a finished build to Steam or itch.io. Blazium Games store uploads are a different tool (`chauffeur`), not this binary. Store docs are [docs.blazium.games](https://docs.blazium.games). Engine docs are [docs.blazium.app](https://docs.blazium.app).
+`blazium-cli` is the binary [Hub](../blazium-hub/blazium-hub.md) shells, CI calls, and Windows/Linux register for `blazium://`. Why it exists next to Hub is in [Blazium Hub & Blazium CLI](../blazium-hub-and-cli/blazium-hub-and-cli.md). It installs editors, keeps the project registry, fetches export templates, updates itself, talks to a running editor, and can deploy a finished build to Steam or itch.io. Blazium Games store uploads are a different tool (`chauffeur`), not this binary. Store docs are [docs.blazium.games](https://docs.blazium.games). Engine docs are [docs.blazium.app](https://docs.blazium.app).
 
 ## Status
 

@@ -11,7 +11,21 @@ hosts: []
 
 # Blazium Toolchain
 
-Console SDKs are large, GPL or otherwise incompatible with a single MIT tree, and they change on their own schedule. Putting GCC, PSn00bSDK, ps2dev, and libdragon inside `blazium.git` would force that license onto the editor. We did not want that.
+## Why we built it
+
+The toolchain README states the split: the CLI is GPL-3.0-or-later, and the MIT editor only spawns the binary. GCC, PSn00bSDK, ps2dev, and libdragon stay out of `blazium.git`. The engine commit "Add InterDVD scene authoring and export through blazium-toolchain" is the editor side of that: Interactive DVD export on `blazium-dev` runs this CLI. PS1, PS2, and N64 are terminal commands in the same binary. The engine README lists them as what Blazium adds on top of Godot. It does not name a first-party console product.
+
+## What Blazium Games uses it for
+
+The documented benefit is the license. The editor process stays MIT and can still master an Interactive DVD. There is no README, commit, or issue in the toolchain repo that names a Blazium Games title shipping on PS1, PS2, N64, or DVD.
+
+<!-- QUESTION FOR BIOBLAZE: Does any Blazium Games title, including Demon Lord: Clicker, ship or prototype with `blazium-toolchain`? The repos only document the license split and the Interactive DVD spawn. -->
+
+## What other projects get
+
+The same published binary (Linux and Windows) fetches those compilers into a cache and builds PS1, PS2, N64, and Interactive DVD. `ps3` and `ps4` exit 2. They are reserved names, not a dated target.
+
+Console SDKs are also on their own schedule. Putting them inside `blazium.git` would force that license onto the editor.
 
 The **Blazium Toolchain** is a separate CLI. It downloads the compilers into a local cache, which keeps everything organized, and it gives you commands to build, run, and package. The engine stays MIT. The CLI is GPL-3.0-or-later. The editor only spawns the binary.
 

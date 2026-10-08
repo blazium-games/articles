@@ -11,7 +11,21 @@ hosts: []
 
 # Asset Tags & Semantic Search
 
-A project collects files faster than a folder tree can explain them. We added two editor modules so the explanation lives next to the files, in a format the editor and your AI agents can both read.
+## Why we built it
+
+The commit "Add AssetTags, SemanticSearch, and JustAMCP MCP integration" lists the pieces: FileSystem **Edit Asset Tags**, a Project Settings **Asset Tags** tab, a semantic search bridge, JustAMCP tools, and deferred prune plus HTTP embedding "so editor startup stays responsive." The release notes for 0.6.725 describe JustAMCP as the editor MCP server agents use to create and modify a project. Asset tags are one of the tool sets on that server. The commit does not name a content pipeline or a game.
+
+## What Blazium Games uses it for
+
+No engine commit, README, or issue read for this pass names a Blazium Games project that commits `res://.blazium/asset_tags/`.
+
+<!-- QUESTION FOR BIOBLAZE: Does a first-party project, an art pipeline, or Demon Lord: Clicker commit asset tags, or is the module only the editor and JustAMCP surface described in that commit? -->
+
+## What other projects get
+
+The dictionary is JSON in the project. The dock writes it. An agent calls `blazium_tags_*` and `blazium_semantic_search` on the same data. Search backends that ship are local (`lexical`, `hash_vector`, `ngram`) unless you set an HTTP URL yourself. A failed HTTP request falls back to `hash_vector`.
+
+A project collects files faster than a folder tree can explain them. The two editor modules keep that explanation next to the files, in a format the editor and an agent can both read.
 
 **Asset Tags** is the dictionary and the per-file assignments. **Semantic Search** is an index over those tags. Exact lookup and similarity lookup share that index. The editor's MCP server (JustAMCP) exposes both modules so your AI agents can organize, search, and maintain assets without leaving the editor.
 

@@ -9,7 +9,21 @@ author: "Blazium"
 hosts: []
 ---
 
-Pick a job first. The APIs are not interchangeable.
+## Why we built it
+
+The [Discord deploy article](../blazium-deploy-games-on-discord/blazium-deploy-games-on-discord.md) (2025-09-05) says the embed work started while Hangman was in development, so the game could run inside Discord voice chat. The goal stated there is a native path: the page talks to the Embedded App SDK without a separate install step. The [YouTube Playables article](../blazium-youtube-playables-integration/blazium-youtube-playables-integration.md) says the Playables node came next, after Discord, so a web export could call that SDK without each project binding the JavaScript object itself. The desktop `Discord` singleton is a different module. The 0.6.725 notes describe it as the Discord Social SDK for rich presence and social features. `Discord.xml` says `initialize_presence_only` is auth-less RPC, and `initialize` is the OAuth layer.
+
+## What Blazium Games uses it for
+
+The deploy article names Hangman as the Embedded App they were building. It calls the game upcoming as of that date. It does not say the activity shipped.
+
+<!-- QUESTION FOR BIOBLAZE: Did Hangman ship as a Discord activity, and does Demon Lord: Clicker or any other first-party title use `DiscordEmbeddedAppClient`, `YoutubePlayablesClient`, or the desktop `Discord` singleton? -->
+
+## What other projects get
+
+An activity inside the Discord client is the `Web` preset, `blazium/discord_embed/enabled`, a host that answers `/.proxy/`, and `DiscordEmbeddedAppClient`. A desktop build that shows presence and invites uses the `Discord` singleton. The two APIs are not interchangeable.
+
+Pick a job first.
 
 ## Status
 

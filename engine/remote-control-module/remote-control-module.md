@@ -11,6 +11,20 @@ hosts: []
 
 # The Remote Control Module
 
+## Why we built it
+
+The commit that adds the module is "Add remote_control module for CLI-to-editor HTTP control." A follow-up makes exec and eval non-blocking: they are deferred onto the main thread, and play, pause, stop, and PNG snapshot are built-in commands. Another commit says privileged exec and eval stay off by default. "Close Autowork discovery, JUnit, CLI, and port gaps so tests run without extra scripts" is the test-runner side of the same idea.
+
+## What Blazium Games uses it for
+
+"Add hub_build/hub_register flags and JustAMCP remote_control bridge" registers editors with Hub from SCons (`hub_register=yes`, post-build `blazium-cli`, not at runtime) and bridges JustAMCP focus and MCP status through this server. That is the engine build and the agent bridge. It is not a documented game session.
+
+<!-- QUESTION FOR BIOBLAZE: Do official game repos or Demon Lord: Clicker call `blazium-cli remote` or Autowork through this server, or is the in-house use limited to editor CI and Hub registration? -->
+
+## What other projects get
+
+`blazium-cli open` can turn the server on and then query health, logs, play state, and a screenshot. Eval stays off until `allow_eval` is set. The routes are in [Drive the editor](../remote-control-and-mcp/remote-control-and-mcp.md).
+
 Opening a project from a script is not enough. The next question is whether the editor process is the one you think it is: which project, which pid, whether the log is moving, whether Autowork passed. Clicking the window does not answer that in CI, and it does not answer it from a second tool on the same machine.
 
 `modules/remote_control` is that check. `RemoteControlServer` is a small HTTP server. The usual client is `blazium-cli remote`. Anything that can send HTTP to loopback can call the same routes. The route table, the exec names, and JustAMCP are in [Drive the editor](../remote-control-and-mcp/remote-control-and-mcp.md). This page is why the server exists and how far it is allowed to go.

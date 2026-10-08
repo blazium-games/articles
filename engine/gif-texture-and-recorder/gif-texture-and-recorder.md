@@ -9,7 +9,7 @@ author: "Blazium"
 hosts: []
 ---
 
-Import a gif onto a sprite. Record a viewport, a window, or the screen back out to a gif. `modules/gif` is how those two directions work, including clips you drop into Hub News.
+Import a gif onto a sprite. Record a viewport, a window, or the screen back out to a gif. `modules/gif` is how those two directions work. Why the module is a `Texture2D` is in [GIF Module](../gif-module/gif-module.md).
 
 ## Status
 
@@ -62,7 +62,7 @@ This works in the editor and in an exported game. The module is not tools-only.
 
 ## Movie writer
 
-`MovieWriterGIF` registers GIF as a movie-writer target. Use it when you want the engine's built-in movie recorder to write a `.gif` without calling `GIFRecorder`. Keep the fps in the 10 to 15 range for a Hub News loop, and keep the clip short. A long full-screen capture will hit `max_frames` or `max_canvas_pixels` and fail the encode.
+`MovieWriterGIF` registers GIF as a movie-writer target. Use it when you want the engine's built-in movie recorder to write a `.gif` without calling `GIFRecorder`. Keep the fps in the 10 to 15 range and keep the clip short. A long full-screen capture will hit `max_frames` or `max_canvas_pixels` and fail the encode.
 
 Class reference and the why-we-added-it writeup: [GIF Module](../gif-module/gif-module.md). Tests: [gif_module_tests](https://github.com/blazium-games/gif_module_tests).
 

@@ -11,7 +11,19 @@ hosts: []
 
 # The Blazium Games Ecosystem
 
-Project Hangman needed more than an editor binary. It needed a place to download a known build, a way to open that project again next week, a crash dump that did not upload itself, and a web build Discord would actually load. Those needs turned into separate tools. They share a CDN and a CLI. They do not share one repo.
+## Why this map exists
+
+The engine README groups what Blazium adds on top of Godot: editor and agent tools, store and platform modules, data modules, live-ops modules, and the older-console path that uses the toolchain. The tool READMEs then split that into separate repos (engine, CLI, Hub, crash sidecar, toolchain) that share `cdn.blazium.app`. The [2025 community update](../blazium-community-update-goodbye-2025-lets-conquer-2026/blazium-community-update-goodbye-2025-lets-conquer-2026.md) lists the CLI, the deployment framework, the GitHub Actions, and Project Hangman as work from that year. The [Discord deploy article](../blazium-deploy-games-on-discord/blazium-deploy-games-on-discord.md) is the one that ties Hangman to a feature: Embedded Apps, so the game could run in Discord voice chat. It does not say Hangman caused Hub, the crash sidecar, or the CDN.
+
+<!-- QUESTION FOR BIOBLAZE: Which of Hub, the CLI, the crash reporter, analytics, and the CDN were built for Project Hangman or Demon Lord: Clicker, and which are general engine infrastructure? The Discord article only ties Hangman to Embedded Apps. -->
+
+## What Blazium Games uses it for
+
+Documented uses, and only those: Hub CI bakes crash and analytics endpoints for the Hub binary. The Hub installer can place BlaziumLauncher for the store, while store uploads stay in `chauffeur`. Steam and itch deploys go through `blazium-cli`, not through the store uploader. Interactive DVD export spawns `blazium-toolchain`. The engine README is explicit that the store and the engine are not the same product. A Made with Blazium shelf and an AssetLib URL are the bridges it names.
+
+## What other projects get
+
+The same CDN catalogs, the same CLI commands, and the same modules on `blazium-dev`. A game does not have to use the Blazium Games store. A store listing does not have to be made with the engine.
 
 This article is the map of why each piece exists. The file-level walk is [The Blazium engine stack](../what-is-the-blazium-ecosystem/what-is-the-blazium-ecosystem.md). The engine line this describes is `blazium-dev` (Godot 4.3 compatible, product version `0.6.x`). Hub's own executable is built from `blazium_4.8`. Do not treat those as one branch.
 
@@ -21,7 +33,7 @@ This article is the map of why each piece exists. The file-level walk is [The Bl
 
 ## Crash reporter and analytics
 
-We wanted dumps before we wanted charts. The crash reporter writes a Breakpad minidump and a JSON file, then a sidecar asks before anything is uploaded. Analytics is a second module on the same app id and build id, and it stays silent until consent is given. Hub CI bakes both at `https://crash.blazium.app` (`/v1/reports` and `/v1/events`).
+The crash reporter writes a Breakpad minidump and a JSON file, then a sidecar asks before anything is uploaded. Analytics is a second module on the same app id and a build id, and it stays silent until consent is given. Hub CI bakes both at `https://crash.blazium.app` (`/v1/reports` and `/v1/events`). The commits that add them are quoted in [Crash Reporter & Analytics](../crash-reporter-and-analytics/crash-reporter-and-analytics.md).
 
 [Crash Reporter & Analytics](../crash-reporter-and-analytics/crash-reporter-and-analytics.md).
 

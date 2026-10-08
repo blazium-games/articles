@@ -11,7 +11,21 @@ hosts: []
 
 # Crash Reporting & Analytics in Blazium
 
-Hub, the editor, and a shipped game all die the same way: a process is gone and the log is incomplete. We wanted a minidump on disk before we wanted a chart, and we wanted usage numbers that stay off until someone agrees. Those are two modules, `modules/crash_reporter` and `modules/analytics`, on `blazium-dev`. They can share an app id and a build id. They do not share a switch.
+## Why we built it
+
+The engine commits that add the modules are "Add opt-in CrashReporter with Breakpad minidumps" and "Add opt-in Analytics module with identity, consent, and HTTP queue." A later commit identifies both by one app id and one build id, and another bakes the editor app id, build id, and analytics URL so they cannot be changed at runtime. The sidecar README says the UI is for first-party utilities: the engine, Hub, and other internal tools. It does not contain Breakpad. The engine writes the files. The sidecar presents them and uploads after confirm.
+
+## What Blazium Games uses it for
+
+Hub CI (`blazium-hub/ci/hub_scons.env`) bakes `editor_app_id=blazium-hub`, reports at `https://crash.blazium.app/v1/reports`, and events at `https://crash.blazium.app/v1/events`. That is the official Hub binary's configuration. The example ingest servers are marked "Not a hosted product." They are references. They are not the Hub endpoint.
+
+<!-- QUESTION FOR BIOBLAZE: Does anyone read `crash.blazium.app` reports or events for Hub, the editor, or a shipped game? The bake and the sidecar README show the plumbing. They do not say the data is used for support, and they do not name Demon Lord: Clicker. -->
+
+## What other projects get
+
+An export template built with the matching SCons flag can write the same dump pair, and can queue events after consent. `require_user_consent` on crash upload defaults to true. Analytics ships nothing until consent is given. Games set their own endpoint. They do not inherit Hub's URL unless they bake or configure it.
+
+Those are two modules, `modules/crash_reporter` and `modules/analytics`, on `blazium-dev`. They can share an app id and a build id. They do not share a switch.
 
 The field lists are in [Crash reports in Blazium](../crash-reporter/crash-reporter.md) and [Opt-in analytics](../analytics-opt-in/analytics-opt-in.md). This page is why they are split, and what a build actually does today.
 

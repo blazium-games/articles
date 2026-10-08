@@ -11,9 +11,21 @@ hosts: []
 
 # Blazium Hub & Blazium CLI
 
-Engine versions used to be a folder you unpacked yourself, and projects were a path you typed into a shortcut. That breaks as soon as two games need two builds, or a CI job needs the same layout as a laptop.
+## Why we built it
 
-We built two tools for that. **Blazium Hub** is the window. **Blazium CLI** is the program that actually installs, registers, and launches. Hub is a front end for the CLI. The CLI also runs on its own, which is what scripts and GitHub Actions call.
+The CLI README describes the job: install editors, keep a project registry, update the binary, remote-control a running editor, and deploy to Steam or itch.io. The Hub README describes the window on top of that: browse CDN catalogs, and send install, open, and project changes through the CLI, including `blazium://` links. The [2025 community update](../blazium-community-update-goodbye-2025-lets-conquer-2026/blazium-community-update-goodbye-2025-lets-conquer-2026.md) lists the CLI, the open-source deployment framework, and the GitHub Actions as things shipped that year, next to Project Hangman. It does not say Hangman is why the CLI exists.
+
+## What Blazium Games uses it for
+
+Hub's installer can download BlaziumLauncher into `{autopf}\Blazium\Games`. Store links go to that launcher, not to Hub. Uploads to the Blazium Games store stay in `chauffeur` (`@blazium-games/cli`), documented at [docs.blazium.games](https://docs.blazium.games). The CLI's own deploy path is Steam and itch.io. `deploy-blazium-game` marks those two reusable workflows deprecated in favor of `blazium-cli deploy steam` and `blazium-cli deploy itch`.
+
+<!-- QUESTION FOR BIOBLAZE: Which first-party game repos actually run `blazium-cli deploy` or the GitHub Actions, and does Demon Lord: Clicker? The READMEs separate the store (chauffeur) from this CLI, and they do not name that title. -->
+
+## What other projects get
+
+The same installer lays down Hub, `blazium-cli`, and the crash sidecar. The same commands run in a terminal and in `setup-blazium-engine`. A project registry in `hub.json` is shared by Hub and the CLI, so a project added in one shows up in the other.
+
+**Blazium Hub** is the window. **Blazium CLI** is the program that installs, registers, and launches. Hub is a front end for the CLI. The CLI also runs on its own, which is what scripts and GitHub Actions call.
 
 ## Why the installer bundles the CLI
 

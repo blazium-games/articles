@@ -9,7 +9,7 @@ author: "Blazium"
 hosts: []
 ---
 
-The Blazium engine stays under the MIT license. This CLI is GPL-3.0-or-later so it can fetch GCC, PSn00bSDK, pcsx-redux, mkpsxiso, OpenBIOS, the ps2dev toolchain, and libdragon. Those trees are never merged into `blazium.git`. The editor looks up `blazium-toolchain` and runs it. It does not vendor the compilers.
+The Blazium engine stays under the MIT license. Why the compilers live in this GPL CLI is in [The Blazium Toolchain](../the-blazium-toolchain/the-blazium-toolchain.md). This CLI is GPL-3.0-or-later so it can fetch GCC, PSn00bSDK, pcsx-redux, mkpsxiso, OpenBIOS, the ps2dev toolchain, and libdragon. Those trees are never merged into `blazium.git`. The editor looks up `blazium-toolchain` and runs it. It does not vendor the compilers.
 
 ## Status
 

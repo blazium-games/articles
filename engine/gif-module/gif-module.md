@@ -11,7 +11,21 @@ hosts: []
 
 # The GIF Module
 
-A `.gif` file is a texture with a clock, a disposal method, and a loop count. Treating it as a pile of loose frames loses that. `modules/gif` is the native path: decode on import, play as a `Texture2D`, encode again from a viewport or from the engine movie recorder.
+## Why we built it
+
+The commit that adds the module is "Add GIF module for reading, writing, and playing animated GIFs." A follow-up narrows the design: "Update implementation to only add GifTexture which can be used anywhere as a texture." `GIFTexture.xml` says the same thing: assign it to Sprite2D, Sprite3D, TextureRect, a material, or a shader uniform like any other `Texture2D`. A later editor commit keeps GIF capture from blocking the editor, in the same change that keeps Steam ticket polling and remote Autowork off the UI thread.
+
+## What Blazium Games uses it for
+
+Those commits and the class reference do not name a first-party game, Hub News, or a production capture pipeline.
+
+<!-- QUESTION FOR BIOBLAZE: Does Hub News, a first-party game, or an internal tool use `GIFTexture` or `GIFRecorder`? Nothing in the GIF commits names one. -->
+
+## What other projects get
+
+The module is always built, in the editor and in export templates. A `.gif` import is a texture with its own playhead. `GIFRecorder` and `MovieWriterGIF` write one back out. Capture is not supposed to freeze the editor.
+
+A `.gif` file is a texture with a clock, a disposal method, and a loop count. `modules/gif` is the native path: decode on import, play as a `Texture2D`, encode again from a viewport or from the engine movie recorder.
 
 The module is always built. `config.py` returns true for both `can_build` and `is_enabled`. It is in the editor and in export templates. There is no separate GIF download on the CDN.
 
@@ -52,7 +66,7 @@ Project Settings cap the decode and the capture:
 | `blazium/gif/capture_source` | `0` Viewport, `1` Window |
 | `blazium/gif/capture_output_dir` | `user://` |
 
-A file over those caps is rejected. The hotkey is read on `process_frame` and toggles `GIFRecorder` only when it is not zero. A long full-screen capture hits `max_frames` and the encode fails. This is not a video codec. Hub News loops stay short, around 10 to 15 fps, because that is what the caps and the file size allow.
+A file over those caps is rejected. The hotkey is read on `process_frame` and toggles `GIFRecorder` only when it is not zero. A long full-screen capture hits `max_frames` and the encode fails. This is not a video codec. Short clips stay in the 10 to 15 fps range because that is what the caps and the file size allow.
 
 `MovieWriterGIF` and `GIFRecorder` share the encoder. They are not the same API. The movie writer is the engine's built-in recorder pointed at a `.gif` path. `record_viewport` is the one-shot on a `SubViewport`.
 
