@@ -9,11 +9,11 @@ author: "Blazium"
 hosts: []
 ---
 
-Import a gif onto a sprite. Record a viewport, a window, or the screen back out to a gif. `modules/gif` is how those two directions work. Why the module is a `Texture2D` is in [GIF Module](../gif-module/gif-module.md).
+Import a gif onto a sprite. Record a viewport, a window, or the screen back out to a gif. `modules/gif` is how those two directions work. `GIFTexture` is a `Texture2D`, so it can sit on Sprite2D, TextureRect, a material, or a shader uniform like any other texture. Capture is not supposed to block the editor. Blazium Games used import, playback, and capture in-house to validate the module. That pass does not name a shipped title.
 
 ## Status
 
-The module is always built on `blazium-dev`. `can_build` and `is_enabled` both return true. It runs in the editor and in exported games. There is no CDN package for it. Why it is one module, and what it will not grow into, is [GIF Module](../gif-module/gif-module.md).
+The module is always built on `blazium-dev`. `can_build` and `is_enabled` both return true. It runs in the editor and in exported games. There is no CDN package for it. It will not grow into a video codec. Short clips stay in the 10 to 15 fps range because that is what the canvas and frame caps allow.
 
 ## Import a file
 
@@ -64,7 +64,7 @@ This works in the editor and in an exported game. The module is not tools-only.
 
 `MovieWriterGIF` registers GIF as a movie-writer target. Use it when you want the engine's built-in movie recorder to write a `.gif` without calling `GIFRecorder`. Keep the fps in the 10 to 15 range and keep the clip short. A long full-screen capture will hit `max_frames` or `max_canvas_pixels` and fail the encode.
 
-Class reference and the why-we-added-it writeup: [GIF Module](../gif-module/gif-module.md). Tests: [gif_module_tests](https://github.com/blazium-games/gif_module_tests).
+The module is always built. A gif is a texture with a playhead, not a video codec. Tests: [gif_module_tests](https://github.com/blazium-games/gif_module_tests).
 
 ---
 

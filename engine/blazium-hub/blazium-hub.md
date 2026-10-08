@@ -9,7 +9,7 @@ author: "Bioblaze Payne"
 hosts: []
 ---
 
-Blazium Hub is a shell for [blazium-cli](../blazium-cli/blazium-cli.md). The installer puts Hub on disk and, with it, the CLI and the crash sidecar. Hub does not download editors itself. Install, uninstall, open, and project registration all go through the CLI. Why the pair exists, including the store launcher versus `chauffeur`, is in [Blazium Hub & Blazium CLI](../blazium-hub-and-cli/blazium-hub-and-cli.md).
+Blazium Hub is a shell for the `blazium-cli` binary ([blazium-cli](https://github.com/blazium-games/blazium-cli)). The installer puts Hub on disk and, with it, the CLI and the crash sidecar. Hub does not download editors itself. Install, uninstall, open, and project registration all go through the CLI. Hub and the CLI were built for the Blazium Engine and this ecosystem, so a window and a script share one registry. The Blazium Games store uses `chauffeur` (`@blazium-games/cli`), documented at [docs.blazium.games](https://docs.blazium.games). Steam and itch deploys stay on `blazium-cli deploy`.
 
 ![Install flow: installer, on-disk trio, blazium://, Hub remote, Editors, Open](assets/install-flow.png)
 
@@ -43,7 +43,7 @@ If you never set a default, the CLI policy is the latest installed editor on the
 
 ## News
 
-Hub fetches `https://cdn.blazium.app/articles/rss.xml`, then `meta.json` and `content.bbcode` for the opened slug. External `hosts` entries (IndieDB, itch.io, and the rest) show up as links. BBCode is allowlisted in `hub_sanitize.gd` before it is drawn. This article shows up in that list only after `deployed` is set to true and the publish workflow has uploaded it.
+Hub fetches `https://cdn.blazium.app/articles/rss.xml`, then `meta.json` and `content.bbcode` for the opened slug. External `hosts` entries (IndieDB, itch.io, and the rest) show up as links. BBCode is allowlisted in `hub_sanitize.gd` before it is drawn. This page shows up in that list only after `deployed` is set to true and the publish workflow has uploaded it.
 
 Untrusted CDN, News, URI, and CLI JSON all go through that sanitizer: HTTPS only for external opens, size caps on CDN responses, and loopback-only for remote control even if a config file has been edited.
 
@@ -79,11 +79,9 @@ Load order is the user file (`%APPDATA%\blazium\hub_remote.json` or `~/.config/b
 
 `blazium://install/<uuid>`, `blazium://game/<uuid>`, and `blazium://buy/<uuid>` are forwarded to the Games launcher on port **39220** (`launcher_remote.json`). They do not install an editor.
 
-JustAMCP also uses `blazium://scene/…` inside the editor. That is a different owner of the same scheme. See [Drive the editor](../remote-control-and-mcp/remote-control-and-mcp.md).
+JustAMCP, the editor MCP server, also uses `blazium://scene/…` and `blazium://tags/dictionary` inside the editor. That is a different owner of the same scheme. The OS handler is still the CLI. JustAMCP listens on port 6506. The editor remote-control server is `127.0.0.1:6508`.
 
-## Next
-
-[The stack](../what-is-the-blazium-ecosystem/what-is-the-blazium-ecosystem.md) · [CLI](../blazium-cli/blazium-cli.md) · [Crash reports](../crash-reporter/crash-reporter.md)
+Downloads: [blazium.app](https://blazium.app). Hub CI bakes crash reports to `https://crash.blazium.app/v1/reports`. The sidecar still asks before anything is uploaded.
 
 ---
 

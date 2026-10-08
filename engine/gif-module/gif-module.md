@@ -27,7 +27,7 @@ A `.gif` file is a texture with a clock, a disposal method, and a loop count. `m
 
 The module is always built. `config.py` returns true for both `can_build` and `is_enabled`. It is in the editor and in export templates. There is no separate GIF download on the CDN.
 
-The import and record steps, with the settings table, are in [GIF import and recording](../gif-texture-and-recorder/gif-texture-and-recorder.md). This page is what the module is for and what it will not do.
+Drop a `.gif` in the filesystem dock. `ResourceImporterGIF` produces a `GIFTexture`. Assign it and set `play` and `loop`. `GIFRecorder.record_viewport(viewport, path, duration_sec, fps)` writes one back out. The C++ default fps is 12. This page is what the module is for and what it will not do.
 
 ## What landed
 

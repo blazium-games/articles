@@ -9,7 +9,7 @@ author: "Blazium"
 hosts: []
 ---
 
-Nothing is sent until consent is given. Analytics was built for the example Hangman game and Demon Lord: Clicker. Why the consent gate exists, and what Hub's bake points at, is in [Crash Reporter & Analytics](../crash-reporter-and-analytics/crash-reporter-and-analytics.md). Anonymous mode (the default) omits `device_uid`. The official editor ingest URL is baked at compile time. An empty baked URL means the editor does not collect any data.
+Nothing is sent until consent is given. Analytics was built for the example Hangman game and Demon Lord: Clicker. The consent gate exists so a counter does not leave the machine until someone opts in. Hub CI bakes `editor_app_id=blazium-hub` and `https://crash.blazium.app/v1/events`. Anonymous mode (the default) omits `device_uid`. The official editor ingest URL is baked at compile time. An empty baked URL means the editor does not collect any data. Analytics events are not what engine crash patches are based on. Crash reports, which are a different module, are.
 
 ![Crash and analytics share the stack](assets/ecosystem-map.png)
 
@@ -40,7 +40,7 @@ There is no separate consent dialog in the editor tree. The toggle is the Editor
 
 An event JSON object for every event. The flush body is `{"events":[...]}`, posted to the endpoint with `/v1/events` appended if you did not include it. Headers on that POST are `X-App-Id` and `X-Build-Id`.
 
-Every queued row carries `app_id`, `build_id`, `engine_version`, `session_id`, `anonymous`, `event`, `timestamp`, and `properties`. Same identity resolution as [crash reports](../crash-reporter/crash-reporter.md): a non-empty bake wins, then project settings, then the fallback `custom_blazium_engine`. Hub's bake is the one in Status.
+Every queued row carries `app_id`, `build_id`, `engine_version`, `session_id`, `anonymous`, `event`, `timestamp`, and `properties`. Identity resolution matches crash reports: a non-empty bake wins, then project settings, then the fallback `custom_blazium_engine`. Hub's bake is the one in Status. Crash reports use `/v1/reports` on the same host when that bake is set. They are not this queue.
 
 Built-in editor events are `editor_launched`, `editor_session_ended`, `editor_export_started`, and `editor_export_finished`. Games get `session_start` and `session_end` when the template was built with analytics.
 
@@ -86,7 +86,7 @@ Anonymous mode is the default. `identify()` and `set_user_properties()` do nothi
 
 Do not pass `--analytics=accepted` if you want the editor silent. Leave `blazium/analytics/consent` at `unset` or `declined`. Ship templates without `analytics=yes` if the game should not include the sender at all. Installing Hub does not imply consent. Hub's binary is a separate build, baked as `blazium-hub`, from engine branch `blazium_4.8`. The editors you install from the CDN are a different binary.
 
-Same identity fields as [crash reports](../crash-reporter/crash-reporter.md). Engine docs: [docs.blazium.app](https://docs.blazium.app).
+Crash reports use the same app id and build id, on `/v1/reports`. Engine docs: [docs.blazium.app](https://docs.blazium.app).
 
 ---
 

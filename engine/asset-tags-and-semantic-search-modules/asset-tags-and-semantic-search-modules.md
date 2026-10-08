@@ -61,13 +61,13 @@ Your AI agents use the JustAMCP tools, not a private socket:
 | `semantic_search` / `blazium_semantic_search` | Index query |
 | `blazium_asset_tagging_workflow` | Prompt that walks the steps |
 
-`blazium://tags/dictionary` is the MCP resource for the same dictionary. The how-to with settings and limits is [Asset tags and search](../asset-tags-and-semantic-search/asset-tags-and-semantic-search.md). The server those tools sit on is [Drive the editor](../remote-control-and-mcp/remote-control-and-mcp.md).
+`blazium://tags/dictionary` is the MCP resource for the same dictionary. In the editor, Project Settings has an Asset Tags tab, and the FileSystem dock menu is **Edit Asset Tags...**. Those tools are served by JustAMCP, the editor MCP server, on port 6506. `strict_tags` and `strict_paths` default to false. An HTTP embedding failure falls back to `hash_vector`. Changing backend or provider needs an editor restart.
 
 ## Why it stays in-engine
 
 A sidecar database would drift from the files the moment someone renames a texture outside the tool. The dictionary is a JSON file beside the assets, the dock writes it, and the agent reads the same file through MCP. That is the whole loop.
 
-The running game does not get the modules. Export baking is the only path into a build, and only for tags the export plugin wrote. HTTP embeddings are a URL you supply. There is no hosted index to wait on. The settings, the dock labels, and the failure cases are in [Asset tags and search](../asset-tags-and-semantic-search/asset-tags-and-semantic-search.md). Engine docs: [docs.blazium.app](https://docs.blazium.app).
+The running game does not get the modules. Export baking is the only path into a build, and only for tags the export plugin wrote. HTTP embeddings are a URL you supply. There is no hosted index to wait on. The dock label is **Edit Asset Tags...**. A tag on a path that is not on disk is stored until `strict_paths` is on. A name that is not in the dictionary is stored until `strict_tags` is on. Engine docs: [docs.blazium.app](https://docs.blazium.app).
 
 ---
 

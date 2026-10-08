@@ -118,7 +118,7 @@ Release 0.4.90 already imported CSV for translations. This module is any table a
 
 `CSVTable.from_file` and `where_equals` return a `CSVTable`, not an array. Headers, delimiters, and true/false tokens are importer options. They are not Project Settings.
 
-Engine docs: [docs.blazium.app](https://docs.blazium.app). The streaming sample that reads `OBS_URL` from `ENV` is [Streaming tools](../streaming-stack/streaming-stack.md).
+Engine docs: [docs.blazium.app](https://docs.blazium.app). A game can read a key such as `OBS_URL` with `ENV.auto_config()` and `ENV.get_env` after the `.env` file is loaded. That is the same call whether the value is an OBS websocket URL or any other setting.
 
 ---
 

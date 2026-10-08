@@ -21,11 +21,11 @@ Blazium Games used remote control in-house to validate editor automation and CI:
 
 ## What other projects get
 
-`blazium-cli open` can turn the server on and then query health, logs, play state, and a screenshot. Eval stays off until `allow_eval` is set. The routes are in [Drive the editor](../remote-control-and-mcp/remote-control-and-mcp.md).
+`blazium-cli open` can turn the server on and then query health, logs, play state, and a screenshot. Eval stays off until `allow_eval` is set. Routes include `GET /v1/health`, `GET /v1/status`, `GET /v1/logs`, `POST /v1/instance`, `POST /v1/exec`, and `POST /v1/eval`. Exec names include `play_main_scene`, `snapshot_editor`, and `autowork_run`. Snapshots come back as `png_base64`.
 
 Opening a project from a script is not enough. The next question is whether the editor process is the one you think it is: which project, which pid, whether the log is moving, whether Autowork passed. Clicking the window does not answer that in CI, and it does not answer it from a second tool on the same machine.
 
-`modules/remote_control` is that check. `RemoteControlServer` is a small HTTP server. The usual client is `blazium-cli remote`. Anything that can send HTTP to loopback can call the same routes. The route table, the exec names, and JustAMCP are in [Drive the editor](../remote-control-and-mcp/remote-control-and-mcp.md). This page is why the server exists and how far it is allowed to go.
+`modules/remote_control` is that check. `RemoteControlServer` is a small HTTP server. The usual client is the `blazium-cli` binary. Hub shells that binary. CI calls it too. Anything that can send HTTP to loopback can call the same routes. JustAMCP is a second server on port 6506. It is the editor MCP server, not this HTTP API. This page is why the server exists and how far it is allowed to go.
 
 ## Why it stays on loopback
 
@@ -61,7 +61,7 @@ Shipped on `blazium-dev`. Tests: [remote_control_module_tests](https://github.co
 
 Turn later opens off with `blazium-cli remote config set enable-on-open false`.
 
-The CLI that calls this server is [Blazium Hub & Blazium CLI](../blazium-hub-and-cli/blazium-hub-and-cli.md). Engine docs: [docs.blazium.app](https://docs.blazium.app).
+The CLI that calls this server is [blazium-cli](https://github.com/blazium-games/blazium-cli). Hub is the desktop shell around that binary. `blazium-cli open` enables the server by default. Engine docs: [docs.blazium.app](https://docs.blazium.app).
 
 ---
 

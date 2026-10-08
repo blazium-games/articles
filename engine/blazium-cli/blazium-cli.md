@@ -9,7 +9,7 @@ author: "Blazium"
 hosts: []
 ---
 
-`blazium-cli` is the binary [Hub](../blazium-hub/blazium-hub.md) shells, CI calls, and Windows/Linux register for `blazium://`. Why it exists next to Hub is in [Blazium Hub & Blazium CLI](../blazium-hub-and-cli/blazium-hub-and-cli.md). It installs editors, keeps the project registry, fetches export templates, updates itself, talks to a running editor, and can deploy a finished build to Steam or itch.io. Blazium Games store uploads are a different tool (`chauffeur`), not this binary. Store docs are [docs.blazium.games](https://docs.blazium.games). Engine docs are [docs.blazium.app](https://docs.blazium.app).
+`blazium-cli` is the binary Hub shells, CI calls, and Windows/Linux register for `blazium://`. Hub is the desktop window on top of this binary. Downloads are on [blazium.app/dev-tools](https://blazium.app/dev-tools). The pair exists so a window and a script share one install path: Hub lists projects, and this binary writes the registry and fetches editors. It installs editors, keeps the project registry, fetches export templates, updates itself, talks to a running editor, and can deploy a finished build to Steam or itch.io. Blazium Games store uploads are a different tool (`chauffeur`), not this binary. Store docs are [docs.blazium.games](https://docs.blazium.games). Engine docs are [docs.blazium.app](https://docs.blazium.app). The CLI repo is [blazium-cli](https://github.com/blazium-games/blazium-cli). Hub's repo is [blazium-hub](https://github.com/blazium-games/blazium-hub).
 
 ## Status
 
@@ -46,9 +46,9 @@ blazium-cli install 0.6.751 --channel nightly
 blazium-cli uninstall 0.6.725
 ```
 
-Current `EditorInstallDir` puts editors in `{install-path}/{channel}/{version}`. Channels are `release`, `prerelease`, and `nightly`. An empty channel is treated as `release`. `--templates` also pulls the `.tpz` bundle for that version. See [Export templates and the CDN](../export-templates-and-cdn/export-templates-and-cdn.md).
+Current `EditorInstallDir` puts editors in `{install-path}/{channel}/{version}`. Channels are `release`, `prerelease`, and `nightly`. An empty channel is treated as `release`. `--templates` also pulls the `.tpz` bundle for that version from `cdn.blazium.app`. Templates follow Blazium `0.6.x`, not a Godot `4.3.2.stable` folder.
 
-The `editors` cast in this article is from an older CLI: that machine stored `0.6.725` directly under `Editors\`, with `channel:release` only as a field. New installs follow the channel directory.
+The `editors` cast below is from an older CLI: that machine stored `0.6.725` directly under `Editors\`, with `channel:release` only as a field. New installs follow the channel directory.
 
 ![blazium-cli install-path](assets/cli-install-path.svg)
 <!-- ASCIINEMA: assets/cli-install-path.cast | blazium-cli install-path -->
@@ -104,7 +104,7 @@ blazium-cli templates list
 blazium-cli templates download 0.6.725 --tpz
 ```
 
-Templates are versioned as Blazium `0.6.x`, not Godot `4.3.2`. Metadata resolution order is in the [templates article](../export-templates-and-cdn/export-templates-and-cdn.md).
+Templates are versioned as Blazium `0.6.x`, not Godot `4.3.2`. Individual file helpers resolve metadata in this order: `https://cdn.blazium.app/{channel}/{version}/template_files.json`, then `templates.json`, then `details.json`, then `GET /api/v1/templates/{deploy_type}/{version}` on `https://blazium.app`. Override that API base with `BLAZIUM_CEREBRO_URL`. Hub does not call it. On Windows the template root is `%LOCALAPPDATA%\Blazium\export_templates`. On Unix it is `~/.local/share/blazium/export_templates`.
 
 ![templates --help](assets/cli-templates-help.svg)
 <!-- ASCIINEMA: assets/cli-templates-help.cast | blazium-cli templates --help -->
@@ -127,7 +127,7 @@ blazium-cli update apply --product launcher --install-root "C:\Program Files\Bla
 
 ## Remote
 
-Short table. The long form is [Drive the editor](../remote-control-and-mcp/remote-control-and-mcp.md). The editor module listens on `127.0.0.1:6508` by default, not 6507 (that port is the game JustAMCP default).
+The editor module listens on `127.0.0.1:6508` by default. Routes include `GET /v1/health`, `GET /v1/status`, `POST /v1/exec`, and `POST /v1/eval`. Eval stays off until `blazium/remote_control/allow_eval` is true. JustAMCP, the editor MCP server, is port 6506. A game export port of `0` means 6507. Do not point this CLI at 6507.
 
 | Command | Job |
 |---|---|
@@ -182,7 +182,7 @@ Steam Guard setup is interactive. Do not run `deploy steam guard setup` on a CI 
 
 `open` and `load` start the editor. They do not run the game. `run` (alias `play`) starts the game and errors if `application/run/main_scene` is empty. Remote control stays off for `run`. `open` and `load` turn it on unless `remote.enable_on_open` is false.
 
-Current installs use `{install-path}/{channel}/{version}`. The `editors` cast in this article is an older CLI that stored the version directly under `Editors\` with the channel only as a field. Do not copy that path into a script that talks to a current binary.
+Current installs use `{install-path}/{channel}/{version}`. The `editors` cast above is an older CLI that stored the version directly under `Editors\` with the channel only as a field. Do not copy that path into a script that talks to a current binary.
 
 Two remote editors: the newest is the default, and the CLI warns unless `--quiet`. Pass `--instance` or `--project`.
 
@@ -192,7 +192,7 @@ Two remote editors: the newest is the default, and the CLI warns unless `--quiet
 
 ## CI
 
-[GitHub Actions for Blazium](../github-actions-for-blazium/github-actions-for-blazium.md) starts with `setup-blazium-cli`, then this binary. Downloads: [Hub and CLI](https://blazium.app/dev-tools).
+CI starts with [setup-blazium-cli](https://github.com/blazium-games/setup-blazium-cli) at `v0.2.1`, then this binary. The other actions are [setup-blazium-engine](https://github.com/blazium-games/setup-blazium-engine) at `v0.3.0`, [export-blazium-game](https://github.com/blazium-games/export-blazium-game) at `v0.3.2`, and [deploy-blazium-game](https://github.com/blazium-games/deploy-blazium-game) at `v0.0.2`. `version: latest` on setup-engine tracks the nightly channel. Downloads: [Hub and CLI](https://blazium.app/dev-tools).
 
 ![Install flow](assets/install-flow.png)
 

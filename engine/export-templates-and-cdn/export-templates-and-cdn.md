@@ -15,7 +15,7 @@ Export templates follow the Blazium product version, not a Godot `4.3.2.stable` 
 
 ## What Blazium Games uses it for
 
-The CDN and these export templates were built for the Blazium Engine and this ecosystem. Official editor and template zips are published there so Hub and `blazium-cli install` resolve a version without a private file share. Internal game builds use the same CDN downloads and the same export templates the public gets. The two engine lines are not interchangeable. Hub's executable tracks `blazium_4.8`. The templates this article describes are the ones for the editor version you install.
+The CDN and these export templates were built for the Blazium Engine and this ecosystem. Official editor and template zips are published there so Hub and `blazium-cli install` resolve a version without a private file share. Internal game builds use the same CDN downloads and the same export templates the public gets. The two engine lines are not interchangeable. Hub's executable tracks `blazium_4.8`. The templates this page describes are the ones for the editor version you install.
 
 ## What other projects get
 
@@ -35,7 +35,7 @@ Install templates for the same Blazium version as the editor you are running. `b
 
 ## What a template is
 
-Each platform has `template_debug` and `template_release`. Mono builds are a second `.tpz` when you pass `--mono`. The web preset (`Web`) can also emit a Discord embed script and a YouTube Playables script, and it can gzip the WASM. Those flags live on the export preset, not in a separate template product. See [Discord on Blazium](../discord-on-blazium/discord-on-blazium.md).
+Each platform has `template_debug` and `template_release`. Mono builds are a second `.tpz` when you pass `--mono`. The web preset (`Web`) can also emit a Discord embed script and a YouTube Playables script, and it can gzip the WASM. Those flags live on the export preset, not in a separate template product: `blazium/discord_embed/enabled`, `blazium/discord_embed/autodetect`, `blazium/youtube_playable/enabled`, and `blazium/export_gzip_compressed_wasm/enabled`. `DiscordEmbeddedAppClient` is the node the embed script talks to. `is_discord_environment()` checks that the page is inside Discord.
 
 ## CLI
 

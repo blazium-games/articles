@@ -55,7 +55,7 @@ blazium-toolchain --json list
 blazium-toolchain ps1 setup --profile compile
 ```
 
-Go 1.23.8 or later if you build from source. Published binaries are Linux and Windows, x86_64 and x86_32. The command list, cache layout, and the exact fetch pins are in [Blazium console toolchain](../blazium-toolchain/blazium-toolchain.md).
+Go 1.23.8 or later if you build from source. Published binaries are Linux and Windows, x86_64 and x86_32. Install with `npm install -g @blazium-engine/toolchain`. `blazium-toolchain ps1 setup --profile compile` fetches the compile profile. Cache is `%LOCALAPPDATA%\Blazium\blazium-toolchain` on Windows and `~/.local/share/blazium-toolchain` elsewhere. Exit `2` is a reserved platform (`ps3`, `ps4`) or a host that cannot compile. Exit `3` means a host tool is missing. SHA pins live in the embedded `pins.json`.
 
 ## What we left out on purpose
 
@@ -65,7 +65,7 @@ The CLI does not download Sony BIOS images or an N64 PIF ROM. `ps2 run` expects 
 
 Published binaries are Linux and Windows. Interactive DVD mastering works on a macOS build of the CLI. PS1, PS2, and N64 setup and build do not, on that host.
 
-That split is the whole design. The MIT editor can call a GPL tool. It does not become one. The command list is [Blazium console toolchain](../blazium-toolchain/blazium-toolchain.md). Engine docs: [docs.blazium.app](https://docs.blazium.app).
+That split is the whole design. The MIT editor can call a GPL tool. It does not become one. Commands are `ps1`, `ps2`, `n64`, and `interdvd`, each with `setup` and `build`. `ps3` and `ps4` exit `2`. Engine docs: [docs.blazium.app](https://docs.blazium.app).
 
 ---
 

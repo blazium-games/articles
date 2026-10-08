@@ -15,7 +15,7 @@ The template README says it hosts a Blazium web export as a Discord Embedded App
 
 ## What Blazium Games uses it for
 
-Blazium Games used this template in-house to validate Discord `/.proxy/` hosting and YouTube Playables bundle serving. `PROJECT_NAME=hangman` in `example.env` is the example Hangman game, which shipped as a Discord app. Registry push is `make deploy-docker`, which reads `.env` for `DOCKER_REGISTRY`, `REGISTRY_PATH`, and `TAG`. The sample registry is `registry.digitalocean.com` and `REGISTRY_PATH=blazium`. The 2025 community update lists a DigitalOcean sponsorship. It does not say this image is the host Hangman runs in production.
+Blazium Games used this template in-house to validate Discord `/.proxy/` hosting and YouTube Playables bundle serving. `PROJECT_NAME=hangman` in `example.env` is the example Hangman game, which shipped as a Discord app. Registry push is `make deploy-docker`, which reads `.env` for `DOCKER_REGISTRY`, `REGISTRY_PATH`, and `TAG`. The sample registry is `registry.digitalocean.com` and `REGISTRY_PATH=blazium`. That sample is not the host Hangman runs in production.
 
 ## What other projects get
 
@@ -31,7 +31,7 @@ The template serves a folder you already exported. It does not install Blazium a
 
 YouTube Playables wants the initial bundle under 15 MiB. That limit is YouTube's, and the template's answer is precompressed WASM plus `gzip_static`. Discord activities need the `/.proxy/` location and the COOP/COEP headers already in `nginx/nginx.conf`. `/ytgame` drops those two headers. Nothing in the template creates the Discord application or the YouTube Playable listing.
 
-The engine preset you export is named `Web` (`EditorExportPlatformWeb.get_name()` returns `"Web"`). Templates and the CDN layout: [Export templates and the CDN](../export-templates-and-cdn/export-templates-and-cdn.md).
+The engine preset you export is named `Web` (`EditorExportPlatformWeb.get_name()` returns `"Web"`). Export templates follow the Blazium version (`0.6.x`) on `cdn.blazium.app`, not a Godot `4.3.2.stable` directory. `blazium-cli install <version> --templates` is the download. Internal game builds use those same templates.
 
 ![CDN tree](assets/cdn-tree.png)
 
@@ -64,7 +64,7 @@ TAG=latest
 
 `example.env` is the committed sample. Do not commit a filled `.env`. The Makefile includes `.env` when it is present.
 
-The GitHub workflow that deploys an already-exported artifact is `deploy-docker.yml` in [deploy-blazium-game](https://github.com/blazium-games/deploy-blazium-game). It expects an artifact named like `Web`. See [GitHub Actions for Blazium](../github-actions-for-blazium/github-actions-for-blazium.md).
+The GitHub workflow that deploys an already-exported artifact is `deploy-docker.yml` in [deploy-blazium-game](https://github.com/blazium-games/deploy-blazium-game) (`v0.0.2`). It expects an artifact named like `Web`. The other public actions install the CLI, install an editor, and export a preset: [setup-blazium-cli](https://github.com/blazium-games/setup-blazium-cli) `v0.2.1`, [setup-blazium-engine](https://github.com/blazium-games/setup-blazium-engine) `v0.3.0`, and [export-blazium-game](https://github.com/blazium-games/export-blazium-game) `v0.3.2`. `platform-name` has to match the preset, so the string is `Web`.
 
 ## Discord activity
 
@@ -75,7 +75,7 @@ Cross-Origin-Opener-Policy: same-origin
 Cross-Origin-Embedder-Policy: require-corp
 ```
 
-On the Discord side you create an application and set URL mappings. The engine side of the embed is the web export flag `blazium/discord_embed/enabled`, which appends the generated `.discord.embed.js`. The node is `DiscordEmbeddedAppClient` in `modules/socialexports`. Walkthrough: [Discord on Blazium](../discord-on-blazium/discord-on-blazium.md).
+On the Discord side you create an application and set URL mappings. The engine side of the embed is the web export flag `blazium/discord_embed/enabled`, which appends the generated `.discord.embed.js`. The node is `DiscordEmbeddedAppClient` in `modules/socialexports`. `is_discord_environment()` checks that the page is inside Discord. `authorize` takes the scope as an Array, for example `authorize("code", "", "none", ["identify", "guilds"])`. Hangman, our example game, shipped as a Discord Embedded App. That does not say the Steam, Play, or Apple builds of Hangman called this node.
 
 ## YouTube Playables
 

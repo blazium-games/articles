@@ -25,11 +25,11 @@ Chat comes in. The game changes. OBS cuts. Five modules on `blazium-dev` cover t
 
 ## Status
 
-`twitchapi`, `kickapi`, `ircclient`, `crowdcontrol`, and `obsclient` are in the engine tree. Each has its own module tests (links at the bottom). There is no scene template that connects all five, and no Blazium service that holds your Twitch, Kick, or OBS tokens. Tokens go in `.env` through the `ENV` singleton. See [ENV, INI, and CSV](../data-formats/data-formats.md).
+`twitchapi`, `kickapi`, `ircclient`, `crowdcontrol`, and `obsclient` are in the engine tree. Each has its own module tests (links at the bottom). There is no scene template that connects all five, and no Blazium service that holds your Twitch, Kick, or OBS tokens. Tokens go in `.env`. `ENV.auto_config()` loads `.env`, `.env.local`, `.env.{mode}`, and `.env.{mode}.local`. `ENV.get_env` reads a key. That file is plain text. It is not a security boundary.
 
 `CrowdControl` and `OBSClient` are `Object`, not `Node`. Both need `poll()` from `_process`. Crowd Control has no `trigger()` method. The viewer starts the effect on Crowd Control's side. The game answers with `respond_to_effect_instant` or `respond_to_effect_timed`.
 
-Per-service articles already on the site cover one module at a time: [Twitch](../twitchapi-module/twitchapi-module.md), [Kick](../kickapi-module/kickapi-module.md), [IRC](../irc-client-module/irc-client-module.md), [Crowd Control](../crowd-control-module/crowd-control-module.md), [OBS](../obs-client-module/obs-client-module.md). This page is the path across them.
+This page is the path across Twitch (`TwitchAPI`, `TwitchIRCClientNode`), Kick (`KickAPI`, `KickHTTPClient.poll`), IRC (`IRCClientNode`), Crowd Control, and OBS. Each class below is the call surface for that service.
 
 ![Twitch / Kick / IRC, then Crowd Control, then the game, then OBS](assets/streaming-stack.png)
 
@@ -68,7 +68,7 @@ OBSClient.connect_to_obs("ws://localhost:4455", "my_password")
 
 ## One overlay
 
-Tokens belong in `.env`, loaded by the `ENV` singleton. See [ENV, INI, and CSV](../data-formats/data-formats.md). This sample connects OBS and reacts to one IRC line. It does not pretend Crowd Control has a fire-and-forget trigger.
+Tokens belong in `.env`. `ENV.auto_config()` loads the file. `ENV.get_env("OBS_URL")` reads a key. This sample connects OBS and reacts to one IRC line. It does not pretend Crowd Control has a fire-and-forget trigger.
 
 ```gdscript
 extends Node

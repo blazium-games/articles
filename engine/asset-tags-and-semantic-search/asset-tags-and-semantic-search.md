@@ -9,7 +9,7 @@ author: "Blazium"
 hosts: []
 ---
 
-Tag a resource once. Search it later from the dock or from an agent. Why the modules were added is in [Asset Tags & Semantic Search Modules](../asset-tags-and-semantic-search-modules/asset-tags-and-semantic-search-modules.md). Two editor-only modules: `assettags` and `semanticsearch`. `semanticsearch` does not build unless `assettags` does. Neither module is in an export template. `config.py` limits both to editor builds.
+Tag a resource once. Search it later from the dock or from an agent. The modules were added so the tag dictionary stays in the project as JSON, the dock can edit it, and JustAMCP can search it without a sidecar database that drifts from the files. Blazium Games used them in-house to validate tagging and agent search. Two editor-only modules: `assettags` and `semanticsearch`. `semanticsearch` does not build unless `assettags` does. Neither module is in an export template. `config.py` limits both to editor builds. HTTP embedding work is deferred so editor startup stays responsive.
 
 ## Status
 
@@ -66,7 +66,7 @@ JustAMCP exposes the modules so your AI agents can organize and search without a
 
 Resource `blazium://tags/dictionary` is the dictionary. Prompt `blazium_asset_tagging_workflow` is the step list the agent is given. Search queries go through the tool, not through `resources/read`. The server will tell the caller to use `blazium_semantic_search` instead.
 
-JustAMCP itself is [Drive the editor](../remote-control-and-mcp/remote-control-and-mcp.md). The longer "why these two modules" piece is [Asset Tags & Semantic Search Modules](../asset-tags-and-semantic-search-modules/asset-tags-and-semantic-search-modules.md).
+JustAMCP is the editor MCP server on port 6506. The dictionary stays in the project as JSON so a sidecar database cannot drift from the files. The commit that added the modules also deferred HTTP embedding so editor startup stays responsive.
 
 ## Limits
 
@@ -74,7 +74,7 @@ Editor only. No CLI flag. Tags on a file the export plugin did not bake are not 
 
 `strict_paths` rejects a tag on a path that is not on disk. `strict_tags` rejects a name that is not in the dictionary. Both default to false, so a typo is stored until you turn them on.
 
-The why these files live in the project, instead of a sidecar database, is [Asset Tags & Semantic Search Modules](../asset-tags-and-semantic-search-modules/asset-tags-and-semantic-search-modules.md). Engine docs: [docs.blazium.app](https://docs.blazium.app).
+The files live in the project so a rename outside a sidecar database cannot leave the index behind. Engine docs: [docs.blazium.app](https://docs.blazium.app).
 
 ---
 

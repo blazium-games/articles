@@ -21,7 +21,7 @@ The download pages, Hub, the CLI, the crash reporter, and the CDN were built for
 
 The same pages. Published Hub and CLI binaries are Linux and Windows. There is no macOS installer in Hub's `packaging/` tree, and no Flatpak. [blazium#428](https://github.com/blazium-games/blazium/issues/428) asks for one.
 
-If you make games, install [Hub](../blazium-hub/blazium-hub.md). If you already live in a terminal or CI, install [CLI](../blazium-cli/blazium-cli.md). Both can be found on the [website](https://blazium.app).
+If you make games, install Hub from [the Hub download](https://blazium.app/dev-tools/download?tool=hub). If you already live in a terminal or CI, install the CLI from [the CLI download](https://blazium.app/dev-tools/download?tool=cli). Both are linked from [blazium.app](https://blazium.app). Hub is the window. The CLI is the binary that installs editors and opens projects. The Hub installer lays both down.
 
 ## Status
 
@@ -52,7 +52,7 @@ GitHub Releases, npm (`@blazium-engine/cli`), the CDN manifest `https://cdn.blaz
 
 The download page is the editor itself (prebuilt archives, package-manager commands, and the same bits over other channels). Those zips are what `blazium-cli install` fetches from `cdn.blazium.app`. You can unpack one by hand. The CLI is what records it in `hub.json` so Hub and `blazium-cli open` can find it.
 
-The product version on that page is Blazium `0.6.x`. Godot compatibility for this line is 4.3.2. Export templates follow the Blazium version, not a `4.3.2.stable` folder. See [Export templates and the CDN](../export-templates-and-cdn/export-templates-and-cdn.md).
+The product version on that page is Blazium `0.6.x`. Godot compatibility for this line is 4.3.2. Export templates follow the Blazium version, not a `4.3.2.stable` folder. `blazium-cli install <version> --templates` pulls them from `cdn.blazium.app`. Internal game builds use those same templates.
 
 ## Dev tools
 
@@ -69,7 +69,7 @@ The product version on that page is Blazium `0.6.x`. Godot compatibility for thi
 | deploy-blazium-game | [deploy-blazium-game](https://github.com/blazium-games/deploy-blazium-game) | Push a built artifact |
 | Toolchain | [blazium-toolchain](https://github.com/blazium-games/blazium-toolchain) | PS1, PS2, N64, Interactive DVD |
 
-The four Actions are separate repositories. They are not a `github_actions/` folder in the articles checkout. Article: [GitHub Actions for Blazium](../github-actions-for-blazium/github-actions-for-blazium.md).
+The four Actions are separate repositories. They are not a folder inside the engine repository. Current tags: [setup-blazium-cli](https://github.com/blazium-games/setup-blazium-cli) `v0.2.1`, [setup-blazium-engine](https://github.com/blazium-games/setup-blazium-engine) `v0.3.0`, [export-blazium-game](https://github.com/blazium-games/export-blazium-game) `v0.3.2`, and [deploy-blazium-game](https://github.com/blazium-games/deploy-blazium-game) `v0.0.2`. `version: latest` on setup-engine tracks the nightly channel. `latest-release` is the release channel. Steam and itch reusable workflows in `deploy-blazium-game` are deprecated in favor of `blazium-cli deploy steam` and `blazium-cli deploy itch`.
 
 ![GitHub Actions flow](assets/github-actions-flow.png)
 
@@ -80,8 +80,8 @@ The four Actions are separate repositories. They are not a `github_actions/` fol
 | Making a game on a PC | Hub (CLI comes with it) |
 | Scripting installs or opening projects | CLI |
 | GitHub CI | `setup-blazium-cli` or `setup-blazium-engine`, then export or Autowork |
-| Discord activity or YouTube Playable | `Web` export + [Docker web export](../docker-web-export/docker-web-export.md) |
-| A console or Interactive DVD build | [Toolchain](../blazium-toolchain/blazium-toolchain.md) |
+| Discord activity or YouTube Playable | `Web` export plus [docker-webbuild-template](https://github.com/blazium-games/docker-webbuild-template) (Nginx `/.proxy/`) |
+| A console or Interactive DVD build | [blazium-toolchain](https://github.com/blazium-games/blazium-toolchain) (`npm install -g @blazium-engine/toolchain`) |
 
 ---
 

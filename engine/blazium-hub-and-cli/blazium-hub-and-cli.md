@@ -13,7 +13,7 @@ hosts: []
 
 ## Why we built it
 
-The CLI README describes the job: install editors, keep a project registry, update the binary, remote-control a running editor, and deploy to Steam or itch.io. The Hub README describes the window on top of that: browse CDN catalogs, and send install, open, and project changes through the CLI, including `blazium://` links. The [2025 community update](../blazium-community-update-goodbye-2025-lets-conquer-2026/blazium-community-update-goodbye-2025-lets-conquer-2026.md) lists the CLI, the open-source deployment framework, and the GitHub Actions as things shipped that year, next to Project Hangman. It does not say Hangman is why the CLI exists.
+The CLI README describes the job: install editors, keep a project registry, update the binary, remote-control a running editor, and deploy to Steam or itch.io. The Hub README describes the window on top of that: browse CDN catalogs, and send install, open, and project changes through the CLI, including `blazium://` links. In 2025 Blazium also shipped the CLI, an open-source deployment framework, and GitHub Actions, next to the example Hangman game. That list does not say Hangman is why the CLI exists.
 
 ## What Blazium Games uses it for
 
@@ -41,11 +41,11 @@ CLI only: [blazium.app/dev-tools/download?tool=cli](https://blazium.app/dev-tool
 
 Hub lists projects and editor builds in one window. Scan a folder for `project.godot`. Favorite pins a card. Remove drops it from the registry. The card scene has a version `OptionButton`. The open path is still `HubCli.open_project_async(path)`, so that control is not consulted. There is no Hub issue that schedules wiring it. The editor you get is the CLI default until you run `blazium-cli editors default`. Custom local binaries show up after `blazium-cli editors add`.
 
-The News tab reads `https://cdn.blazium.app/articles/rss.xml` and renders the article in the window. You do not need a browser to see what shipped.
+The News tab reads `https://cdn.blazium.app/articles/rss.xml` and renders the post in the window. You do not need a browser to see what shipped.
 
 Everything that changes disk goes through the CLI. Hub and the CLI share `%APPDATA%\blazium\hub.json` (or `~/.config/blazium/hub.json`). If the registry is right in one, it is right in the other.
 
-The longer walk of tabs, the tray, and port 39218 is in [Blazium Hub](../blazium-hub/blazium-hub.md).
+The window has four tabs: Projects, Editors, News, and Settings. On Windows a tray icon stays up after you close the window. Hub listens on loopback port 39218. The token file is `hub_remote.json`. Leave it alone.
 
 ## What the CLI is for
 
@@ -61,9 +61,9 @@ blazium-cli open ./MyProject
 
 Deep links use the `blazium://` scheme. The OS handler is the CLI, not Hub. `blazium://open?path=` opens a project. `blazium://install?version=` installs an editor. `blazium://hub` focuses Hub over the loopback port the installer wrote into `hub_remote.json`. Leave that file alone.
 
-When the editor was built with the Remote Control module, `blazium-cli remote` can query status, run a command, read logs, and kick Autowork without clicking the UI. Details: [The Remote Control module](../remote-control-module/remote-control-module.md).
+When the editor was built with the Remote Control module, `blazium-cli remote` can query status, run a command, read logs, and kick Autowork without clicking the UI. The editor listens on `127.0.0.1:6508`. `allow_eval` defaults to false. Usual calls are `blazium-cli remote status`, `remote exec`, `remote logs`, and `remote autowork run --wait`. Blazium Games used that path in-house to validate editor automation.
 
-Command reference: [Blazium CLI](../blazium-cli/blazium-cli.md).
+Other commands on the same binary: `editors`, `templates`, `update apply --product cli|hub|crash_reporter|launcher`, `deploy steam`, and `deploy itch`.
 
 ## Why both
 
@@ -79,7 +79,7 @@ Engine docs: [docs.blazium.app](https://docs.blazium.app). CLI repo: [blazium-cl
 
 ## Next steps
 
-[The Blazium engine stack](../what-is-the-blazium-ecosystem/what-is-the-blazium-ecosystem.md) is the map of website, CDN, Hub, CLI, and the editor.
+The pieces a download touches are [blazium.app](https://blazium.app), `cdn.blazium.app`, Hub, the CLI, and the `0.6.x` editor on `blazium-dev`. Hub's own executable is built from `blazium_4.8`.
 
 ---
 

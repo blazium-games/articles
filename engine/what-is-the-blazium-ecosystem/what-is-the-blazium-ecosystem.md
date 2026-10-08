@@ -9,9 +9,9 @@ author: "Blazium"
 hosts: []
 ---
 
-You install Hub. Hub asks the CLI to fetch an editor from the CDN. The editor is the engine. The News tab in Hub is this articles repo, once an article is marked deployed and published.
+You install Hub. Hub asks the CLI to fetch an editor from the CDN. The editor is the engine. The News tab in Hub reads `https://cdn.blazium.app/articles/rss.xml` once a post is marked deployed and published.
 
-Hub, the CLI, the crash reporter, and the CDN were built for the Blazium Engine and this ecosystem. Internal game builds use the same CDN downloads and export templates the public gets. Analytics and the in-game bug reporter were built for our example Hangman game and for Demon Lord: Clicker. Hangman shipped on Steam, Discord (as an Embedded App), Google Play, and the Apple App Store. Crash reports that are sent are read to find engine issues and to ship patches for those crashes. The longer map is [The Blazium Games Ecosystem](../the-blazium-games-ecosystem/the-blazium-games-ecosystem.md).
+Hub, the CLI, the crash reporter, and the CDN were built for the Blazium Engine and this ecosystem. Internal game builds use the same CDN downloads and export templates the public gets. Analytics and the in-game bug reporter were built for our example Hangman game and for Demon Lord: Clicker. Hangman shipped on Steam, Discord (as an Embedded App), Google Play, and the Apple App Store. Crash reports that are sent are read to find engine issues and to ship patches for those crashes. In Demon Lord: Clicker the bug reporter sends a description, a screenshot, logs, and session details, with account IDs and PC usernames stripped. The backend links those reports to GitHub issues. That path is not the minidump, and analytics events are not the patch input.
 
 That is the stack people touch. Everything else is a module inside the editor, or a separate repo the CLI and the editor know how to call.
 
@@ -29,7 +29,7 @@ That is the stack people touch. Everything else is a module inside the editor, o
 | Crash sidecar | Shows the dump. Uploads only after you confirm |
 | Cerebro | Internal. Release CI publishes catalogs. Hub never calls it. The CLI can, for template metadata, via `BLAZIUM_CEREBRO_URL` |
 
-There is a second engine line, `blazium_4.8`. Hub's own executable is built from that branch. The editors you install from the CDN are whatever channel you picked. This article stays on what `blazium-dev` and the tool repos actually contain.
+There is a second engine line, `blazium_4.8`. Hub's own executable is built from that branch. The editors you install from the CDN are whatever channel you picked. This page stays on what `blazium-dev` and the tool repos actually contain.
 
 Published Hub and CLI binaries are Linux and Windows. There is no Flatpak in the download set. [blazium#428](https://github.com/blazium-games/blazium/issues/428) is the open request. Engine docs are [docs.blazium.app](https://docs.blazium.app). The store at [blazium.games](https://blazium.games) is a different product. Uploads there go through `chauffeur`, documented at [docs.blazium.games](https://docs.blazium.games), not through `blazium-cli deploy`.
 
@@ -61,11 +61,11 @@ asciinema play assets/cli-editors.cast
 
 ## The other pieces
 
-- **Crash sidecar.** The engine writes a minidump and a JSON file. A small UI asks you. Nothing leaves the machine until Send. Editor HTTP upload is not implemented. See [Crash reports](../crash-reporter/crash-reporter.md).
-- **Analytics.** Off until consent is given. Same app id and build id as crash reports. See [Opt-in analytics](../analytics-opt-in/analytics-opt-in.md).
-- **CLI remote and MCP.** Localhost JSON for scripts on port 6508. JustAMCP for agents on port 6506. Autowork is the test runner both can start. See [Drive the editor](../remote-control-and-mcp/remote-control-and-mcp.md).
-- **Toolchain.** A GPL-3.0 CLI. The editor spawns it for Interactive DVD (`export/inter_dvd/toolchain`). PS1, PS2, and N64 are terminal commands in that same binary. Compilers are not in `blazium.git`. See [Console toolchain](../blazium-toolchain/blazium-toolchain.md).
-- **Web.** A normal editor preset named `Web`, plus the [Docker template](../docker-web-export/docker-web-export.md) if you need Discord `.proxy` paths. Web is not a toolchain target.
+- **Crash sidecar.** The engine writes a minidump and a JSON file. A small UI asks you. Nothing leaves the machine until Send. Editor HTTP upload is not implemented. `require_user_consent` defaults to true.
+- **Analytics.** Off until consent is given (`--analytics=accepted|declined`, `BLAZIUM_ANALYTICS_CONSENT`, `Analytics.set_consent`, or Editor Settings `blazium/analytics/consent`). Same app id and build id as crash reports. `flush()` is what POSTs.
+- **CLI remote and MCP.** Localhost JSON for scripts on port 6508 (`GET /v1/health`, `POST /v1/exec`). JustAMCP for agents on port 6506. Autowork is the test runner both can start. `allow_eval` defaults to false.
+- **Toolchain.** A GPL-3.0 CLI, [blazium-toolchain](https://github.com/blazium-games/blazium-toolchain). The editor spawns it for Interactive DVD (`export/inter_dvd/toolchain`). PS1, PS2, and N64 are terminal commands in that same binary. Compilers are not in `blazium.git`. `ps3` and `ps4` exit 2.
+- **Web.** A normal editor preset named `Web`, plus [docker-webbuild-template](https://github.com/blazium-games/docker-webbuild-template) if Discord needs Nginx `/.proxy/` paths. Web is not a toolchain target.
 - **Multiplayer that compiles on `blazium-dev`.** `ENetServer` / `ENetClient`, WebRTC signaling (`SignalClient`, `WebRTCEnetSession`), and `Discord.create_or_join_lobby`. `LobbyClient`, `LoginClient`, and `MasterServerClient` are not registered classes in this tree. Script templates with those names are still in the editor template folder. They do not run.
 
 ## Two meanings of `blazium://`
@@ -81,12 +81,7 @@ Same scheme. Two owners.
 
 The engine is MIT. `blazium-toolchain` is GPL-3.0-or-later so it can fetch GCC and the console SDKs. The editor process stays MIT and only executes that binary. Fetching the SDK into the engine repo would be the thing the split exists to avoid.
 
-## Next
-
-- [Blazium Hub](../blazium-hub/blazium-hub.md)
-- [Blazium CLI](../blazium-cli/blazium-cli.md)
-- [Crash reports](../crash-reporter/crash-reporter.md)
-- [Download and dev tools](../download-and-dev-tools/download-and-dev-tools.md)
+Downloads: [blazium.app](https://blazium.app). Hub and the CLI: [dev tools](https://blazium.app/dev-tools).
 
 ---
 

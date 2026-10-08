@@ -11,17 +11,17 @@ hosts: []
 
 ## Why we built it
 
-The [2025 community update](../blazium-community-update-goodbye-2025-lets-conquer-2026/blazium-community-update-goodbye-2025-lets-conquer-2026.md) lists an open-source deployment framework for Godot and Blazium CI, and "dozen+ GitHub Actions," next to learning how to launch a game across storefronts. The checklist it links is [blazium-game-checklist](https://github.com/blazium-engine/blazium-game-checklist). These four repositories are the public actions: put the CLI on a runner, install an editor from the CDN, export a preset, deploy an artifact. `deploy-blazium-game`'s README now says the Steam and itch reusable workflows are deprecated. The replacement it names is `blazium-cli deploy steam` and `blazium-cli deploy itch`.
+In 2025 Blazium shipped an open-source deployment framework for Godot and Blazium CI, and a set of GitHub Actions, next to learning how to launch a game across storefronts. The public checklist is [blazium-game-checklist](https://github.com/blazium-engine/blazium-game-checklist). These four repositories are the public actions: put the CLI on a runner, install an editor from the CDN, export a preset, deploy an artifact. `deploy-blazium-game`'s README now says the Steam and itch reusable workflows are deprecated. The replacement it names is `blazium-cli deploy steam` and `blazium-cli deploy itch`.
 
 ## What Blazium Games uses it for
 
-Blazium Games used these actions in-house to validate installing an editor, exporting a preset, and deploying an artifact on a runner. Our example game, Hangman, shipped on Steam, Discord, Google Play, and the Apple App Store. The Apple store lesson in the 2025 update is that release. Those four storefronts are how export and deploy were checked end to end. The update does not name which workflow file each store build called. Steam and itch reusable workflows in `deploy-blazium-game` are deprecated in favor of `blazium-cli deploy`.
+Blazium Games used these actions in-house to validate installing an editor, exporting a preset, and deploying an artifact on a runner. Our example game, Hangman, shipped on Steam, Discord, Google Play, and the Apple App Store. Those four storefronts are how export and deploy were checked end to end. That does not name which workflow file each store build called. Steam and itch reusable workflows in `deploy-blazium-game` are deprecated in favor of `blazium-cli deploy`.
 
 ## What other projects get
 
 The actions are public. Pin a tag. `setup-blazium-engine` at `v0.3.0` installs an editor and can download templates. `version: latest` tracks nightly. Export `platform-name` has to match the preset name in the project, including `Web`.
 
-Four Actions. Each one is its own repository under [blazium-games](https://github.com/blazium-games). CI talks to the CDN through [blazium-cli](../blazium-cli/blazium-cli.md).
+Four Actions. Each one is its own repository under [blazium-games](https://github.com/blazium-games). CI talks to the CDN through the `blazium-cli` binary ([blazium-cli](https://github.com/blazium-games/blazium-cli)). `blazium-cli install <version> --templates` is how a runner fetches export templates. They follow Blazium `0.6.x`, not a Godot `4.3.2.stable` folder.
 
 ## Status
 
@@ -84,7 +84,7 @@ jobs:
 | `latest-release-0.6` | Highest 0.6.x on release |
 | `lts` | LTS alias handled by the CLI |
 
-If you wanted a release and you wrote `latest`, you get a nightly. Same version trap as [export templates](../export-templates-and-cdn/export-templates-and-cdn.md): Blazium `0.6.x`, not Godot `4.3.2`.
+If you wanted a release and you wrote `latest`, you get a nightly. Same version trap as export templates: Blazium `0.6.x`, not Godot `4.3.2`. Templates install under the Blazium version directory, not `4.3.2.stable`.
 
 Other inputs: `download_template` (default `false`), `download_mono`, `platform`, `arch`, `use-cache`, `cli-version`. The cache key includes the resolved version, platform, arch, and whether Mono was requested.
 
@@ -115,7 +115,7 @@ A cache hit on `setup-blazium-engine` is keyed by resolved version, platform, ar
 "$BLAZIUM_EDITOR" --headless --path . -s run_tests.gd
 ```
 
-Or, if an editor is already up with remote control: `blazium-cli remote autowork run --wait`. See [Drive the editor](../remote-control-and-mcp/remote-control-and-mcp.md).
+Or, if an editor is already up with remote control: `blazium-cli remote autowork run --wait`. That command talks to the editor HTTP server on `127.0.0.1:6508`. Eval stays off unless `blazium/remote_control/allow_eval` is set. Do not point the CLI at port 6507. That port is the game JustAMCP default.
 
 ---
 

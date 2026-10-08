@@ -9,7 +9,7 @@ author: "Blazium"
 hosts: []
 ---
 
-Three tools, three jobs. Do not collapse them. Why the HTTP server was added, including Hub registration from SCons, is in [The Remote Control module](../remote-control-module/remote-control-module.md).
+Three tools, three jobs. Do not collapse them. The HTTP server was added so the CLI and CI can check health, logs, play state, snapshots, and Autowork without clicking the window. SCons `hub_register=yes` registers editor builds with Hub after the build, through `blazium-cli`, not at runtime. Blazium Games used this in-house to validate editor automation.
 
 ## Status
 
@@ -17,7 +17,7 @@ Three tools, three jobs. Do not collapse them. Why the HTTP server was added, in
 
 Neither server is a cloud relay. Default binds are loopback. Remote control is port **6508**. Editor MCP is port **6506**. A game export port of `0` means editor port + 1, which is **6507**. Pointing the CLI at 6507 does not reach remote control.
 
-Why the HTTP server is local, and what eval is allowed to do, is [The Remote Control module](../remote-control-module/remote-control-module.md).
+The bind stays on `127.0.0.1` because the routes include play, snapshots, and eval. `allow_eval` defaults to false. Eval runs GDScript or Luau in the editor process. A token, when set, is `Authorization: Bearer` or `X-Remote-Control-Token`.
 
 ## First check
 

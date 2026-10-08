@@ -9,7 +9,7 @@ author: "Blazium"
 hosts: []
 ---
 
-The Blazium engine stays under the MIT license. Why the compilers live in this GPL CLI is in [The Blazium Toolchain](../the-blazium-toolchain/the-blazium-toolchain.md). This CLI is GPL-3.0-or-later so it can fetch GCC, PSn00bSDK, pcsx-redux, mkpsxiso, OpenBIOS, the ps2dev toolchain, and libdragon. Those trees are never merged into `blazium.git`. The editor looks up `blazium-toolchain` and runs it. It does not vendor the compilers.
+The Blazium engine stays under the MIT license. The compilers live in this GPL CLI so the editor does not absorb GCC, PSn00bSDK, or libdragon. This CLI is GPL-3.0-or-later so it can fetch GCC, PSn00bSDK, pcsx-redux, mkpsxiso, OpenBIOS, the ps2dev toolchain, and libdragon. Those trees are never merged into `blazium.git`. The editor looks up `blazium-toolchain` and runs it. It does not vendor the compilers. Blazium Games used the CLI in-house to validate PS1, PS2, N64, and Interactive DVD exports. That is not a shipped console title.
 
 ## Status
 
@@ -19,7 +19,7 @@ On `blazium-dev` the editor spawn that exists is Interactive DVD (`modules/inter
 
 `ps3` and `ps4` are reserved names. Commands exit `2`. They are not a shipping target and the CLI does not document a date for them.
 
-The license split, and why the compilers are not in the engine repo, is [The Blazium Toolchain](../the-blazium-toolchain/the-blazium-toolchain.md).
+The license split is the design: the MIT editor executes the binary and does not vendor the compilers. Putting those SDKs in `blazium.git` would force that license onto the editor.
 
 ![MIT engine spawns GPLv3 toolchain](assets/mit-vs-gpl.png)
 

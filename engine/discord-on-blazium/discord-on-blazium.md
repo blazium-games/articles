@@ -11,11 +11,11 @@ hosts: []
 
 ## Why we built it
 
-The [Discord deploy article](../blazium-deploy-games-on-discord/blazium-deploy-games-on-discord.md) (2025-09-05) says the embed work started while Hangman was in development, so the game could run inside Discord voice chat. The goal stated there is a native path: the page talks to the Embedded App SDK without a separate install step. The [YouTube Playables article](../blazium-youtube-playables-integration/blazium-youtube-playables-integration.md) says the Playables node came next, after Discord, so a web export could call that SDK without each project binding the JavaScript object itself. The desktop `Discord` singleton is a different module. The 0.6.725 notes describe it as the Discord Social SDK for rich presence and social features. `Discord.xml` says `initialize_presence_only` is auth-less RPC, and `initialize` is the OAuth layer.
+The Discord embed work started in 2025 while Hangman was in development, so the game could run inside Discord voice chat. The page talks to the Embedded App SDK without a separate install step. `YoutubePlayablesClient` came next, so a web export could call that SDK without each project binding the JavaScript object itself. The desktop `Discord` singleton is a different module. The 0.6.725 notes describe it as the Discord Social SDK for rich presence and social features. `Discord.xml` says `initialize_presence_only` is auth-less RPC, and `initialize` is the OAuth layer.
 
 ## What Blazium Games uses it for
 
-Hangman is our example game. The 2025-09-05 deploy article describes the embed work while that game was in development, so it could run in Discord voice chat. Hangman has since shipped as a Discord app, and also on Steam, Google Play, and the Apple App Store. That set of releases is how export and deploy were checked end to end. It does not say that the Steam, Play, or Apple builds called `DiscordEmbeddedAppClient`.
+Hangman is our example game. The embed work started while that game was in development, so it could run in Discord voice chat. Hangman has since shipped as a Discord app, and also on Steam, Google Play, and the Apple App Store. That set of releases is how export and deploy were checked end to end. It does not say that the Steam, Play, or Apple builds called `DiscordEmbeddedAppClient`.
 
 Blazium Games used the Embedded App client, `YoutubePlayablesClient`, and the desktop `Discord` singleton in-house to validate those three paths. No other title is named as a user of those classes.
 
@@ -29,7 +29,7 @@ Pick a job first.
 
 Both paths are on `blazium-dev`. `DiscordEmbeddedAppClient` is `modules/socialexports` and talks to the Discord Embedded App SDK (the header notes v1.9.0). `Discord` is `modules/discord_module` and talks to the Discord Social SDK. `socialexports` also registers `YoutubePlayablesClient` and `ReactClient`. Those are other host pages. They are not the Social SDK.
 
-`blazium-dev` does not register `LoginClient`. The GDScript template with that name will not run. If the embed needs a session on your server, send the Discord token to an endpoint you run. The web host for an activity is [Docker web export](../docker-web-export/docker-web-export.md). The desktop token exchange is [Identity, Steam, and Xbox](../online-identity-and-stores/online-identity-and-stores.md).
+`blazium-dev` does not register `LoginClient`. The GDScript template with that name will not run. If the embed needs a session on your server, send the Discord token to an endpoint you run. The web host for an activity is [docker-webbuild-template](https://github.com/blazium-games/docker-webbuild-template): Nginx answers `/.proxy/` and sends COOP/COEP. On the desktop, `Discord.authenticate_with_server` returns a `DiscordAuthResult`. `get_jwt()` is a token your backend minted. `JWTBuilder` (`set_issuer`, `set_subject`, `set_algorithm`, `set_expiration`, `sign`) and `JWT.parse` cover HS256 and RS256.
 
 ![Embedded App vs Social SDK](assets/discord-two-jobs.png)
 
@@ -47,7 +47,7 @@ Both paths are on `blazium-dev`. `DiscordEmbeddedAppClient` is `modules/socialex
 
 `DiscordEmbeddedAppClient` bridges the Discord Embedded App SDK (the header notes SDK v1.9.0). It is a `Node`. The page has to actually be running inside Discord. `is_discord_environment()` is the check. `is_ready` is the later gate.
 
-Web export writes `{name}.discord.embed.js` when `blazium/discord_embed/enabled` is set, and substitutes `$BLAZIUM_DISCORD_AUTODETECT` from `blazium/discord_embed/autodetect`. Host the export with [Docker web export](../docker-web-export/docker-web-export.md) so Nginx answers `/.proxy/`. In the Discord developer portal, create the application and set the URL mappings to that host.
+Web export writes `{name}.discord.embed.js` when `blazium/discord_embed/enabled` is set, and substitutes `$BLAZIUM_DISCORD_AUTODETECT` from `blazium/discord_embed/autodetect`. Host the export with [docker-webbuild-template](https://github.com/blazium-games/docker-webbuild-template) so Nginx answers `/.proxy/`. `docker compose up --build` serves `static/` on port 8080. In the Discord developer portal, create the application and set the URL mappings to that host.
 
 ![DiscordEmbeddedAppClient in the tree](assets/embedded-nodes.png)
 
@@ -81,7 +81,7 @@ Calls return a `DiscordEmbeddedAppResponse` (or a typed result) and you wait on 
 - `initialize_presence_only` for rich presence.
 - `initialize(client_id)` when you need OAuth: friends, invites, and `authenticate_with_server`.
 - `run_callbacks()` pumps the SDK. After `initialize` it also runs once per frame on its own.
-- `authenticate_with_server(url, access_token, client_id)` returns `DiscordAuthResult`. `get_jwt()` is the token your backend minted. That JWT tooling is [Identity, Steam, and Xbox](../online-identity-and-stores/online-identity-and-stores.md).
+- `authenticate_with_server(url, access_token, client_id)` returns `DiscordAuthResult`. `get_jwt()` is the token your backend minted. Build that token with `JWTBuilder` (`set_issuer`, `set_subject`, `set_algorithm`, `set_expiration`, `sign`) and check it with `JWT.parse`. The class reference documents HS256 and RS256.
 - `create_or_join_lobby(secret)` is a Discord lobby.
 
 ```gdscript

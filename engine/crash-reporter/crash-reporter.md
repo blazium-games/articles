@@ -9,7 +9,7 @@ author: "Blazium"
 hosts: []
 ---
 
-Confirm-before-upload is the product. The engine writes files. A sidecar UI asks. Send is a decision, not a default. The crash reporter was built for the Blazium Engine. Blazium Games reads the reports that are sent, uses them to find engine issues, and ships patches for those crashes. Reports from other projects are part of that. Why the module and the analytics queue were split is in [Crash Reporter & Analytics](../crash-reporter-and-analytics/crash-reporter-and-analytics.md).
+Confirm-before-upload is the product. The engine writes files. A sidecar UI asks. Send is a decision, not a default. The crash reporter was built for the Blazium Engine. Blazium Games reads the reports that are sent, uses them to find engine issues, and ships patches for those crashes. Reports from other projects are part of that. Analytics is a separate opt-in queue, built for the example Hangman game and Demon Lord: Clicker. It stays silent until consent is given. An empty baked editor endpoint means the editor collects nothing. The two modules can share an app id and a build id. They do not share a switch, and analytics events are not the input for engine crash patches.
 
 ![Where the sidecar sits in the stack](assets/ecosystem-map.png)
 
@@ -86,7 +86,7 @@ SCons `editor_app_id` defaults to `custom_blazium_engine`. Official CI overrides
 | `blazium-hub` | Hub (`ci/hub_scons.env`) |
 | `custom_blazium_engine` | Local editor builds that do not pass `editor_app_id` |
 
-`editor_build_id` empty means the git `VERSION_HASH` at runtime. Same ids as [opt-in analytics](../analytics-opt-in/analytics-opt-in.md). `CrashReporter.get_resolved_config()` returns the values the process actually used.
+`editor_build_id` empty means the git `VERSION_HASH` at runtime. Analytics uses the same resolution: a non-empty bake wins, then project settings, then `custom_blazium_engine`. `CrashReporter.get_resolved_config()` returns the values the process actually used.
 
 ## Where it goes
 
@@ -96,7 +96,7 @@ Dumps are still written when the endpoint is empty. Upload is the part you turn 
 
 `induce_crash()` only does something when Breakpad was compiled in. Signals on a template that uploads in-engine: `upload_started`, `upload_progress`, `upload_succeeded`, `upload_failed`.
 
-The why these two modules are split, and what official Hub bakes, is [Crash Reporter & Analytics](../crash-reporter-and-analytics/crash-reporter-and-analytics.md). Engine docs: [docs.blazium.app](https://docs.blazium.app).
+A crash file is evidence of an engine fault. An analytics event is a counter. Analytics consent is `--analytics=accepted|declined`, then `BLAZIUM_ANALYTICS_CONSENT`, then `Analytics.set_consent`, then Editor Settings `blazium/analytics/consent`. There is no consent dialog. `flush()` is what POSTs. Quitting queues `session_end` and does not POST by itself. Engine docs: [docs.blazium.app](https://docs.blazium.app).
 
 ---
 

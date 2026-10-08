@@ -27,7 +27,7 @@ An export template built with the matching SCons flag can write the same dump pa
 
 Those are two modules, `modules/crash_reporter` and `modules/analytics`, on `blazium-dev`. They can share an app id and a build id. They do not share a switch.
 
-The field lists are in [Crash reports in Blazium](../crash-reporter/crash-reporter.md) and [Opt-in analytics](../analytics-opt-in/analytics-opt-in.md). This page is why they are split, and what a build actually does today.
+On a game, `application/crash_reporter/upload_mode` is `0` (files only), `1` (in-engine HTTP), `2` (sidecar), or `3` (both). `require_user_consent` defaults to true. The editor never HTTP-uploads a dump. Analytics consent is checked in order: `--analytics=accepted|declined`, `BLAZIUM_ANALYTICS_CONSENT`, `Analytics.set_consent`, then Editor Settings `blazium/analytics/consent`. `flush()` is what POSTs `{"events":[...]}`. Quitting only queues `session_end`. This page is why they are split, and what a build actually does today.
 
 ## Why a dump is not a metric
 
