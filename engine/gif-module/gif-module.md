@@ -17,9 +17,7 @@ The commit that adds the module is "Add GIF module for reading, writing, and pla
 
 ## What Blazium Games uses it for
 
-Those commits and the class reference do not name a first-party game, Hub News, or a production capture pipeline.
-
-<!-- QUESTION FOR BIOBLAZE: Does Hub News, a first-party game, or an internal tool use `GIFTexture` or `GIFRecorder`? Nothing in the GIF commits names one. -->
+Blazium Games used `GIFTexture` and `GIFRecorder` in-house to validate GIF import, playback, and capture, including capture that does not block the editor. That is a validation pass. It does not name a shipped title.
 
 ## What other projects get
 

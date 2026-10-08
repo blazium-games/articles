@@ -15,9 +15,7 @@ The engine README lists Twitch, Kick, OBS, and IRC under live operations, as mod
 
 ## What Blazium Games uses it for
 
-No README, release note, or commit read for this pass names a Blazium Games stream, a first-party overlay, or Demon Lord: Clicker.
-
-<!-- QUESTION FOR BIOBLAZE: Which first-party titles or streams use Twitch, Kick, IRC, Crowd Control, or OBS? The class docs describe the protocols. They do not name a production user. -->
+Blazium Games used the Twitch, Kick, IRC, Crowd Control, and OBS modules in-house to validate those clients: Helix requests, Kick HTTP, IRC and Twitch chat, Crowd Control effect responses, and obs-websocket 5 scene control. That is a validation pass. It does not name a channel or a shipped overlay.
 
 ## What other projects get
 

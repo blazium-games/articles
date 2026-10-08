@@ -17,9 +17,7 @@ The commit "Add AssetTags, SemanticSearch, and JustAMCP MCP integration" lists t
 
 ## What Blazium Games uses it for
 
-No engine commit, README, or issue read for this pass names a Blazium Games project that commits `res://.blazium/asset_tags/`.
-
-<!-- QUESTION FOR BIOBLAZE: Does a first-party project, an art pipeline, or Demon Lord: Clicker commit asset tags, or is the module only the editor and JustAMCP surface described in that commit? -->
+Blazium Games used asset tags and semantic search in-house to validate editor tagging and agent search, including the JustAMCP tools and the deferred HTTP path that keeps editor startup responsive. That is a validation pass. It does not name a project that ships those JSON files.
 
 ## What other projects get
 

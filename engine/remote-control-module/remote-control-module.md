@@ -17,9 +17,7 @@ The commit that adds the module is "Add remote_control module for CLI-to-editor 
 
 ## What Blazium Games uses it for
 
-"Add hub_build/hub_register flags and JustAMCP remote_control bridge" registers editors with Hub from SCons (`hub_register=yes`, post-build `blazium-cli`, not at runtime) and bridges JustAMCP focus and MCP status through this server. That is the engine build and the agent bridge. It is not a documented game session.
-
-<!-- QUESTION FOR BIOBLAZE: Do official game repos or Demon Lord: Clicker call `blazium-cli remote` or Autowork through this server, or is the in-house use limited to editor CI and Hub registration? -->
+Blazium Games used remote control in-house to validate editor automation and CI: health checks, play commands, snapshots, and Autowork without a separate driver script. "Add hub_build/hub_register flags and JustAMCP remote_control bridge" also registers editor builds with Hub from SCons (`hub_register=yes`, post-build `blazium-cli`, not at runtime). That is the build and the agent bridge. It is not a claim about a shipped game session.
 
 ## What other projects get
 

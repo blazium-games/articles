@@ -17,9 +17,7 @@ The toolchain README states the split: the CLI is GPL-3.0-or-later, and the MIT 
 
 ## What Blazium Games uses it for
 
-The documented benefit is the license. The editor process stays MIT and can still master an Interactive DVD. There is no README, commit, or issue in the toolchain repo that names a Blazium Games title shipping on PS1, PS2, N64, or DVD.
-
-<!-- QUESTION FOR BIOBLAZE: Does any Blazium Games title, including Demon Lord: Clicker, ship or prototype with `blazium-toolchain`? The repos only document the license split and the Interactive DVD spawn. -->
+The editor process stays MIT and can still master an Interactive DVD, because the compilers stay in this GPL binary. Blazium Games used the toolchain in-house to validate PS1, PS2, N64, and Interactive DVD exports. That is a validation pass. It is not a claim that a title shipped on those platforms.
 
 ## What other projects get
 

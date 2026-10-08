@@ -17,9 +17,11 @@ The CLI README describes the job: install editors, keep a project registry, upda
 
 ## What Blazium Games uses it for
 
+Hub and the CLI were built for the Blazium Engine and the ecosystem around it. They are how editors get installed, projects get opened, and `blazium://` links get handled. They were not built as the Blazium Games store client.
+
 Hub's installer can download BlaziumLauncher into `{autopf}\Blazium\Games`. Store links go to that launcher, not to Hub. Uploads to the Blazium Games store stay in `chauffeur` (`@blazium-games/cli`), documented at [docs.blazium.games](https://docs.blazium.games). The CLI's own deploy path is Steam and itch.io. `deploy-blazium-game` marks those two reusable workflows deprecated in favor of `blazium-cli deploy steam` and `blazium-cli deploy itch`.
 
-<!-- QUESTION FOR BIOBLAZE: Which first-party game repos actually run `blazium-cli deploy` or the GitHub Actions, and does Demon Lord: Clicker? The READMEs separate the store (chauffeur) from this CLI, and they do not name that title. -->
+Our example game, Hangman, shipped on Steam, Discord, Google Play, and the Apple App Store. That release is how export and deploy were checked end to end. It does not say which CLI flags or Action inputs each store build used.
 
 ## What other projects get
 

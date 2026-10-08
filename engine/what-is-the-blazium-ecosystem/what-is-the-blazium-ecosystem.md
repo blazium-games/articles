@@ -9,7 +9,9 @@ author: "Blazium"
 hosts: []
 ---
 
-You install Hub. Hub asks the CLI to fetch an editor from the CDN. The editor is the engine. The News tab in Hub is this articles repo, once an article is marked deployed and published. Why the pieces are separate repos is in [The Blazium Games Ecosystem](../the-blazium-games-ecosystem/the-blazium-games-ecosystem.md).
+You install Hub. Hub asks the CLI to fetch an editor from the CDN. The editor is the engine. The News tab in Hub is this articles repo, once an article is marked deployed and published.
+
+Hub, the CLI, the crash reporter, and the CDN were built for the Blazium Engine and this ecosystem. Internal game builds use the same CDN downloads and export templates the public gets. Analytics and the in-game bug reporter were built for our example Hangman game and for Demon Lord: Clicker. Hangman shipped on Steam, Discord (as an Embedded App), Google Play, and the Apple App Store. Crash reports that are sent are read to find engine issues and to ship patches for those crashes. The longer map is [The Blazium Games Ecosystem](../the-blazium-games-ecosystem/the-blazium-games-ecosystem.md).
 
 That is the stack people touch. Everything else is a module inside the editor, or a separate repo the CLI and the editor know how to call.
 

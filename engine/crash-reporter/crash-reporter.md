@@ -9,7 +9,7 @@ author: "Blazium"
 hosts: []
 ---
 
-Confirm-before-upload is the product. The engine writes files. A sidecar UI asks. Send is a decision, not a default. Why the module and the analytics queue were added is in [Crash Reporter & Analytics](../crash-reporter-and-analytics/crash-reporter-and-analytics.md).
+Confirm-before-upload is the product. The engine writes files. A sidecar UI asks. Send is a decision, not a default. The crash reporter was built for the Blazium Engine. Blazium Games reads the reports that are sent, uses them to find engine issues, and ships patches for those crashes. Reports from other projects are part of that. Why the module and the analytics queue were split is in [Crash Reporter & Analytics](../crash-reporter-and-analytics/crash-reporter-and-analytics.md).
 
 ![Where the sidecar sits in the stack](assets/ecosystem-map.png)
 

@@ -17,13 +17,13 @@ The engine commits that add the modules are "Add opt-in CrashReporter with Break
 
 ## What Blazium Games uses it for
 
-Hub CI (`blazium-hub/ci/hub_scons.env`) bakes `editor_app_id=blazium-hub`, reports at `https://crash.blazium.app/v1/reports`, and events at `https://crash.blazium.app/v1/events`. That is the official Hub binary's configuration. The example ingest servers are marked "Not a hosted product." They are references. They are not the Hub endpoint.
+The crash reporter was built for the Blazium Engine and the ecosystem around it. Blazium Games reads the incoming crash reports to find engine issues and ships patches specifically for those crashes. Hub CI (`blazium-hub/ci/hub_scons.env`) bakes `editor_app_id=blazium-hub`, reports at `https://crash.blazium.app/v1/reports`, and events at `https://crash.blazium.app/v1/events`. That is the official Hub binary's configuration. The example ingest servers are marked "Not a hosted product." They are references. They are not the Hub endpoint.
 
-<!-- QUESTION FOR BIOBLAZE: Does anyone read `crash.blazium.app` reports or events for Hub, the editor, or a shipped game? The bake and the sidecar README show the plumbing. They do not say the data is used for support, and they do not name Demon Lord: Clicker. -->
+Analytics was built for our games: the example Hangman game and Demon Lord: Clicker. The in-game bug reporter was built for those same games. In Demon Lord: Clicker that reporter sends a description, a screenshot, logs, and session details to our backend, with account IDs and PC usernames stripped. The backend links those reports to GitHub issues. That path is not the minidump, and it is not the analytics queue. Nothing here says the analytics events are what the engine patches are based on. Consent still gates analytics. An empty baked editor endpoint still means the editor collects nothing.
 
 ## What other projects get
 
-An export template built with the matching SCons flag can write the same dump pair, and can queue events after consent. `require_user_consent` on crash upload defaults to true. Analytics ships nothing until consent is given. Games set their own endpoint. They do not inherit Hub's URL unless they bake or configure it.
+An export template built with the matching SCons flag can write the same dump pair, and can queue events after consent. `require_user_consent` on crash upload defaults to true. Analytics ships nothing until consent is given. Games set their own endpoint. They do not inherit Hub's URL unless they bake or configure it. Crash reports that do get sent are part of how engine crash fixes get shipped. Analytics events are not described as that input.
 
 Those are two modules, `modules/crash_reporter` and `modules/analytics`, on `blazium-dev`. They can share an app id and a build id. They do not share a switch.
 

@@ -17,9 +17,9 @@ The engine README separates this from the Blazium Games store. That store is Div
 
 ## What Blazium Games uses it for
 
-The 2025 community update says the team learned to ship a game across storefronts, and names the Apple store as one of those lessons. It does not say which title calls `Steam.initialize`, `Discord.initialize`, `GDK.initialize`, or `JWTBuilder`.
+Our example game, Hangman, shipped on Steam, Discord, Google Play, and the Apple App Store. The Apple store lesson in the 2025 community update is that release. Those four storefronts are how store export and deploy were checked end to end. That does not say the Steam build called `Steam.initialize`, or that the Apple build called `GDK.initialize`, or that any of them called `JWTBuilder`.
 
-<!-- QUESTION FOR BIOBLAZE: Which first-party titles use the Steam module, the Discord Social SDK, GDK, or JWT? Does Demon Lord: Clicker? The articles describe the APIs and the GodotSteam removal. They do not name a shipping title. -->
+Blazium Games used the Steam module, the Discord Social SDK, GDK, and JWT in-house to validate tickets and backend auth, desktop presence, Xbox init, and token signing. The Blazium Games store upload path is still `chauffeur`, not these modules.
 
 ## What other projects get
 

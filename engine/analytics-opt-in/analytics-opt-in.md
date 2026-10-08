@@ -9,7 +9,7 @@ author: "Blazium"
 hosts: []
 ---
 
-Nothing is sent until consent is given. Why that gate exists, and what Hub's bake points at, is in [Crash Reporter & Analytics](../crash-reporter-and-analytics/crash-reporter-and-analytics.md). Anonymous mode (the default) omits `device_uid`. The official editor ingest URL is baked at compile time. An empty baked URL means the editor does not collect any data.
+Nothing is sent until consent is given. Analytics was built for the example Hangman game and Demon Lord: Clicker. Why the consent gate exists, and what Hub's bake points at, is in [Crash Reporter & Analytics](../crash-reporter-and-analytics/crash-reporter-and-analytics.md). Anonymous mode (the default) omits `device_uid`. The official editor ingest URL is baked at compile time. An empty baked URL means the editor does not collect any data.
 
 ![Crash and analytics share the stack](assets/ecosystem-map.png)
 

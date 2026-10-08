@@ -15,9 +15,7 @@ The engine README says official binaries are on [blazium.app/download](https://b
 
 ## What Blazium Games uses it for
 
-Release CI publishes those catalogs. Hub only fetches `https://cdn.blazium.app`. That is how the Hub binary, which is built from `blazium_4.8`, installs editor builds for the line you pick. The store is not this page. Store uploads are `chauffeur`.
-
-<!-- QUESTION FOR BIOBLAZE: Is the download site only the public distribution path, or do internal builds for Hangman, Demon Lord: Clicker, or other titles also come from these same CDN catalogs? -->
+The download pages, Hub, the CLI, the crash reporter, and the CDN were built for the Blazium Engine and this ecosystem. Release CI publishes the catalogs. Hub only fetches `https://cdn.blazium.app`. That is how the Hub binary, which is built from `blazium_4.8`, installs editor builds for the line you pick. Internal game builds use the same CDN downloads the public gets. The store is not this page. Store uploads are `chauffeur`.
 
 ## What other projects get
 

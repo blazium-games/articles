@@ -15,9 +15,7 @@ The [2025 community update](../blazium-community-update-goodbye-2025-lets-conque
 
 ## What Blazium Games uses it for
 
-The update says the team shipped that framework and learned the storefront path, including the Apple store. It does not name the game repositories that call these actions today.
-
-<!-- QUESTION FOR BIOBLAZE: Which first-party repos, including Hangman or Demon Lord: Clicker, still call `setup-blazium-engine`, `export-blazium-game`, or `deploy-blazium-game`? The update lists the actions. It does not list callers. -->
+Blazium Games used these actions in-house to validate installing an editor, exporting a preset, and deploying an artifact on a runner. Our example game, Hangman, shipped on Steam, Discord, Google Play, and the Apple App Store. The Apple store lesson in the 2025 update is that release. Those four storefronts are how export and deploy were checked end to end. The update does not name which workflow file each store build called. Steam and itch reusable workflows in `deploy-blazium-game` are deprecated in favor of `blazium-cli deploy`.
 
 ## What other projects get
 

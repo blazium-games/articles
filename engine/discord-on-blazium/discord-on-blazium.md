@@ -15,9 +15,9 @@ The [Discord deploy article](../blazium-deploy-games-on-discord/blazium-deploy-g
 
 ## What Blazium Games uses it for
 
-The deploy article names Hangman as the Embedded App they were building. It calls the game upcoming as of that date. It does not say the activity shipped.
+Hangman is our example game. The 2025-09-05 deploy article describes the embed work while that game was in development, so it could run in Discord voice chat. Hangman has since shipped as a Discord app, and also on Steam, Google Play, and the Apple App Store. That set of releases is how export and deploy were checked end to end. It does not say that the Steam, Play, or Apple builds called `DiscordEmbeddedAppClient`.
 
-<!-- QUESTION FOR BIOBLAZE: Did Hangman ship as a Discord activity, and does Demon Lord: Clicker or any other first-party title use `DiscordEmbeddedAppClient`, `YoutubePlayablesClient`, or the desktop `Discord` singleton? -->
+Blazium Games used the Embedded App client, `YoutubePlayablesClient`, and the desktop `Discord` singleton in-house to validate those three paths. No other title is named as a user of those classes.
 
 ## What other projects get
 

@@ -15,9 +15,7 @@ Export templates follow the Blazium product version, not a Godot `4.3.2.stable` 
 
 ## What Blazium Games uses it for
 
-Official editor and template zips are published there so Hub and `blazium-cli install` resolve a version without a private file share. The two engine lines are not interchangeable. Hub's executable tracks `blazium_4.8`. The templates this article describes are the ones for the editor version you install.
-
-<!-- QUESTION FOR BIOBLAZE: Do first-party games, including Hangman or Demon Lord: Clicker, export against these CDN templates, or do they pin a different template build? -->
+The CDN and these export templates were built for the Blazium Engine and this ecosystem. Official editor and template zips are published there so Hub and `blazium-cli install` resolve a version without a private file share. Internal game builds use the same CDN downloads and the same export templates the public gets. The two engine lines are not interchangeable. Hub's executable tracks `blazium_4.8`. The templates this article describes are the ones for the editor version you install.
 
 ## What other projects get
 

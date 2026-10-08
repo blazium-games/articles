@@ -15,9 +15,7 @@ The 0.6.725 notes give the jobs. DotENV loads `.env` files so config and secrets
 
 ## What Blazium Games uses it for
 
-The example analytics server tells you to copy `.env.example` and not commit `.env`. That is the reference server's own config. It is not evidence that Hangman or another game uses `ENV`.
-
-<!-- QUESTION FOR BIOBLAZE: Do official games, the crash or analytics hosts, or Demon Lord: Clicker use `ENV`, `DotIniFile`, or `CSVTable`? The release notes describe the modules. They do not name a caller. -->
+Blazium Games used `ENV`, `DotIniFile`, and `CSVTable` in-house to validate `.env` loading, INI with types, and CSV tables. The example analytics server tells you to copy `.env.example` and not commit `.env`. That file is the reference server's config. It is not a claim that the example Hangman game stores its settings there.
 
 ## What other projects get
 
