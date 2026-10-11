@@ -1,51 +1,44 @@
 ---
 title: "GitHub Actions for Blazium"
-description: "setup-blazium-cli, setup-blazium-engine, export-blazium-game, and deploy-blazium-game: install the tools in CI and ship a build."
+description: "Four repositories: put the CLI on a runner, install an editor, export a preset, deploy an artifact. Pin the tag."
 cover: "assets/cover.png"
 slug: "github-actions-for-blazium"
 deployed: false
-date: "2026-08-31"
-author: "Blazium"
+date: "2026-10-11"
+author: "Bioblaze Payne"
 hosts: []
 ---
 
-## Why we built it
+# GitHub Actions for Blazium
 
-In 2025 Blazium shipped an open-source deployment framework for Godot and Blazium CI, and a set of GitHub Actions, next to learning how to launch a game across storefronts. The public checklist is [blazium-game-checklist](https://github.com/blazium-engine/blazium-game-checklist). These four repositories are the public actions: put the CLI on a runner, install an editor from the CDN, export a preset, deploy an artifact. `deploy-blazium-game`'s README now says the Steam and itch reusable workflows are deprecated. The replacement it names is `blazium-cli deploy steam` and `blazium-cli deploy itch`.
+### Pin the tag you mean to run
 
-## What Blazium Games uses it for
+*By Bioblaze Payne, Co-Founder of [Blazium Games](https://blazium.games)*
 
-Blazium Games used these actions in-house to validate installing an editor, exporting a preset, and deploying an artifact on a runner. Our example game, Hangman, shipped on Steam, Discord, Google Play, and the Apple App Store. Those four storefronts are how export and deploy were checked end to end. That does not name which workflow file each store build called. Steam and itch reusable workflows in `deploy-blazium-game` are deprecated in favor of `blazium-cli deploy`.
+---
 
-## What other projects get
+In 2025 we published the CLI, a deploy path, and a set of GitHub Actions next to Hangman. Hangman later shipped on Steam, Discord, Google Play, and the Apple App Store. Those storefronts are how export and deploy were checked. They do not mean each store build called the same workflow file.
 
-The actions are public. Pin a tag. `setup-blazium-engine` at `v0.3.0` installs an editor and can download templates. `version: latest` tracks nightly. Export `platform-name` has to match the preset name in the project, including `Web`.
-
-Four Actions. Each one is its own repository under [blazium-games](https://github.com/blazium-games). CI talks to the CDN through the `blazium-cli` binary ([blazium-cli](https://github.com/blazium-games/blazium-cli)). `blazium-cli install <version> --templates` is how a runner fetches export templates. They follow Blazium `0.6.x`, not a Godot `4.3.2.stable` folder.
-
-## Status
-
-Pin the tag you intend to run. Current tags: `setup-blazium-cli@v0.2.1`, `setup-blazium-engine@v0.3.0` (that composite calls `setup-blazium-cli@v0.2.1`), `export-blazium-game@v0.3.2`, `deploy-blazium-game@v0.0.2`. Older README examples still say `blazium-engine/export-blazium-game@master`. That org name is not the repository.
-
-`setup-blazium-engine` input `version: latest` tracks the nightly channel. `latest-release` is the release channel. Writing `latest` when you wanted a release build installs a nightly.
-
-Steam and itch.io reusable workflows in deploy-blazium-game are marked deprecated. The replacement in that README is `blazium-cli deploy steam` and `blazium-cli deploy itch`. Docker, Play, iOS, and macOS workflows in the repo are unchanged. `deploy steam guard setup` is interactive. Do not put it in a job.
+The public actions are four repositories. They are not a folder in the engine. CI talks to the CDN through [blazium-cli](https://github.com/blazium-games/blazium-cli).
 
 ![setup-cli, then setup-engine, then export, then deploy](assets/github-actions-flow.png)
 
-| Action | Repository | Job |
+| Action | Tag to pin | Job |
 |---|---|---|
-| Setup Blazium CLI | `blazium-games/setup-blazium-cli` | Download CLI from `cdn.blazium.app/cli/cli.json` and put it on `PATH` |
-| Setup Blazium Engine | `blazium-games/setup-blazium-engine` | `blazium-cli install`, optional templates |
-| Export Blazium Game | `blazium-games/export-blazium-game` | Export a project. `platform-name` must match an editor export preset |
-| Deploy Blazium Game | `blazium-games/deploy-blazium-game` | Push an already-exported artifact |
+| [setup-blazium-cli](https://github.com/blazium-games/setup-blazium-cli) | `v0.2.1` | Download the CLI from `cdn.blazium.app/cli/cli.json` and put it on `PATH` |
+| [setup-blazium-engine](https://github.com/blazium-games/setup-blazium-engine) | `v0.3.0` | `blazium-cli install`, optional templates |
+| [export-blazium-game](https://github.com/blazium-games/export-blazium-game) | `v0.3.2` | Export a preset |
+| [deploy-blazium-game](https://github.com/blazium-games/deploy-blazium-game) | `v0.0.2` | Push an already-exported artifact |
 
-Use the tags in Status, or a newer one you have read. The action list below is the job each repo does.
+`v0.2.1` and `v0.3.0` are git tags. The latest GitHub Release objects for those two repos are older (`v0.2.0` and `v0.1.1`). Pin the tag the action README uses, not whatever the Releases page calls Latest, until you have read the newer tag. Older examples that say `blazium-engine/export-blazium-game@master` use an org name that is not the repository.
 
 ![blazium-cli --help](assets/cli-help.svg)
-<!-- ASCIINEMA: assets/cli-help.cast | blazium-cli --help -->
 
-## Minimal workflow
+```text
+asciinema play assets/cli-help.cast
+```
+
+## A workflow
 
 ```yml
 name: export
@@ -72,50 +65,48 @@ jobs:
 
 ## Version input
 
-`setup-blazium-engine` `version` (default `latest`):
+`setup-blazium-engine` `version` defaults to `latest`.
 
 | Input | Meaning |
 |---|---|
-| `0.6.725` | That release |
+| `0.6.838` | That release |
 | `latest-release` | Highest version on the release channel |
-| `nightly`, `latest`, `latest-nightly` | Nightly channel. `latest` tracks nightly |
-| `0.6.751-nightly` | That nightly |
+| `nightly`, `latest`, `latest-nightly` | Nightly channel. `latest` is nightly |
+| `0.6.924-nightly` | That nightly |
 | `latest-0.6` | Highest 0.6.x across nightly and release |
 | `latest-release-0.6` | Highest 0.6.x on release |
-| `lts` | LTS alias handled by the CLI |
 
-If you wanted a release and you wrote `latest`, you get a nightly. Same version trap as export templates: Blazium `0.6.x`, not Godot `4.3.2`. Templates install under the Blazium version directory, not `4.3.2.stable`.
+If you wanted a release and you wrote `latest`, you get a nightly. Templates install under the Blazium version, not Godot `4.3.2.stable`.
 
-Other inputs: `download_template` (default `false`), `download_mono`, `platform`, `arch`, `use-cache`, `cli-version`. The cache key includes the resolved version, platform, arch, and whether Mono was requested.
+Other inputs: `download_template` (default false), `download_mono`, `platform`, `arch`, `use-cache`, `cli-version`. The cache key includes the resolved version, platform, arch, and whether Mono was requested. Changing only the game source does not invalidate that cache.
 
 CLI only:
 
 ```yml
 - uses: blazium-games/setup-blazium-cli@v0.2.1
-- run: blazium-cli install 0.6.725 --templates --json --quiet
+- run: blazium-cli install 0.6.838 --templates --json --quiet
 ```
 
-Empty `version` on setup-cli uses `.latest` from `cli.json`. The action verifies SHA-256 when the manifest has one. Host arch is preferred. It falls back to `x86_64` when the CDN has no build for the runner arch.
+An empty `version` on setup-cli uses `.latest` from `cli.json`. The action checks SHA-256 when the manifest has one.
 
-## Export
+## Export and deploy
 
-`platform-name` must match the export preset name in the editor. Examples from the engine: `Web` (`EditorExportPlatformWeb.get_name()`), plus the desktop preset names in your `export_presets.cfg` (`Linux x86_64`, `Windows Desktop x86_64`, and the rest). The action rewrites `export_presets.cfg`. Apple and Android signing secrets stay empty until you export a store build. Steam uses `store-name: steam` plus `steam-app-id`.
+`platform-name` must match the export preset name. The web preset's `get_name()` is `Web`. Desktop presets are whatever is in `export_presets.cfg` (`Linux x86_64`, `Windows Desktop x86_64`, and the rest). The action rewrites `export_presets.cfg`. Apple and Android signing secrets stay empty until you export a store build.
 
-## Deploy
-
-Deploy runs on an artifact from export. Targets in the deploy README: Docker registry, itch.io, Play Store, iOS App Store, macOS App Store, Steam. See Status for which of those workflows are deprecated.
+Deploy runs on an artifact from export. Docker, Play, iOS, and macOS workflows in deploy-blazium-game are the ones to use for those targets. The Steam and itch reusable workflows in that repo are deprecated. The replacement named in the README is `blazium-cli deploy steam` and `blazium-cli deploy itch`. `deploy steam guard setup` is interactive. Do not put it in a job.
 
 Do not paste secrets into the workflow file in a way that lands in the log. The kinds are Apple certificates, an Android keystore, a butler API key, a Docker token, and Steam publisher credentials.
 
-A cache hit on `setup-blazium-engine` is keyed by resolved version, platform, arch, and whether Mono was requested. Changing only the game source does not invalidate that cache. The editor binary is what the cache holds.
+Headless Autowork is `"$BLAZIUM_EDITOR" --headless --path . -s run_tests.gd`. If an editor is already up with remote control, `blazium-cli remote autowork run --wait` talks to `127.0.0.1:6508`. Eval stays off unless `blazium/remote_control/allow_eval` is set. Port 6507 is the game JustAMCP default. Do not point the CLI at it.
 
-## Autowork in CI
+## Links
 
-```text
-"$BLAZIUM_EDITOR" --headless --path . -s run_tests.gd
-```
-
-Or, if an editor is already up with remote control: `blazium-cli remote autowork run --wait`. That command talks to the editor HTTP server on `127.0.0.1:6508`. Eval stays off unless `blazium/remote_control/allow_eval` is set. Do not point the CLI at port 6507. That port is the game JustAMCP default.
+- setup-blazium-cli: https://github.com/blazium-games/setup-blazium-cli
+- setup-blazium-engine: https://github.com/blazium-games/setup-blazium-engine
+- export-blazium-game: https://github.com/blazium-games/export-blazium-game
+- deploy-blazium-game: https://github.com/blazium-games/deploy-blazium-game
+- CLI: https://github.com/blazium-games/blazium-cli
+- Blazium Games: https://blazium.games
 
 ---
 

@@ -1,71 +1,50 @@
 ---
-title: "The Blazium Toolchain"
-description: "Why console compilers live in a GPL sidecar instead of inside the MIT engine."
+title: "Why the console compilers are not in the engine"
+description: "The editor stays MIT. blazium-toolchain is GPL-3.0-or-later and the editor only spawns it."
 cover: "assets/cover.png"
 slug: "the-blazium-toolchain"
 deployed: false
-date: "2026-09-03"
-author: "sshiiden"
+date: "2026-10-11"
+author: "Bioblaze Payne"
 hosts: []
 ---
 
-# Blazium Toolchain
+# Why the console compilers are not in the engine
 
-## Why we built it
+### MIT for the editor, GPL for the binary that fetches GCC
 
-The toolchain README states the split: the CLI is GPL-3.0-or-later, and the MIT editor only spawns the binary. GCC, PSn00bSDK, ps2dev, and libdragon stay out of `blazium.git`. The engine commit "Add InterDVD scene authoring and export through blazium-toolchain" is the editor side of that: Interactive DVD export on `blazium-dev` runs this CLI. PS1, PS2, and N64 are terminal commands in the same binary. The engine README lists them as what Blazium adds on top of Godot. It does not name a first-party console product.
+*By Bioblaze Payne, Co-Founder of [Blazium Games](https://blazium.games)*
 
-## What Blazium Games uses it for
+---
 
-The editor process stays MIT and can still master an Interactive DVD, because the compilers stay in this GPL binary. Blazium Games used the toolchain in-house to validate PS1, PS2, N64, and Interactive DVD exports. That is a validation pass. It is not a claim that a title shipped on those platforms.
+The Blazium engine is MIT. No royalty, no seat fee. That only stays true if we do not merge in trees that are not MIT. GCC, PSn00bSDK, pcsx-redux, mkpsxiso, the ps2dev SDK, and libdragon are the compilers and kits a PS1, PS2, or N64 build needs. They live in [blazium-toolchain](https://github.com/blazium-games/blazium-toolchain), which is GPL-3.0-or-later, so it is allowed to fetch them. The editor looks up `blazium-toolchain` on `PATH` (or `export/inter_dvd/toolchain`, or `BLAZIUM_TOOLCHAIN`) and runs it. The process that stays MIT never links those libraries.
 
-## What other projects get
+The engine README lists PS1, PS2, N64, and Interactive DVD as something Blazium adds, used with the toolchain. The code is narrower than that sentence. Interactive DVD has an export platform. The editor runs `blazium-toolchain interdvd iso` and `blazium-toolchain interdvd ffmpeg`. There is no PS1, PS2, or N64 `EditorExportPlatform`. Those are terminal commands after `setup`. Godot does not ship this toolchain either.
 
-The same published binary (Linux and Windows) fetches those compilers into a cache and builds PS1, PS2, N64, and Interactive DVD. `ps3` and `ps4` exit 2. They are reserved names, not a dated target.
+![The editor spawns the GPL binary](assets/mit-vs-gpl.png)
 
-Console SDKs are also on their own schedule. Putting them inside `blazium.git` would force that license onto the editor.
+![What actually builds](assets/toolchain-targets.png)
 
-The **Blazium Toolchain** is a separate CLI. It downloads the compilers into a local cache, which keeps everything organized, and it gives you commands to build, run, and package. The engine stays MIT. The CLI is GPL-3.0-or-later. The editor only spawns the binary.
+## What "no mkisofs" means
 
-Repo: [blazium-games/blazium-toolchain](https://github.com/blazium-games/blazium-toolchain).
+Interactive DVD mastering writes ISO9660 and UDF 1.02 inside the Go process. It does not shell out to `mkisofs` or `oscdimg`. You do not install those tools. The folder you pass already has `VIDEO_TS/`. Language and region fields in `disc.interdvd.json` are metadata for that JSON file. They are not written into the IFO.
 
-## What it actually builds
+PS1 is a different command. `ps1 iso` uses mkpsxiso, which `ps1 setup` downloads into the toolchain cache. Saying the toolchain never calls an external ISO tool would be wrong. The Interactive DVD path is the one that does not.
 
-| Platform | Status on the current CLI |
-|---|---|
-| PlayStation 1 | `ps1 setup`, `build`, `run`, `iso` |
-| PlayStation 2 | `ps2 setup`, `build`, `run`, `iso`, `elf-info`, `chd` |
-| Nintendo 64 | `n64 setup`, `build`, `run`, `rom`. No ISO. Output is `.z64` |
-| Interactive DVD | `interdvd setup`, `ffmpeg`, `iso`. The editor export calls this |
-| PlayStation 3, PlayStation 4 | Reserved. Exit code `2` |
+## What does not ship
 
-Windows screensaver, live wallpaper, and web export are engine modules (`screensaver`, `livewallpaper`, `platform/web`). They are not this CLI.
+`ps3` and `ps4` are reserved names. Commands exit `2`. There is no date. Published binaries are Linux and Windows. A macOS build of the CLI can master an Interactive DVD. PS1, PS2, and N64 setup and build exit `2` on that host. CI does not publish a macOS binary.
 
-## Why the editor spawns it
+Compilers are downloaded on `setup` into `%LOCALAPPDATA%\Blazium\blazium-toolchain` or `~/.local/share/blazium-toolchain`. They are not inside the Go binary. The MIT guest stub is. Third-party licenses are in `THIRDPARTY.md` in the toolchain repo. Those SDKs link into the exported guest, not into the editor.
 
-Interactive DVD export on `blazium-dev` is `EditorExportPlatformWindowsInterDVD`. Scene encode and ISO mastering run `blazium-toolchain`. The lookup is `export/inter_dvd/toolchain`, then `BLAZIUM_TOOLCHAIN`, then `PATH`. ISO mastering does not call mkisofs or oscdimg. The CLI writes ISO9660 and UDF 1.02 from a folder that already has `VIDEO_TS/`.
+We used the CLI in-house to validate the four targets. That is not a shipped console title. Catalog: `https://cdn.blazium.app/toolchain/toolchain.json`.
 
-PS1, PS2, and N64 do not have editor export platforms in this tree. You run those commands in a terminal after `setup`. Profiles (`compile`, `dev`, `iso` or `rom`) decide how much to fetch. `--offline` refuses the network. `--prefix` is the cache root so two games do not share a half-upgraded SDK by accident.
+## Links
 
-## Install
-
-```text
-npm install -g @blazium-engine/toolchain
-blazium-toolchain --json list
-blazium-toolchain ps1 setup --profile compile
-```
-
-Go 1.23.8 or later if you build from source. Published binaries are Linux and Windows, x86_64 and x86_32. Install with `npm install -g @blazium-engine/toolchain`. `blazium-toolchain ps1 setup --profile compile` fetches the compile profile. Cache is `%LOCALAPPDATA%\Blazium\blazium-toolchain` on Windows and `~/.local/share/blazium-toolchain` elsewhere. Exit `2` is a reserved platform (`ps3`, `ps4`) or a host that cannot compile. Exit `3` means a host tool is missing. SHA pins live in the embedded `pins.json`.
-
-## What we left out on purpose
-
-The CLI does not download Sony BIOS images or an N64 PIF ROM. `ps2 run` expects `PCSX2_EXE`. `n64 run` can use Ares (fetched on Windows x64 for the `dev` profile) or `PROJECT64_EXE`. A missing emulator is a skip, not a silent substitute.
-
-`ps3` and `ps4` exit `2`. That is a reserved id, not a milestone with a date. Windows screensaver, live wallpaper, and the `Web` export preset stay in the engine. They are not waiting on this CLI.
-
-Published binaries are Linux and Windows. Interactive DVD mastering works on a macOS build of the CLI. PS1, PS2, and N64 setup and build do not, on that host.
-
-That split is the whole design. The MIT editor can call a GPL tool. It does not become one. Commands are `ps1`, `ps2`, `n64`, and `interdvd`, each with `setup` and `build`. `ps3` and `ps4` exit `2`. Engine docs: [docs.blazium.app](https://docs.blazium.app).
+- Toolchain: https://github.com/blazium-games/blazium-toolchain
+- Catalog: https://cdn.blazium.app/toolchain/toolchain.json
+- Engine: https://github.com/blazium-games/blazium
+- Blazium Games: https://blazium.games
 
 ---
 
@@ -73,8 +52,8 @@ That split is the whole design. The MIT editor can call a GPL tool. It does not 
 
 Or follow us everywhere else:
 
-- **[X / Twitter](https://x.com/BlaziumGames)**
 - **[GitHub](https://github.com/blazium-games)**
 - **[IndieDB](https://www.indiedb.com/engines/blazium-engine)**
+- **[X / Twitter](https://x.com/BlaziumGames)**
 - **[YouTube](https://www.youtube.com/@blazium)**
 - **[itch.io](https://blaziumengine.itch.io)**

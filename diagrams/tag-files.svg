@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img">
+  <title>Tags stay in the project</title>
+  <rect width="1920" height="1080" fill="#121018"/>
+  <text x="64" y="72" fill="#e070ff" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" letter-spacing="2">BLAZIUM</text>
+  <text x="64" y="124" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="42" font-weight="700">Tags stay in the project</text>
+  <text x="64" y="168" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="20">Editor-only modules. The export plugin can bake a sidecar. The player does not load the module.</text>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#8a7aa8"/></marker></defs><rect x="80" y="320" width="500" height="170" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="330.0" y="397.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">FileSystem dock</text>
+  <text x="330.0" y="429.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">Edit Asset Tags</text><rect x="700" y="320" width="520" height="170" rx="14" fill="#1c1828" stroke="#e070ff" stroke-width="2"/>
+  <text x="960.0" y="397.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">res://.blazium/asset_tags/</text>
+  <text x="960.0" y="429.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">tags.json and asset_index.json</text><rect x="1340" y="320" width="500" height="170" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="1590.0" y="397.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">JustAMCP tools</text>
+  <text x="1590.0" y="429.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">blazium_tags_* and semantic_search</text><line x1="580" y1="405" x2="700" y2="405" stroke="#8a7aa8" stroke-width="2.5" marker-end="url(#arrow)"/><line x1="1220" y1="405" x2="1340" y2="405" stroke="#8a7aa8" stroke-width="2.5" marker-end="url(#arrow)"/><rect x="700" y="640" width="520" height="150" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="960.0" y="707.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">semantic index</text>
+  <text x="960.0" y="739.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">res://.blazium/semantic_index/</text>
+  <text x="64" y="1028" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18">Default backend is lexical. HTTP embeddings are optional and you bring the URL.</text>
+</svg>

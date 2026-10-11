@@ -1,86 +1,84 @@
 ---
 title: "Blazium Services"
-description: "Lobby, Scripted Lobby, Login, and Master Server as engine nodes. Hosted on Blazium's domain, or self-host."
+description: "Login, lobby, and master-server clients live in blazium-sdk-module. Only the login host answers today."
 cover: "assets/cover.png"
 slug: "blazium-services"
 deployed: false
-date: "2026-08-31"
-author: "Blazium"
+date: "2026-10-11"
+author: "Bioblaze Payne"
 hosts: []
 ---
 
-Hangman needed matchmaking without giving away player IPs. The clients shipped as engine nodes. They talk HTTP and WebSocket to a service. A free hosted endpoint sits on Blazium's domain. Self-host if that is not enough.
+# Blazium Services
 
-## Four clients
+### Matchmaking clients that are not in the stock editor
 
-| Node | Job |
-|---|---|
-| `LobbyClient` | Matchmaking, rooms, peers. Does not leak IPs |
-| `ScriptedLobbyClient` | Same, with server-side lobby scripts |
-| `LoginClient` | Social login, returns a JWT |
-| `MasterServerClient` | Track dedicated game servers |
+*By Bioblaze Payne, Co-Founder of [Blazium Games](https://blazium.games)*
 
-<!-- CAPTURE: assets/node-create-lobby.png | Editor | Create-node dialog filtered to Lobby / Login / MasterServer -->
-<!-- CAPTURE: assets/cover.png | Editor | Scene with LoginClient + LobbyClient visible -->
+---
 
-## Login, then Lobby
+Hangman needed a lobby that did not hand every player everyone else's IP. The clients for that are `LoginClient`, `LobbyClient`, `ScriptedLobbyClient`, and `MasterServerClient`. They are C++ nodes. They are not in the `blazium-dev` module tree.
 
-![Steam ticket / Discord OAuth / Login to JWT to Lobby or backend](assets/identity-flow.png)
+They live in [blazium-sdk-module](https://github.com/blazium-games/blazium-sdk-module), last touched in September 2025. A stock 0.6 editor does not register those classes. GDScript templates under `modules/gdscript/editor/script_templates/` still use the names. Those templates do not run until you compile the SDK in as a custom module. Discord embed, YouTube Playables, JWT, `.env`, and CSV used to sit in that same SDK. Those moved into the engine. The lobby stack did not.
 
-```gdscript
-extends LoginClient
+![Service clients and the hosts they name](assets/services-hosts.png)
 
-func _init() -> void:
-    received_jwt.connect(_received_jwt)
-    var result := await connect_to_server().finished
-    if result.has_error():
-        push_error(result.error)
+## What is actually up
 
-func request_login_and_open() -> void:
-    var login_result: LoginURLResult = await request_login_info("discord").finished
-    if login_result.has_error():
-        push_error(login_result.error)
-        return
-    OS.shell_open(login_result.login_url)
+Checked on 11 October 2026:
 
-func _received_jwt(jwt: String, type: String, access_token: String) -> void:
-    print("login ok, jwt length=", jwt.length())
-```
+| Client | Default in the SDK | DNS |
+|---|---|---|
+| `LoginClient` | host `login.blazium.app` | Resolves. `https://login.blazium.app/` returns `{"status":"ok","success":true}` |
+| `LobbyClient` | `wss://lobby.blazium.app/connect` | Does not resolve |
+| `MasterServerClient` | `https://masterserver.blazium.app/api/v1` | Does not resolve |
 
-```gdscript
-extends LobbyClient
+The login client stores the host without a scheme. It adds `wss://` for the socket (`/connect`) and `https://` for HTTP (`/api/v1/connect`, `/api/v1/auth`, `/api/v1/steam/auth`, `/api/v1/private/profile`). An older Hangman inspector showed `wss://login.blazium.app/connect` typed into the Server URL field. That is a scene value, not the current source default.
 
-@export var reconnects := 0
-var config := ConfigFile.new()
+Inside a Discord activity the same clients rewrite the host to `{client_id}.discordsays.com/.proxy/` plus a path (`blazium/login`, `blazium/lobby/connect`, or `blazium/masterserver/api/v1`). That rewrite is in the SDK. It is not something `DiscordEmbeddedAppClient` in the engine does by itself.
 
-func _ready() -> void:
-    config.load("user://blazium.cfg")
-    reconnection_token = config.get_value("LobbyClient", "reconnection_token", "")
-    disconnected_from_server.connect(_disconnected)
-    connected_to_server.connect(_connected)
-    connect_to_server()
+`POGRClient` is also in the SDK. It posts to `https://api.pogr.io/v1/intake`. That is a third-party intake URL, not a Blazium host.
 
-func _connected(_peer: LobbyPeer, new_reconnection_token: String) -> void:
-    reconnects = 0
-    config.set_value("LobbyClient", "reconnection_token", new_reconnection_token)
-    config.save("user://blazium.cfg")
-```
+## Login, then a room
 
-Do not print live tokens. The JWT goes to Lobby or to your own backend. Store path: [Identity, Steam, and Xbox](../online-identity-and-stores/online-identity-and-stores.md).
+`LoginClient` can ask the login service for a Discord login URL (`request_login_info`) and can exchange a Steam token. The result you keep is a JSON Web Token. Do not print live tokens. The engine's own `JWT` / `JWTBuilder` classes, in `modules/jwttool`, are what you use to build and check tokens in game code. They are not this login node.
 
-<!-- CAPTURE: assets/login-jwt.png | Editor | Inspector or log with a redacted JWT -->
-<!-- CAPTURE: assets/lobby-list.png | Running game | Lobby list / matchmaking UI -->
+`LobbyClient.connect_to_server` opens the websocket. The server hands back a reconnection token. Store it yourself. The node does not write `user://` for you. Peers in the lobby are lobby peers. Their game-traffic addresses are not what this socket is for.
 
-## Where this sits vs ENet
+`ScriptedLobbyClient` is the same idea with server-side scripts. The lobby server docs in [lobby-template](https://github.com/blazium-games/lobby-template) describe a `lobby_service` binary, `config.ini`, `games.ini`, and Lua, AngelScript, or relay backends. That repository is documentation and a demo project. It is not a public hostname.
+
+`MasterServerClient` registers and lists dedicated servers (`/server/create`, `/server/update/`, `/servers/recent`) against whatever `server_url` you set. The hostname baked as the default does not resolve, so set the URL to a server you run.
+
+## Where this sits next to ENet
 
 ![Networking layers](assets/networking-layers.png)
 
-Lobby is HTTP/WebSocket. Dedicated game traffic is still `enet_server` or MultiplayerAPI ENet. Do not put world simulation on the lobby node.
+Lobby traffic is HTTP and WebSocket. World simulation stays on `enet_server` or MultiplayerAPI's ENet peer. Do not put ticks on the lobby node.
 
-## Discord activities
+The engine's `Discord.create_or_join_lobby` is a Discord Social SDK lobby. It is a different object from `LobbyClient`.
 
-On `*.discordsays.com` the service nodes rewrite their URLs. Docker `.proxy` maps complete the path. Details: [Discord on Blazium](../discord-on-blazium/discord-on-blazium.md) and [Docker web export](../docker-web-export/docker-web-export.md).
+## What you compile
 
-## Self-host
+Drop the SDK in as a Godot/Blazium custom module and build. `can_build` returns true on every platform the SDK's `config.py` sees. That does not mean the official editor zip already contains it. If `LobbyClient` is missing from the Create dialog, you are on a stock `blazium-dev` build.
 
-The nodes accept a server URL. Class reference: [docs.blazium.app](https://docs.blazium.app). This article does not deploy your replica.
+Class reference pages for these nodes are not on `docs.blazium.app` today (the LobbyClient page 404s). Read the headers in the SDK repo. `services-docs` in the org is a stub.
+
+## Links
+
+- SDK module: https://github.com/blazium-games/blazium-sdk-module
+- Lobby server notes: https://github.com/blazium-games/lobby-template
+- Login host: https://login.blazium.app/
+- Engine: https://github.com/blazium-games/blazium
+- Blazium Games: https://blazium.games
+
+---
+
+**[Jump into our Discord](https://blazium.app/chat)** for real-time chats, dev support and feedback
+
+Or follow us everywhere else:
+
+- **[GitHub](https://github.com/blazium-games)**
+- **[IndieDB](https://www.indiedb.com/engines/blazium-engine)**
+- **[X / Twitter](https://x.com/BlaziumGames)**
+- **[YouTube](https://www.youtube.com/@blazium)**
+- **[itch.io](https://blaziumengine.itch.io)**

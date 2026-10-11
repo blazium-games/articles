@@ -1,93 +1,106 @@
 ---
 title: "Export templates and the CDN"
-description: "Templates are versioned as Blazium 0.6.x, not Godot 4.3.2. How the CLI and the editor fetch them."
+description: "Templates are versioned as Blazium 0.6.x. The CLI downloads them from the CDN. The editor's mirror list still points at GitHub."
 cover: "assets/cover.png"
 slug: "export-templates-and-cdn"
 deployed: false
-date: "2026-08-31"
-author: "Blazium"
+date: "2026-10-11"
+author: "Bioblaze Payne"
 hosts: []
 ---
 
-## Why we built it
+# Export templates and the CDN
 
-Export templates follow the Blazium product version, not a Godot `4.3.2.stable` directory. The CLI README and the template resolver implement that: CDN files under `/{channel}/{version}/`, then a fallthrough `GET /api/v1/templates/{deploy_type}/{version}` on `blazium.app` when `template_files.json`, `templates.json`, and `details.json` are missing. Hub never calls that API. Release CI is what fills the bucket. The engine README points downloads at the same CDN.
+### Same bits, two download paths, and a version folder Godot will not recognize
 
-## What Blazium Games uses it for
+*By Bioblaze Payne, Co-Founder of [Blazium Games](https://blazium.games)*
 
-The CDN and these export templates were built for the Blazium Engine and this ecosystem. Official editor and template zips are published there so Hub and `blazium-cli install` resolve a version without a private file share. Internal game builds use the same CDN downloads and the same export templates the public gets. The two engine lines are not interchangeable. Hub's executable tracks `blazium_4.8`. The templates this page describes are the ones for the editor version you install.
+---
 
-## What other projects get
+A Blazium editor will not export with a Godot template pack, and a Godot editor will not export with ours. The version string inside the pack has to match the editor that is running. Godot looks for a folder like `4.4.1.stable` and asks [godotengine.org/mirrorlist](https://godotengine.org/mirrorlist/4.4.1.stable.json), which today points at `downloads.godotengine.org`. Blazium looks for `{version}.{channel}`, for example `0.6.838.release`, and the string in `version.txt` inside the `.tpz` is that same value. `.mono` is appended for the .NET pack.
 
-`blazium-cli install <version> --templates` puts the bundle in the Blazium template root for that version. A Godot-shaped folder on disk does not satisfy the export dialog. Mono is a second `.tpz` (`--mono`), not a different version number. Discord and YouTube flags are preset options on the platform named `Web`.
+We publish those packs to `cdn.blazium.app` so Hub, the CLI, and the website can share one copy. The editor does not read that copy yet.
 
-Blazium on the `blazium-dev` line is a Godot 4.3.2-compatible engine with its own version number, currently in the `0.6.x` range. Export templates are stored under that Blazium version. They are not stored under a `4.3.2.stable` folder. If you copied a Godot template layout by hand, the export dialog will say the templates are missing even though the files are on disk.
+![How a template pack is found](assets/template-mirrors.png)
 
-## Status
+## What the editor does today
 
-Release CI publishes editor zips and template bundles to `cdn.blazium.app`. Hub, at runtime, only reads that host. The CLI falls through to `GET /api/v1/templates/{deploy_type}/{version}` on `https://blazium.app` when `template_files.json`, `templates.json`, and `details.json` are all missing. Override that API base with `BLAZIUM_CEREBRO_URL`. Hub does not call it.
+`version.py` on `blazium-dev` sets `mirror_list` to `https://blazium.app/api/mirrorlist/`. The Export Template Manager requests `{mirror_list}{version}.{channel}.json`. A `.mono` suffix selects the .NET pack.
 
-Mono is a second `.tpz` when you pass `--mono` or `download_mono` in CI. It is not a different version number. Web, Discord embed, and YouTube Playables flags live on the export preset named `Web`, not in a separate template product.
+On 11 October 2026, [the 0.6.838 release list](https://blazium.app/api/mirrorlist/0.6.838.release.json) returned one mirror, named "Github Blazium Templates Mirror", pointing at the GitHub release asset. The matching [details.json](https://cdn.blazium.app/release/0.6.838/details.json) on the CDN already lists the CDN URL first and the GitHub release second. The handler in [blazium.app](https://github.com/blazium-games/blazium.app) (`templates.go`) reads `details.json` and would emit that order. Production is still serving the GitHub-only list. Until that site update is what you get from the API, the editor downloads templates from GitHub.
 
-Install templates for the same Blazium version as the editor you are running. `blazium-cli install 0.6.725 --templates` is the command that does both. The editor Export Template Manager keys off the running editor's Blazium version, so a nightly editor will not use a release template directory.
+The download button is gated on the Godot-side `status` field in `version.py`, not on our channel stamp. On `blazium-dev` that field is `stable`, so release, prerelease, and nightly editors all offer the download. On `blazium_4.8` the field is `dev`, and a bare `dev` status hides the in-editor download. That line is not what the CDN is shipping as 0.6.x.
 
 ![Two version numbers](assets/dual-version.png)
 
-## What a template is
-
-Each platform has `template_debug` and `template_release`. Mono builds are a second `.tpz` when you pass `--mono`. The web preset (`Web`) can also emit a Discord embed script and a YouTube Playables script, and it can gzip the WASM. Those flags live on the export preset, not in a separate template product: `blazium/discord_embed/enabled`, `blazium/discord_embed/autodetect`, `blazium/youtube_playable/enabled`, and `blazium/export_gzip_compressed_wasm/enabled`. `DiscordEmbeddedAppClient` is the node the embed script talks to. `is_discord_environment()` checks that the page is inside Discord.
-
-## CLI
+## What the CLI does
 
 ```text
-blazium-cli install 0.6.725 --templates
+blazium-cli install 0.6.838 --templates
 blazium-cli templates list
-blazium-cli templates download 0.6.725 --tpz
+blazium-cli templates download 0.6.838 --tpz
 ```
 
-`install --templates` uses the CDN `.tpz` bundle. Individual file helpers resolve metadata in this order (from the CLI README):
+`install --templates` uses the CDN `.tpz`. Individual file helpers try, in order:
 
 1. `https://cdn.blazium.app/{channel}/{version}/template_files.json`
-2. `…/templates.json` (legacy per-file list, or a `{base,mono}` bundle)
-3. `…/details.json` (the export template manager bundle)
-4. `GET /api/v1/templates/{deploy_type}/{version}` on `https://blazium.app`
+2. `…/templates.json`
+3. `…/details.json`
+4. Cerebro, only if `BLAZIUM_CEREBRO_URL` is set
 
-Override the API base with `BLAZIUM_CEREBRO_URL`. The CLI calls that API. Hub does not.
+Hub never calls Cerebro. The CLI's template channel is `nightly` or `release`. A prerelease editor version is fetched from the `release` prefix unless the nightly flag is set.
 
-On Unix, including macOS, the install root the CLI reports is `~/.local/share/blazium/export_templates`. On Windows it is under `%LOCALAPPDATA%\Blazium\export_templates`. Files land in a versioned subdirectory.
+Mono is a second `.tpz` (`--mono` or `download_mono` in CI). It is not a different version number.
+
+On Windows the install root is `%LOCALAPPDATA%\Blazium\export_templates`. On Unix it is `~/.local/share/blazium/export_templates`.
 
 ![templates --help](assets/cli-templates-help.svg)
-<!-- ASCIINEMA: assets/cli-templates-help.cast | blazium-cli templates --help -->
 
-## Editor
+```text
+asciinema play assets/cli-templates-help.cast
+```
 
-The Export Template Manager and the Export dialog both key off the running editor's Blazium version. Web preset checkboxes:
+## What a pack contains
 
-- `blazium/discord_embed/enabled` (and `blazium/discord_embed/autodetect`)
+Each platform has a debug template and a release template. The web preset is named `Web`. These flags live on that preset, not in a separate product:
+
+- `blazium/discord_embed/enabled` and `blazium/discord_embed/autodetect`
 - `blazium/youtube_playable/enabled`
 - `blazium/export_gzip_compressed_wasm/enabled`
 
-`get_name()` for that platform is `Web`. A workflow `platform-name` has to match the preset name in `export_presets.cfg`, so the string is `Web`, not a menu label.
+`get_name()` for that platform is `Web`. A GitHub Actions `platform-name` has to match the preset name in `export_presets.cfg`, so the string is `Web`.
 
-## CDN layout
+If the editor is `0.6.838` and the only templates on disk sit under a Godot `4.3.2` path, the export dialog will say the templates are missing. `blazium-cli install 0.6.838 --templates` is the command that puts them in the folder this editor checks.
 
-![cdn.blazium.app tree](assets/cdn-tree.png)
+## What lands on the CDN
+
+Storage is served at `https://cdn.blazium.app`. Versioned downloads live at `/{channel}/{version}/`: editor zips, `editors.json`, both `.tpz` packs, `details.json`, `template_files.json`, and the changelog. The catalog pointer is `catalog/versions/{channel}/latest.json`, not a copy of `editors.json` under `catalog/`.
 
 | Prefix | Contents |
 |---|---|
-| `/{channel}/{version}/` | Editor builds and templates (`template_files.json`, `templates.json`, `details.json`) |
+| `/{channel}/{version}/` | Editor builds and template manifests |
 | `/cli/` | CLI binaries and `cli.json` |
-| `/hub/` | Hub installers |
 | `/crash_reporter/` | Sidecar catalog `crash_reporter.json` |
 | `/toolchain/` | `toolchain.json` |
 | `/articles/` | Hub News (`rss.xml`, bbcode, assets) |
-| `/catalog/versions/` | `nightly.json`, `release.json`, and `latest.json` |
+| `/catalog/versions/{channel}/` | `latest.json` for that channel |
+| `/catalog/tools/hub/` | Hub installer manifest |
 
-Release CI publishes those objects into the bucket. Hub, at runtime, only reads `cdn.blazium.app`. It does not call the Cerebro API. The CLI is the tool that falls through to `GET /api/v1/templates/...` when the three CDN manifests are missing.
+There is no `hub/` prefix at the CDN root. Hub installers are indexed from `catalog/tools/hub/manifest.json`.
 
-## One export
+![cdn.blazium.app tree](assets/cdn-tree.png)
 
-Install templates for the same Blazium version as the editor, then export. If the editor is `0.6.725` and the only templates on disk are under a Godot `4.3.2` path, start over with `blazium-cli install 0.6.725 --templates`.
+Per-engine-line catalog keys (`catalog/versions/{channel}/{line}/latest.json`) are in the deploy pipeline and are not what every older object on the bucket uses yet. New deploys are what fill them. Do not script against a path that 404s until you have seen it for the version you want.
+
+## Links
+
+- Download page: https://blazium.app/download
+- Release catalog: https://cdn.blazium.app/catalog/versions/release/latest.json
+- Release details.json: https://cdn.blazium.app/release/0.6.838/details.json
+- Live mirror list: https://blazium.app/api/mirrorlist/0.6.838.release.json
+- Template manager: https://github.com/blazium-games/blazium/blob/blazium-dev/editor/export/export_template_manager.cpp
+- CLI: https://github.com/blazium-games/blazium-cli
+- Blazium Games: https://blazium.games
 
 ---
 

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img">
+  <title>Service clients and the hosts they name</title>
+  <rect width="1920" height="1080" fill="#121018"/>
+  <text x="64" y="72" fill="#e070ff" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" letter-spacing="2">BLAZIUM</text>
+  <text x="64" y="124" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="42" font-weight="700">Service clients and the hosts they name</text>
+  <text x="64" y="168" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="20">The nodes live in blazium-sdk-module. They are not in the blazium-dev module tree.</text>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#8a7aa8"/></marker></defs><rect x="80" y="280" width="520" height="150" rx="14" fill="#1c1828" stroke="#e070ff" stroke-width="2"/>
+  <text x="340.0" y="347.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">LoginClient</text>
+  <text x="340.0" y="379.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">login.blazium.app  ·  live</text><rect x="700" y="280" width="520" height="150" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="960.0" y="347.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">LobbyClient</text>
+  <text x="960.0" y="379.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">lobby.blazium.app  ·  no DNS</text><rect x="1320" y="280" width="520" height="150" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="1580.0" y="347.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">MasterServerClient</text>
+  <text x="1580.0" y="379.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">masterserver.blazium.app  ·  no DNS</text><rect x="80" y="560" width="820" height="170" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="490.0" y="637.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">Inside Discord</text>
+  <text x="490.0" y="669.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">discordsays.com/.proxy/ plus the client path</text><rect x="1000" y="560" width="820" height="170" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="1410.0" y="637.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">Game simulation</text>
+  <text x="1410.0" y="669.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">ENet or MultiplayerAPI, not the lobby socket</text>
+  <text x="64" y="1028" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18">Checked 11 October 2026. login.blazium.app answers. The lobby and master-server hostnames in this SDK do not resolve.</text>
+</svg>

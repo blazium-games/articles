@@ -1,73 +1,54 @@
 ---
-title: "Asset Tags & Semantic Search Modules"
-description: "Two editor modules that keep a project's tag dictionary in the project, and let your AI agents search it."
+title: "Why asset tags live in the project"
+description: "The tag dictionary is JSON under res://.blazium. Editor-only modules expose it to the dock and to your agents through JustAMCP."
 cover: "assets/cover.png"
 slug: "asset-tags-and-semantic-search-modules"
 deployed: false
-date: "2026-09-03"
-author: "sshiiden"
+date: "2026-10-11"
+author: "Bioblaze Payne"
 hosts: []
 ---
 
-# Asset Tags & Semantic Search
+# Why asset tags live in the project
 
-## Why we built it
+### Agents search the files you committed, not a database that drifted
 
-The commit "Add AssetTags, SemanticSearch, and JustAMCP MCP integration" lists the pieces: FileSystem **Edit Asset Tags**, a Project Settings **Asset Tags** tab, a semantic search bridge, JustAMCP tools, and deferred prune plus HTTP embedding "so editor startup stays responsive." The release notes for 0.6.725 describe JustAMCP as the editor MCP server agents use to create and modify a project. Asset tags are one of the tool sets on that server. The commit does not name a content pipeline or a game.
+*By Bioblaze Payne, Co-Founder of [Blazium Games](https://blazium.games)*
 
-## What Blazium Games uses it for
+---
 
-Blazium Games used asset tags and semantic search in-house to validate editor tagging and agent search, including the JustAMCP tools and the deferred HTTP path that keeps editor startup responsive. That is a validation pass. It does not name a project that ships those JSON files.
+The commit that added asset tags, semantic search, and the JustAMCP tools lists the pieces: a filesystem **Edit Asset Tags** action, a Project Settings **Asset Tags** tab, a search bridge, MCP tools, and deferred prune plus HTTP embedding so editor startup stays responsive. The 0.6.725 notes describe JustAMCP as the editor MCP server agents use to create and modify a project. Tags are one of the tool sets on that server.
 
-## What other projects get
+We did it this way because a tag database beside the project goes stale the moment someone copies the folder. `res://.blazium/asset_tags/tags.json` and `asset_index.json` travel with the project. Commit them if the tags are part of the game. They are not an editor cache.
 
-The dictionary is JSON in the project. The dock writes it. An agent calls `blazium_tags_*` and `blazium_semantic_search` on the same data. Search backends that ship are local (`lexical`, `hash_vector`, `ngram`) unless you set an HTTP URL yourself. A failed HTTP request falls back to `hash_vector`.
+Godot has no core module for this. Both of ours build only for the editor. A shipped player does not load them. `EditorExportAssetTags` can bake a sidecar at export time. That file is data. It is not the search module running in the game.
 
-A project collects files faster than a folder tree can explain them. The two editor modules keep that explanation next to the files, in a format the editor and an agent can both read.
+![The dock writes JSON. An agent reads it through MCP.](assets/tag-files.png)
 
-**Asset Tags** is the dictionary and the per-file assignments. **Semantic Search** is an index over those tags. Exact lookup and similarity lookup share that index. The editor's MCP server (JustAMCP) exposes both modules so your AI agents can organize, search, and maintain assets without leaving the editor.
+![MCP is one consumer](assets/automation-three.png)
 
-Both exist on `blazium-dev`. Both build only when the target is the editor. Semantic Search refuses to build without Asset Tags. A running export does not include either module. `EditorExportAssetTags` bakes what the build needs at export time.
+## What your agents can call
 
-Search that ships today is local unless you point `blazium/semanticsearch/embedding_http_url` at a server you run. The `http` provider falls back to `hash_vector` on failure. There is no Blazium-hosted embedding endpoint in these repos. Changing backend or provider needs an editor restart. `scan_filesystem` defaults to false, so the index does not walk the project until that is on or an agent asks for a rebuild.
+Enable JustAMCP (`blazium/justamcp/server_enabled`, or `--enable-mcp` from the CLI). The server is port 6506. Tag tools are named `blazium_tags_*`: list, add, remove, rename, set on an asset, find, search, unused, rescan, undo. Semantic tools are `semantic_search`, `semantic_find_similar`, `semantic_index_stats`, and `semantic_rebuild_index`. The prompt `blazium_asset_tagging_workflow` is the walk those tools expect.
 
-## What you edit
+That is the surface your agents use to organize, search, and maintain assets without leaving the editor. Search is those tools. It is not a raw read of a random resource path.
 
-The filesystem dock context menu tags the resource under the cursor. The Project Settings "Asset Tags" tab is the dictionary: names, comments, renames. Storage is plain JSON in the project, not a hidden editor cache:
+## What search is willing to do
 
-- `res://.blazium/asset_tags/tags.json`
-- `res://.blazium/asset_tags/asset_index.json`
+The default backend is `lexical`. `embedding` and `hybrid` exist. The default embedding provider is `hash_vector`, which needs no network. `ngram` is local. `http` uses `blazium/semanticsearch/embedding_http_url` and falls back to `hash_vector` if the request fails. There is no Blazium-hosted embedding service. If you set `http`, the URL is yours.
 
-Commit those files if the tags are part of the project. `blazium/assettags/strict_tags` rejects a name that is not in the dictionary. `blazium/assettags/strict_paths` rejects a path that is not on disk. `blazium/assettags/taggable_extensions` is the extension list the dock will offer.
+HTTP work is deferred so startup stays responsive, and async search rejects the HTTP provider off the main thread. Changing backend or provider needs an editor restart. The index is `res://.blazium/semantic_index/index.json`.
 
-`AssetTagCoordinator` batches a change so undo works. The classes are editor objects. Gameplay code does not own them. On export, `EditorExportAssetTags` bakes the tags the build needs. The running game does not include the module.
+`semanticsearch` does not build unless `assettags` does.
 
-## What search does
+We validated the dock, the JSON, and the MCP tools in-house, including while Demon Lord: Clicker was exercising the 2D editor. That does not mean a shipped build of that game runs semantic search at runtime. The modules are editor-only.
 
-`SemanticAssetIndex` is what JustAMCP calls. The default backend is lexical: tag tokens, no network. Set `blazium/semanticsearch/backend` to `embedding` or `hybrid` when you want a vector. Providers are `hash_vector` (default, local), `ngram`, and `http`. An empty HTTP URL or a failed request falls back to `hash_vector`. Changing the backend or the provider requires an editor restart.
+## Links
 
-`scan_filesystem` defaults to false, so the index does not walk the project until you turn that on or an agent asks for a rebuild.
-
-## What an agent can call
-
-Your AI agents use the JustAMCP tools, not a private socket:
-
-| Tool | Job |
-|---|---|
-| `blazium_tags_list` | Dictionary |
-| `blazium_tags_set_on_asset` | Assign tags |
-| `blazium_tags_find_assets` | Exact tag |
-| `blazium_tags_search_assets` | Tag query |
-| `semantic_search` / `blazium_semantic_search` | Index query |
-| `blazium_asset_tagging_workflow` | Prompt that walks the steps |
-
-`blazium://tags/dictionary` is the MCP resource for the same dictionary. In the editor, Project Settings has an Asset Tags tab, and the FileSystem dock menu is **Edit Asset Tags...**. Those tools are served by JustAMCP, the editor MCP server, on port 6506. `strict_tags` and `strict_paths` default to false. An HTTP embedding failure falls back to `hash_vector`. Changing backend or provider needs an editor restart.
-
-## Why it stays in-engine
-
-A sidecar database would drift from the files the moment someone renames a texture outside the tool. The dictionary is a JSON file beside the assets, the dock writes it, and the agent reads the same file through MCP. That is the whole loop.
-
-The running game does not get the modules. Export baking is the only path into a build, and only for tags the export plugin wrote. HTTP embeddings are a URL you supply. There is no hosted index to wait on. The dock label is **Edit Asset Tags...**. A tag on a path that is not on disk is stored until `strict_paths` is on. A name that is not in the dictionary is stored until `strict_tags` is on. Engine docs: [docs.blazium.app](https://docs.blazium.app).
+- assettags: https://github.com/blazium-games/blazium/tree/blazium-dev/modules/assettags
+- semanticsearch: https://github.com/blazium-games/blazium/tree/blazium-dev/modules/semanticsearch
+- JustAMCP: https://github.com/blazium-games/blazium/tree/blazium-dev/modules/justamcp
+- Blazium Games: https://blazium.games
 
 ---
 
@@ -75,8 +56,8 @@ The running game does not get the modules. Export baking is the only path into a
 
 Or follow us everywhere else:
 
-- **[X / Twitter](https://x.com/BlaziumGames)**
 - **[GitHub](https://github.com/blazium-games)**
 - **[IndieDB](https://www.indiedb.com/engines/blazium-engine)**
+- **[X / Twitter](https://x.com/BlaziumGames)**
 - **[YouTube](https://www.youtube.com/@blazium)**
 - **[itch.io](https://blaziumengine.itch.io)**

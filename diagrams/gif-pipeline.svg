@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img">
+  <title>GIF in, GIF out</title>
+  <rect width="1920" height="1080" fill="#121018"/>
+  <text x="64" y="72" fill="#e070ff" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" letter-spacing="2">BLAZIUM</text>
+  <text x="64" y="124" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="42" font-weight="700">GIF in, GIF out</text>
+  <text x="64" y="168" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="20">modules/gif is always built. It is a texture with a clock, not a video codec.</text>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#8a7aa8"/></marker></defs><rect x="80" y="340" width="460" height="160" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="310.0" y="412.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">.gif file</text>
+  <text x="310.0" y="444.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">ResourceImporterGIF</text><rect x="680" y="340" width="520" height="160" rx="14" fill="#1c1828" stroke="#e070ff" stroke-width="2"/>
+  <text x="940.0" y="412.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">GIFTexture</text>
+  <text x="940.0" y="444.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">Sprite2D, material, shader</text><rect x="1340" y="340" width="500" height="160" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="1590.0" y="412.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">GIFRecorder</text>
+  <text x="1590.0" y="444.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">viewport, window, or screen</text><line x1="540" y1="420" x2="680" y2="420" stroke="#8a7aa8" stroke-width="2.5" marker-end="url(#arrow)"/><line x1="1200" y1="420" x2="1340" y2="420" stroke="#8a7aa8" stroke-width="2.5" marker-end="url(#arrow)"/><rect x="680" y="640" width="520" height="150" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="940.0" y="707.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">MovieWriterGIF</text>
+  <text x="940.0" y="739.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">engine movie recorder, default 12 fps</text>
+  <text x="64" y="1028" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18">Caps: 16777216 canvas pixels and 4096 frames. Audio is not written into the GIF.</text>
+</svg>

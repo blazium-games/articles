@@ -1,6 +1,6 @@
 # Ecosystem diagrams
 
-SVG sources plus 1920x1080 PNG exports. Labels are drawn in code (`articles/scripts/generate_ecosystem_diagrams.py`), then rasterized with ImageMagick.
+SVG sources plus 1920x1080 PNG exports. Labels are drawn in the SVG, then rasterized. Text has to match the source the article cites.
 
 Do not regenerate these with an image model. Text has to stay exact.
 
@@ -20,3 +20,13 @@ Do not regenerate these with an image model. Text has to stay exact.
 | hub-tabs | stack, Hub |
 | github-actions-flow | Actions, download |
 | data-formats | data-formats |
+| template-mirrors | templates, download |
+| crash-flow | crash reporter |
+| analytics-consent | analytics |
+| services-hosts | services |
+| gif-pipeline | GIF |
+| editor-ports | remote/MCP |
+| docker-host | Docker web export |
+| toolchain-targets | toolchain |
+| tag-files | asset tags |
+| repo-split | stack |

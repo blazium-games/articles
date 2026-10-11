@@ -1,66 +1,63 @@
 ---
-title: "Crash Reporter & Analytics"
-description: "Native crash capture and an opt-in analytics layer for the editor and for shipped games."
+title: "Why crash reports and analytics are separate"
+description: "A minidump is evidence of an engine fault. An analytics event is a counter. They share an app id and they do not share a switch."
 cover: "assets/cover.png"
 slug: "crash-reporter-and-analytics"
 deployed: false
-date: "2026-09-03"
-author: "sshiiden"
+date: "2026-10-11"
+author: "Bioblaze Payne"
 hosts: []
 ---
 
-# Crash Reporting & Analytics in Blazium
+# Why crash reports and analytics are separate
 
-## Why we built it
+### One is how we patch the engine. The other is a counter you opt into.
 
-The engine commits that add the modules are "Add opt-in CrashReporter with Breakpad minidumps" and "Add opt-in Analytics module with identity, consent, and HTTP queue." A later commit identifies both by one app id and one build id, and another bakes the editor app id, build id, and analytics URL so they cannot be changed at runtime. The sidecar README says the UI is for first-party utilities: the engine, Hub, and other internal tools. It does not contain Breakpad. The engine writes the files. The sidecar presents them and uploads after confirm.
+*By Bioblaze Payne, Co-Founder of [Blazium Games](https://blazium.games)*
 
-## What Blazium Games uses it for
+---
 
-The crash reporter was built for the Blazium Engine and the ecosystem around it. Blazium Games reads the incoming crash reports to find engine issues and ships patches specifically for those crashes. Hub CI (`blazium-hub/ci/hub_scons.env`) bakes `editor_app_id=blazium-hub`, reports at `https://crash.blazium.app/v1/reports`, and events at `https://crash.blazium.app/v1/events`. That is the official Hub binary's configuration. The example ingest servers are marked "Not a hosted product." They are references. They are not the Hub endpoint.
+We added both modules in the same stretch of engine work, and we gave them the same app id and build id so a report and an event from one binary can be lined up. That is as far as the sharing goes. A crash report is a minidump we read to find an engine fault and ship a patch. An analytics event is a counter. We do not patch the engine from analytics events.
 
-Analytics was built for our games: the example Hangman game and Demon Lord: Clicker. The in-game bug reporter was built for those same games. In Demon Lord: Clicker that reporter sends a description, a screenshot, logs, and session details to our backend, with account IDs and PC usernames stripped. The backend links those reports to GitHub issues. That path is not the minidump, and it is not the analytics queue. Nothing here says the analytics events are what the engine patches are based on. Consent still gates analytics. An empty baked editor endpoint still means the editor collects nothing.
+Godot ships neither module. The crash path is opt-in upload with a confirm step, because a dump can contain more than a stack. The analytics path is opt-in because a counter should not leave the machine until someone says so.
 
-## What other projects get
+![Where both sit](assets/ecosystem-map.png)
 
-An export template built with the matching SCons flag can write the same dump pair, and can queue events after consent. `require_user_consent` on crash upload defaults to true. Analytics ships nothing until consent is given. Games set their own endpoint. They do not inherit Hub's URL unless they bake or configure it. Crash reports that do get sent are part of how engine crash fixes get shipped. Analytics events are not described as that input.
+## Crash reports
 
-Those are two modules, `modules/crash_reporter` and `modules/analytics`, on `blazium-dev`. They can share an app id and a build id. They do not share a switch.
+`modules/crash_reporter` writes `{id}.dmp` and `{id}.json`. Breakpad is compiled into the engine when `crash_reporter=yes` or `editor_crash_reporter=yes`. The sidecar UI in [blazium_crash_reporter](https://github.com/blazium-games/blazium_crash_reporter) does not contain Breakpad. It shows the two files. Send uploads. Discard does not. `--auto-send` exists and we do not use it for Hub.
 
-On a game, `application/crash_reporter/upload_mode` is `0` (files only), `1` (in-engine HTTP), `2` (sidecar), or `3` (both). `require_user_consent` defaults to true. The editor never HTTP-uploads a dump. Analytics consent is checked in order: `--analytics=accepted|declined`, `BLAZIUM_ANALYTICS_CONSENT`, `Analytics.set_consent`, then Editor Settings `blazium/analytics/consent`. `flush()` is what POSTs `{"events":[...]}`. Quitting only queues `session_end`. This page is why they are split, and what a build actually does today.
+The module builds on Windows and Linux/BSD only. Editor builds never HTTP-upload. `is_http_upload_available()` is false in the editor. `require_user_consent` defaults to true. Hub's bake posts to `https://crash.blazium.app/v1/reports`. A game does not inherit that URL.
 
-## Why a dump is not a metric
+We read the reports that are sent. Hangman shipping on Steam, Discord, Google Play, and the Apple App Store did not replace that. Crashes still show up after a title is out.
 
-A crash file is evidence. An analytics event is a counter. Mixing them means a crash upload that also starts a session log, or a metrics SDK that tries to explain a segfault. The crash module writes `{id}.dmp` and `{id}.json`, then either leaves them, hands them to a sidecar, or (in an export template) POSTs them. The analytics module queues JSON events and POSTs `{"events":[...]}` only after consent is given and `flush()` runs. Shutdown queues `session_end`. It does not POST by itself.
+![Confirm, then upload](assets/crash-flow.png)
 
-`AppIdentity` resolves one app id and one build id for both. A non-empty SCons bake wins, then project keys, then `custom_blazium_engine` and the git hash. `CrashReporter.get_resolved_config()` and `Analytics.get_resolved_config()` return that set. A settings screen can show it. The headers on an analytics POST are `X-App-Id` and `X-Build-Id`.
+## Analytics
 
-## What official builds do
+`modules/analytics` queues JSON events and posts them when you call `flush()`. The body is `{"events":[...]}`. Hub's bake uses `https://crash.blazium.app/v1/events` on the same host as crash reports, on a different path.
 
-Hub CI (`blazium-hub/ci/hub_scons.env`) bakes `editor_app_id=blazium-hub`, crash reports at `https://crash.blazium.app/v1/reports`, and analytics at `https://crash.blazium.app/v1/events`. Consent still has to be given before analytics rows leave the machine. Crash upload on a template waits on `require_user_consent`, which defaults to true. The sidecar UI is Send, Discard, or Refresh. The privacy URL is an argument so the dialog can show where the bytes would go.
+Consent, first match wins: `--analytics=accepted|declined`, then `BLAZIUM_ANALYTICS_CONSENT`, then `Analytics.set_consent`, then Editor Settings `blazium/analytics/consent`. There is no consent dialog. Anonymous mode is the default, and it omits `device_uid`.
 
-A local engine build does not inherit that bake. `editor_app_id` defaults to `custom_blazium_engine`. An empty `editor_analytics_endpoint` means the editor does not collect any data. An empty crash endpoint still writes dumps. It does not upload. There is no CLI flag that fills those baked URLs in later.
+`application/analytics/require_user_consent` defaults to **false**. The crash reporter's matching flag defaults to **true**. Do not treat them as one setting. An empty baked editor endpoint means the editor does not collect any data.
 
-Editor builds never HTTP-upload a dump. `is_http_upload_available()` is false in the editor. `--crash-reporter <path>` selects the sidecar. Otherwise the editor writes files and stops.
+Built-in editor events are `editor_launched` and `editor_session_ended`. `flush()` is what POSTs. Quitting queues `session_end` and does not upload by itself.
 
-## What is not in the tree
+We used the analytics module while building Hangman and Demon Lord: Clicker. Demon Lord: Clicker was also how we validated the newer tools and the 2D side. The example server at [example_analytics_server](https://github.com/blazium-games/example_analytics_server) says it is not a hosted product.
 
-Crash reporting compiles on Windows and Linux/BSD only (`config.py`). macOS, web, Android, and iOS do not build the module. Breakpad is the in-process client. The module does not ship `crash_generation_server`. The sidecar repo, [blazium_crash_reporter](https://github.com/blazium-games/blazium_crash_reporter), has no Breakpad. It shows the two files and uploads after confirm.
+![Consent order](assets/analytics-consent.png)
 
-There is no analytics consent dialog in the editor. The control is Editor Settings `blazium/analytics/consent` (`unset`, `accepted`, `declined`), or `--analytics=accepted|declined`, or `BLAZIUM_ANALYTICS_CONSENT`, or `Analytics.set_consent`. Anonymous mode is the default, so `device_uid` is omitted. `identify()` and `set_user_properties()` do nothing while that mode is on.
+## What "same id" means
 
-Sidecar screenshots are not in this draft.
+SCons `editor_app_id` defaults to `custom_blazium_engine`. Hub CI sets `blazium-hub`. A non-empty bake wins over project settings for both modules. That lets us see that a crash and a session came from the same binary. It does not merge the queues.
 
-## Where to read the contract
+## Links
 
-Example servers and module tests:
-
-- [example_crash_reporter_server](https://github.com/blazium-games/example_crash_reporter_server)
-- [example_analytics_server](https://github.com/blazium-games/example_analytics_server)
-- [crash_reporter_module_tests](https://github.com/blazium-games/crash_reporter_module_tests)
-- [analytics_module_tests](https://github.com/blazium-games/analytics_module_tests)
-
-Engine docs: [docs.blazium.app](https://docs.blazium.app). The engine repo is [blazium](https://github.com/blazium-games/blazium) on `blazium-dev`.
+- Crash module: https://github.com/blazium-games/blazium/tree/blazium-dev/modules/crash_reporter
+- Analytics module: https://github.com/blazium-games/blazium/tree/blazium-dev/modules/analytics
+- Sidecar: https://github.com/blazium-games/blazium_crash_reporter
+- Sidecar catalog: https://cdn.blazium.app/crash_reporter/crash_reporter.json
+- Blazium Games: https://blazium.games
 
 ---
 
@@ -68,8 +65,8 @@ Engine docs: [docs.blazium.app](https://docs.blazium.app). The engine repo is [b
 
 Or follow us everywhere else:
 
-- **[X / Twitter](https://x.com/BlaziumGames)**
 - **[GitHub](https://github.com/blazium-games)**
 - **[IndieDB](https://www.indiedb.com/engines/blazium-engine)**
+- **[X / Twitter](https://x.com/BlaziumGames)**
 - **[YouTube](https://www.youtube.com/@blazium)**
 - **[itch.io](https://blaziumengine.itch.io)**

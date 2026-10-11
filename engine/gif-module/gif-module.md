@@ -1,76 +1,51 @@
 ---
-title: "GIF Module"
-description: "Native GIF support in Blazium: decode, import, playback, encode, and MovieWriter."
+title: "Why the GIF module is a texture"
+description: "GIFTexture is a Texture2D with a playhead. The recorder writes one back. It is not a video codec."
 cover: "assets/cover.png"
 slug: "gif-module"
 deployed: false
-date: "2026-09-02"
-author: "sshiiden"
+date: "2026-10-11"
+author: "Bioblaze Payne"
 hosts: []
 ---
 
-# The GIF Module
+# Why the GIF module is a texture
 
-## Why we built it
+### Drop it on a sprite. Do not expect a movie.
 
-The commit that adds the module is "Add GIF module for reading, writing, and playing animated GIFs." A follow-up narrows the design: "Update implementation to only add GifTexture which can be used anywhere as a texture." `GIFTexture.xml` says the same thing: assign it to Sprite2D, Sprite3D, TextureRect, a material, or a shader uniform like any other `Texture2D`. A later editor commit keeps GIF capture from blocking the editor, in the same change that keeps Steam ticket polling and remote Autowork off the UI thread.
+*By Bioblaze Payne, Co-Founder of [Blazium Games](https://blazium.games)*
 
-## What Blazium Games uses it for
+---
 
-Blazium Games used `GIFTexture` and `GIFRecorder` in-house to validate GIF import, playback, and capture, including capture that does not block the editor. That is a validation pass. It does not name a shipped title.
+The commit that added `modules/gif` was for reading, writing, and playing animated GIFs. The follow-up narrowed it: the thing you assign is `GIFTexture`, and it can sit anywhere a `Texture2D` sits. Sprite2D, Sprite3D, TextureRect, a material, a shader uniform. Godot does not have that class. We wanted it because 2D games, including Demon Lord: Clicker, keep using GIFs as art, and importing them as a pile of loose frames was the workaround.
 
-## What other projects get
+A later editor change keeps GIF capture off the UI thread, in the same pass that keeps Steam ticket polling and remote Autowork from blocking the editor. Capture is allowed to be slow. It is not allowed to freeze the window.
 
-The module is always built, in the editor and in export templates. A `.gif` import is a texture with its own playhead. `GIFRecorder` and `MovieWriterGIF` write one back out. Capture is not supposed to freeze the editor.
+![Import, play, record](assets/gif-pipeline.png)
 
-A `.gif` file is a texture with a clock, a disposal method, and a loop count. `modules/gif` is the native path: decode on import, play as a `Texture2D`, encode again from a viewport or from the engine movie recorder.
+## Always on
 
-The module is always built. `config.py` returns true for both `can_build` and `is_enabled`. It is in the editor and in export templates. There is no separate GIF download on the CDN.
+`can_build` and `is_enabled` return true. There is no SCons flag and no CDN package. The module is in the editor and in export templates.
 
-Drop a `.gif` in the filesystem dock. `ResourceImporterGIF` produces a `GIFTexture`. Assign it and set `play` and `loop`. `GIFRecorder.record_viewport(viewport, path, duration_sec, fps)` writes one back out. The C++ default fps is 12. This page is what the module is for and what it will not do.
+`play` defaults to false, `loop` to true, `autoplay_on_load` to true. `resource_local_to_scene` defaults to true so two instances do not share a playhead unless you want them to. Netscape loop counts are honored.
 
-## What landed
+`GIFRecorder.record_viewport` takes a viewport, a path, a duration, and an fps. The C++ default fps is 12. `MovieWriterGIF` is the engine movie-recorder target, same default. It drops audio. The encoder quantizes to a palette. That is the format. It is not RGBA video.
 
-| Class | Job |
-|---|---|
-| `GIFTexture` | `Texture2D` with its own playhead. `resource_local_to_scene` defaults to true |
-| `ResourceImporterGIF` | Drop a `.gif` in the filesystem dock |
-| `ResourceImporterGIFFrames` | The same file as frames for a sprite sheet |
-| `GIFRecorder` | Viewport, window, or screen back out to a `.gif` |
-| `MovieWriterGIF` | The engine movie recorder, when the output path ends in `.gif` |
+Project Settings cap the import: `blazium/gif/max_canvas_pixels` defaults to 16777216 and `blazium/gif/max_frames` defaults to 4096. Over the cap, import fails. A long full-screen capture will hit one of those and stop. Keep clips short and stay near 10 to 15 fps.
 
-`GIFTexture.from_sprite_frames` and `to_sprite_frames` move a clip between this texture and `SpriteFrames`. `save_to_path` writes the encoded file. Delay on `add_source_frame` is in centiseconds.
+`blazium/gif/capture_hotkey` defaults to 0, which means no hotkey until you set one. Output goes to `user://` unless you change `blazium/gif/capture_output_dir`.
 
-```gdscript
-var gif := GIFTexture.new()
-var err := gif.load_from_path("res://ui/banner.gif")
-if err != OK:
-    push_error(err)
-$Sprite2D.texture = gif
-gif.play = true
-```
+`GIFTexture.from_sprite_frames` and `to_sprite_frames` exist so an animation you already authored as SpriteFrames can become a GIF and the reverse. `ResourceImporterGIFFrames` is the importer that splits a file into frames instead of one texture.
 
-Playback follows `netscape_loop_count` while `loop` is true. `autoplay_on_load` and importer `speed_scale` are set at import. Use Make Unique when two nodes in one scene must not share a playhead.
+We validated import, playback, and capture in-house. That pass does not name a title that ships GIF capture as a feature. The module is there because the art pipeline needed it.
 
-## Limits
+Tests: [gif_module_tests](https://github.com/blazium-games/gif_module_tests).
 
-Project Settings cap the decode and the capture:
+## Links
 
-| Key | Default |
-|---|---|
-| `blazium/gif/max_canvas_pixels` | `16777216` |
-| `blazium/gif/max_frames` | `4096` |
-| `blazium/gif/capture_hotkey` | `0` (off) |
-| `blazium/gif/capture_source` | `0` Viewport, `1` Window |
-| `blazium/gif/capture_output_dir` | `user://` |
-
-A file over those caps is rejected. The hotkey is read on `process_frame` and toggles `GIFRecorder` only when it is not zero. A long full-screen capture hits `max_frames` and the encode fails. This is not a video codec. Short clips stay in the 10 to 15 fps range because that is what the caps and the file size allow.
-
-`MovieWriterGIF` and `GIFRecorder` share the encoder. They are not the same API. The movie writer is the engine's built-in recorder pointed at a `.gif` path. `record_viewport` is the one-shot on a `SubViewport`.
-
-## Status
-
-Shipped on `blazium-dev`. No SCons flag turns it off. Tests live in [gif_module_tests](https://github.com/blazium-games/gif_module_tests). Nothing in the module registers a follow-up format (APNG, WebP animation). Those are not a queued target in this tree.
+- Module: https://github.com/blazium-games/blazium/tree/blazium-dev/modules/gif
+- Tests: https://github.com/blazium-games/gif_module_tests
+- Blazium Games: https://blazium.games
 
 ---
 
@@ -78,8 +53,8 @@ Shipped on `blazium-dev`. No SCons flag turns it off. Tests live in [gif_module_
 
 Or follow us everywhere else:
 
-- **[X / Twitter](https://x.com/BlaziumGames)**
 - **[GitHub](https://github.com/blazium-games)**
 - **[IndieDB](https://www.indiedb.com/engines/blazium-engine)**
+- **[X / Twitter](https://x.com/BlaziumGames)**
 - **[YouTube](https://www.youtube.com/@blazium)**
 - **[itch.io](https://blaziumengine.itch.io)**

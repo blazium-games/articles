@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img">
+  <title>Three loopback servers</title>
+  <rect width="1920" height="1080" fill="#121018"/>
+  <text x="64" y="72" fill="#e070ff" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" letter-spacing="2">BLAZIUM</text>
+  <text x="64" y="124" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="42" font-weight="700">Three loopback servers</text>
+  <text x="64" y="168" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="20">Same machine. Different ports. Do not point the CLI at the game MCP port.</text>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#8a7aa8"/></marker></defs><rect x="80" y="340" width="520" height="180" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="340.0" y="422.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">JustAMCP  :6506</text>
+  <text x="340.0" y="454.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">MCP for agents  ·  editor</text><rect x="700" y="340" width="520" height="180" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="960.0" y="422.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">Game MCP  :6507</text>
+  <text x="960.0" y="454.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">export_port 0 means editor + 1</text><rect x="1320" y="340" width="520" height="180" rx="14" fill="#1c1828" stroke="#e070ff" stroke-width="2"/>
+  <text x="1580.0" y="422.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">remote_control  :6508</text>
+  <text x="1580.0" y="454.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">blazium-cli remote</text><rect x="700" y="660" width="520" height="150" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="960.0" y="727.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">Hub remote  :39218</text>
+  <text x="960.0" y="759.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">blazium://hub focuses the window</text>
+  <text x="64" y="1028" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18">Eval stays off until blazium/remote_control/allow_eval is true. OAuth on JustAMCP defaults to off.</text>
+</svg>
