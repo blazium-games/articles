@@ -6,6 +6,7 @@ import {
   asString,
   checkArticlePath,
   engineArticlesRoot,
+  isTodoArticlePath,
   extractLocalMediaPaths,
   isValidSlug,
   loadArticle,
@@ -68,12 +69,21 @@ async function main() {
     const hostsErr = validateHosts(article.frontmatter.hosts);
     if (hostsErr) errors.push(`${label}: ${hostsErr}`);
 
-    if (!article.deployed) {
+    const inTodo = isTodoArticlePath(article.relativePath);
+    if (inTodo && article.deployed) {
+      errors.push(`${label}: todo articles must not set deployed: true`);
+    }
+
+    if (!article.deployed && !inTodo) {
       console.log(`skip media checks (deployed: false): ${label}`);
       continue;
     }
 
-    deployedCount += 1;
+    if (inTodo) {
+      console.log(`validate media (todo, not published): ${label}`);
+    } else {
+      deployedCount += 1;
+    }
 
     if (cover) {
       const coverPath = resolveMediaPath(article.articleDir, cover);

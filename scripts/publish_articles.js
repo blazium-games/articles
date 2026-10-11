@@ -9,6 +9,7 @@ import {
   engineArticlesRoot,
   extractLocalMediaPaths,
   gitDateForFile,
+  isTodoArticlePath,
   loadArticle,
   markdownToBbcode,
   mediaCdnLocation,
@@ -42,6 +43,10 @@ async function main() {
 
   for (const filePath of files) {
     const article = await loadArticle(filePath, repoRoot);
+    if (isTodoArticlePath(article.relativePath)) {
+      console.log(`skip (todo): ${article.relativePath}`);
+      continue;
+    }
     if (!article.deployed) {
       console.log(`skip (deployed: false): ${article.relativePath}`);
       continue;

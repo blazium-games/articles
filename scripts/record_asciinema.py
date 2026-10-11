@@ -148,7 +148,9 @@ def main() -> None:
         write_svg(CAST_DIR / f"{stem}.svg", cmd, body)
         print(f"recorded {stem} exit={code}")
 
-    engine = ROOT / "engine"
+    # These drafts live under engine/todo and must not be copied into a
+    # published engine/<slug>/ folder.
+    engine = ROOT / "engine" / "todo"
     for slug, stems in ARTICLE_CASTS.items():
         assets = engine / slug / "assets"
         assets.mkdir(parents=True, exist_ok=True)

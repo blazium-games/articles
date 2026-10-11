@@ -3,7 +3,7 @@ title: Luau Module
 description: >-
   Native Luau scripting support for Blazium Game Engine: fast, safe, and
   familiar Lua with full engine integration.
-cover: assets/cover.jpg
+cover: assets/cover.svg
 deployed: false
 slug: luau-module
 author: sshiiden
@@ -11,7 +11,7 @@ author: sshiiden
 
 # Introducing the Luau Module
 
-![](assets/cover.jpg)
+![](assets/cover.svg)
 
 We have added native support for **Luau**, a fast, safe, and modern version of Lua developed by Roblox. The new Luau module lets you write game logic in Luau alongside (or instead of) GDScript, giving developers more choice and performance options.
 
@@ -26,8 +26,6 @@ Luau brings performance improvements, and safety features while staying familiar
 - **Compilation & Bytecode**: Built-in tools to compile scripts and work with pre-compiled bytecode.
 
 ## Why Use Luau in Your Blazium Project?
-
-![](assets/luau_code.jpg)
 
 Luau is a great fit for many types of projects:
 

@@ -6,6 +6,8 @@ import matter from 'gray-matter';
 export const CDN_BASE = 'https://cdn.blazium.app';
 export const ARTICLES_PREFIX = 'articles';
 export const ENGINE_DIR = 'engine';
+/** In-progress articles live here and are never published. */
+export const TODO_DIR = 'todo';
 /** kebab-case, no spaces: a-z, 0-9, hyphens */
 export const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 export const ALLOWED_MEDIA_EXT = new Set(['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg']);
@@ -113,6 +115,8 @@ export function mediaCdnLocation(absMediaPath, engineRoot) {
   if (!rel || rel.startsWith('..') || path.isAbsolute(rel)) return null;
   const parts = rel.split(path.sep);
   if (parts.length < 2) return null;
+  // engine/todo/<slug>/... is not a publishable article slug.
+  if (parts[0] === TODO_DIR) return null;
   const slug = parts[0];
   if (!isValidSlug(slug)) return null;
   const assetRel = parts.slice(1).join('/');
@@ -124,7 +128,17 @@ export function mediaCdnLocation(absMediaPath, engineRoot) {
 }
 
 /**
+ * @param {string} rel posix path relative to the repo root
+ * @returns {boolean}
+ */
+export function isTodoArticlePath(rel) {
+  const normalized = String(rel).replace(/\\/g, '/');
+  return normalized.startsWith(`${ENGINE_DIR}/${TODO_DIR}/`);
+}
+
+/**
  * Expected layout: engine/<slug>/<slug>.md
+ * or, for in-progress drafts, engine/todo/<slug>/<slug>.md
  * @param {string} filePath
  * @param {string} repoRoot
  * @param {string} slug
@@ -132,11 +146,10 @@ export function mediaCdnLocation(absMediaPath, engineRoot) {
  */
 export function checkArticlePath(filePath, repoRoot, slug) {
   const rel = path.relative(repoRoot, filePath).replace(/\\/g, '/');
-  const expected = `${ENGINE_DIR}/${slug}/${slug}.md`;
-  if (rel !== expected) {
-    return `path must be ${expected} (got ${rel})`;
-  }
-  return null;
+  const published = `${ENGINE_DIR}/${slug}/${slug}.md`;
+  const todo = `${ENGINE_DIR}/${TODO_DIR}/${slug}/${slug}.md`;
+  if (rel === published || rel === todo) return null;
+  return `path must be ${published} or ${todo} (got ${rel})`;
 }
 
 /**
