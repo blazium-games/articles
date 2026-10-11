@@ -103,7 +103,7 @@ The Embedded App client is a different module (`socialexports`) and a web export
 
 The script surface in the class reference is `GDK`: `initialize`, `shutdown`, `is_available`, `is_initialized`, `dispatch`. Access via `Engine.get_singleton("GDK")` as the XML describes. C++ getters for users, achievements, stats, leaderboards, store, and presence are in `modules/xbox_module/gdk/gdk.h`. Most of those sub-objects do not have class-reference XML yet. Read the header before calling them. Call `dispatch` each frame, or enable `gdk/runtime/embed_dispatch`.
 
-`EditorExportPlatformXbox` needs a GDK install on the machine doing the export. Signed-in tests need `LIVE_TESTS=1`. This is not a retail console-kit guide.
+`EditorExportPlatformXbox` needs a GDK install on the machine doing the export. This is not a retail console-kit or signed-in test guide.
 
 ![GDK export](assets/gdk-export.png)
 

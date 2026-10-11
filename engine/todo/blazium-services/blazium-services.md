@@ -19,7 +19,7 @@ hosts: []
 
 Hangman needed a lobby that did not hand every player everyone else's IP. The clients for that are `LoginClient`, `LobbyClient`, `ScriptedLobbyClient`, and `MasterServerClient`. They are C++ nodes that inherit `BlaziumClient`. They are not registered in a stock `blazium-dev` editor.
 
-They live in [blazium-sdk-module](https://github.com/blazium-games/blazium-sdk-module). The module's last merge on that tree is 4 September 2025. A stock 0.6 editor does not show those classes in the Create dialog. GDScript templates under `modules/gdscript/editor/script_templates/` still use the names (`LoginClient/default.gd`, `LobbyClient/default.gd`, `ScriptedLobbyClient/default.gd`). Those templates do not run until you compile the SDK in as a custom module. Discord embed, YouTube Playables, JWT, `.env`, and CSV used to sit in that same SDK. Those moved into the engine (`socialexports`, `jwttool`, `dotenv`, `dotcsv`). The lobby stack did not.
+They live in [blazium-sdk-module](https://github.com/blazium-games/blazium-sdk-module). The module's last merge on that tree is 4 September 2025. A stock 0.6 editor does not show those classes in the Create dialog. GDScript templates under `modules/gdscript/editor/script_templates/` still use the names (`LoginClient/default.gd`, `LobbyClient/default.gd`, `ScriptedLobbyClient/default.gd`). Those templates do not run until you compile the SDK in as a custom module. Discord embed, YouTube Playables, JWT, `.env`, and CSV now also have in-tree engine modules (`socialexports`, `jwttool`, `dotenv`, `dotcsv`), although the older SDK still registers its copies. The lobby stack remains SDK-only.
 
 Hangman itself is the proof that this stack is real game code: the example project autoloads `GlobalLobbyClient` from `lobby_client.tscn`, extends `LobbyClient`, and drives match state through lobby data and `notify_lobby`. That project still requires an SDK build. Shipping Hangman on Steam, Discord, Google Play, and the Apple App Store validated export and store upload; it does not put `LobbyClient` into the official editor zip.
 
@@ -149,7 +149,7 @@ The engine's `Discord.create_or_join_lobby` is a Discord Social SDK lobby. It is
 
 Drop the SDK in as a Godot/Blazium custom module and build. `can_build` in the SDK's `config.py` returns true on every platform the file sees. That does not mean the official editor zip already contains it. If `LobbyClient` is missing from the Create dialog, you are on a stock `blazium-dev` build. Script templates for these classes ship in the engine tree anyway, which is confusing until you know the registration lives in the SDK.
 
-Class reference pages for these nodes are not on `docs.blazium.app` today (the LobbyClient page 404s). Read the XML under `doc_classes/` in the SDK repo. `services-docs` in the org is a stub. Only `login.blazium.app` answers among the baked Blazium service hosts. Lobby, scripted lobby, and master server require your own deployment or a URL you control.
+Class reference pages for these nodes are not on `docs.blazium.app` today (the LobbyClient page 404s). Read the XML under `doc_classes/` in the SDK repo. The older `services-docs` repository is thin and does not replace that class XML. Only `login.blazium.app` answers among the baked Blazium service hosts. Lobby, scripted lobby, and master server require your own deployment or a URL you control.
 
 ## Links
 

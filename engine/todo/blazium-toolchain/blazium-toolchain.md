@@ -51,7 +51,7 @@ Cache: `%LOCALAPPDATA%\Blazium\blazium-toolchain` on Windows, `~/.local/share/bl
 
 Stdout is one verb per line (`fetching`, `installing`, `skip`, `wrote`, `ready`, `error`). `--json` emits the same fields as one object. Exit `2` means a reserved platform or a host that cannot compile. Exit `3` means a host tool is missing.
 
-Project settings load from `--settings FILE`, then `$BLAZIUM_TOOLCHAIN_SETTINGS`, then `blazium-toolchain.yml` / `.blazium-toolchain.yml` walking up from cwd. `blazium-toolchain settings` dumps the resolved file; `--json settings` is the machine-readable form.
+Project settings load from `--settings FILE`, then `$BLAZIUM_TOOLCHAIN_SETTINGS`, then `blazium-toolchain.yml` / `.blazium-toolchain.yml` walking up from cwd. `blazium-toolchain settings` prints the resolved settings and their source path; `--json settings` is the machine-readable form.
 
 The editor preset key is `export/inter_dvd/toolchain` (also mirrored from the Interactive DVD export option `inter_dvd/toolchain`). Empty means `BLAZIUM_TOOLCHAIN`, then `PATH`. Dummy-VOB export works without the CLI. ISO export and scene bake that need FFmpeg do not.
 
@@ -64,7 +64,7 @@ blazium-toolchain [--json] [--prefix DIR] ps1|ps2|n64|interdvd|steam env
 blazium-toolchain [--json] [--prefix DIR] ps1|ps2|n64|interdvd|steam status
 ```
 
-`version` reports name, version, and license. `list` prints the platform catalog from the embedded `manifest.json`. `env` and `status` work even on hosts that cannot compile console guests.
+Plain `version` reports the name and version; `--json version` also includes the license field. `list` prints the platform catalog from the embedded `manifest.json`. `env` and `status` work even on hosts that cannot compile console guests.
 
 ## PS1
 
@@ -146,9 +146,9 @@ blazium-toolchain interdvd ffprobe -- <args>
 
 The folder must already contain `VIDEO_TS/`. `AUDIO_TS/` is optional. **No mkisofs** means this command writes ISO9660 and UDF 1.02 itself. It does not shell out to `mkisofs` or `oscdimg`. Extra host files sit beside the video folders via `--extra HOST[:DISC]` and `--recursive`. The engine's `InterDVDIfoWriter.toolchain_iso_args` documents the same argument list shape: `--dir`, `--out`, `--meta`, `--write-meta`, and `--json`.
 
-`menu_language`, `audio_language`, `subtitle_language`, `region_mask`, and `parental_level` are stored in `disc.interdvd.json`. They are not written into the IFO.
+`menu_language`, `audio_language`, `subtitle_language`, `region_mask`, and `parental_level` are stored in the CLI's `disc.interdvd.json`; the CLI ISO path does not write those values into the IFO. The engine's separate `InterDVDIfoWriter` authoring path can write its own region, parental, menu, and audio options.
 
-`interdvd setup` can fetch a pinned FFmpeg on Windows and Linux. The editor's scene baker and VOB mux run `blazium-toolchain interdvd ffmpeg` to encode a cell. If the CLI is missing, bake fails with "blazium-toolchain is not ready." Dummy-VOB paths that never call FFmpeg still work without it.
+`interdvd setup` can fetch a pinned FFmpeg on Windows and Linux. The editor's scene baker and VOB mux run `blazium-toolchain interdvd ffmpeg` to encode a cell. If the CLI is missing, the editor reports that the toolchain is not ready and tells you to run `interdvd setup` or set `export/inter_dvd/toolchain`. Dummy-VOB paths that never call FFmpeg still work without it.
 
 ## SteamCMD cache
 

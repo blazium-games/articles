@@ -19,7 +19,7 @@ hosts: []
 
 The engine README groups what Blazium adds on top of Godot: editor and agent tools, store and platform modules, data modules, live-ops modules, and the older-console path. Those features do not all belong in one git tree. The editor is MIT and is the thing you ship a game with. The CLI installs that editor. Hub is a window over the CLI. The crash sidecar asks before a dump is uploaded. The toolchain is GPL-3.0-or-later because the compilers it fetches are not MIT. Putting GCC into `blazium.git` would have been the mistake the split exists to avoid.
 
-They share `cdn.blazium.app` so a download does not depend on GitHub. The website, Hub, and the CLI read that host. The editor's template manager asks `https://blazium.app/api/mirrorlist/`; the live `0.6.838` entry lists the CDN pack as `base.url` with a GitHub mirror beside it. Release CI still publishes catalogs that Cerebro never exposes to Hub directly.
+They share `cdn.blazium.app` so a download does not depend on GitHub. The website, Hub, and the CLI read that host. The editor's template manager asks `https://blazium.app/api/mirrorlist/`; for `0.6.838`, the details catalog names the CDN pack as its primary URL and the mirror list includes GitHub alongside it. Release CI still publishes catalogs that Cerebro never exposes to Hub directly.
 
 ![Repositories around the editor](assets/repo-split.png)
 
@@ -55,7 +55,7 @@ In 2025 we also shipped the CLI, the deploy commands, and the GitHub Actions. Th
 
 ## Two lines, on purpose
 
-`blazium-dev` is the Godot 4.3 line. The editors on the CDN are `0.6.x` from that branch. As of 11 October 2026, release is 0.6.838 and nightly is 0.6.924. `blazium_4.8` is the Godot 4.8 line. Hub's executable and the crash sidecar builds track it. There is no 0.8 download on the CDN yet. CI knows how to map 0.8 and 0.9 onto that line when those versions exist.
+`blazium-dev` is the Godot 4.3 line. The editors on the CDN are `0.6.x` from that branch. As of 11 October 2026, release is 0.6.838 and nightly is 0.6.924. `blazium_4.8` is the Godot 4.8 line. Hub's executable and the crash sidecar builds track it. There is no 0.8 download on the CDN today.
 
 Keeping two lines in separate process lanes is why Hub can move with 4.8 APIs while shipping editors stay on the 0.6 catalogs players and studios already pin. Collapsing them early would force every Hub fix through an editor release train, or every editor nightly through Hub packaging.
 
@@ -69,7 +69,7 @@ That separation is intentional: Divine Games, Inc. operates the store; the engin
 
 `LobbyClient` is not in the engine tree. It is in [blazium-sdk-module](https://github.com/blazium-games/blazium-sdk-module). `login.blazium.app` answers. The lobby hostname that SDK defaults to does not resolve. Web export hosting for a Discord activity is [docker-webbuild-template](https://github.com/blazium-games/docker-webbuild-template), which is Nginx, not the web editor and not the GPL toolchain.
 
-Discord embed, YouTube Playables, JWT, dotenv, and CSV moved from the SDK into the engine. The lobby stack did not. That is another deliberate boundary: optional online services clients should not gate MIT editor releases, and they should not imply a public lobby hostname that is not up.
+Discord embed, YouTube Playables, JWT, dotenv, and CSV now have in-tree engine modules, although the older SDK still registers its own copies. The lobby stack remains SDK-only. That is another deliberate boundary: optional online services clients should not gate MIT editor releases, and they should not imply a public lobby hostname that is not up.
 
 ## CI, CDN catalogs, and reserved names
 

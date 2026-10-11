@@ -19,7 +19,7 @@ hosts: []
 
 You install Hub. Hub asks the CLI to fetch an editor from the CDN. The editor is the engine. News in Hub reads `https://cdn.blazium.app/articles/rss.xml` after a post is marked deployed and the publish workflow has uploaded it.
 
-We split it this way because a full engine deploy should not depend on one person's laptop, and a download should not depend on GitHub being healthy. The website, Hub, and the CLI read `cdn.blazium.app`. The editor's export-template manager asks `https://blazium.app/api/mirrorlist/` for mirrors; as of 11 October 2026 the `0.6.838` list's primary `base.url` is the CDN pack, with a GitHub mirror entry alongside it. The CLI installs editors from the CDN catalogs either way.
+We split it this way because a full engine deploy should not depend on one person's laptop, and a download should not depend on GitHub being healthy. The website, Hub, and the CLI read `cdn.blazium.app`. The editor's export-template manager asks `https://blazium.app/api/mirrorlist/` for mirrors; as of 11 October 2026, the `0.6.838` details catalog names the CDN pack as its primary URL and the mirror list includes GitHub alongside it. The CLI installs editors from the CDN catalogs either way.
 
 ![The Blazium engine stack](assets/ecosystem-map.png)
 
@@ -35,7 +35,7 @@ We split it this way because a full engine deploy should not depend on one perso
 
 ![One product, several repositories](assets/repo-split.png)
 
-There is a second engine line, `blazium_4.8`, which tracks Godot 4.8. Hub's own executable, the crash sidecar builds, and the skills tooling track that branch. The editors you install from the CDN are `0.6.x` from `blazium-dev`. As of 11 October 2026 the release catalog is [0.6.838](https://cdn.blazium.app/catalog/versions/release/latest.json) and nightly is 0.6.924. There is no `0.8` build on the CDN yet. CI policy maps 0.8 and 0.9 to the 4.8 line when those versions exist. They do not exist as downloads today.
+There is a second engine line, `blazium_4.8`, which tracks Godot 4.8. Hub's own executable, the crash sidecar builds, and the skills tooling track that branch. The editors you install from the CDN are `0.6.x` from `blazium-dev`. As of 11 October 2026 the release catalog is [0.6.838](https://cdn.blazium.app/catalog/versions/release/latest.json) and nightly is 0.6.924. There is no `0.8` build on the CDN today.
 
 Published Hub and CLI binaries are Linux and Windows. There is no Flatpak. [blazium#428](https://github.com/blazium-games/blazium/issues/428) is the open request. The store at [blazium.games](https://blazium.games) is a different product. Uploads there go through `blazium-cli games` (alias `chauffeur`), not through `blazium-cli deploy`. Steam and itch are `deploy`.
 

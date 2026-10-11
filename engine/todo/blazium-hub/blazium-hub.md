@@ -37,7 +37,7 @@ Windows uses Inno Setup, machine-wide under `{autopf}\Blazium`, and it requires 
 
 ## Projects
 
-Hub imports a project by scanning a folder for `project.godot`. Opening that card runs `blazium-cli open`. Run on the card runs `blazium-cli run` / `play`. Favorite pins the card. Remove takes it off the list with `blazium-cli projects remove`.
+Hub imports a project by scanning a folder for `project.blazium` first, then `project.godot`. Opening that card runs `blazium-cli open`. Run on the card runs `blazium-cli run` / `play`. Favorite pins the card. Remove takes it off the list with `blazium-cli projects remove`.
 
 The project card draws a version dropdown (`BlaziumVersionButton`). Nothing fills it, and the open path does not read it. `projects_view.gd` calls `HubCli.open_project_async(path)` and stops there. Until that call passes a version, Open is the CLI default. Set the default with `blazium-cli editors default` if you need a pin. The button on the card does not do it. Treat the control as unfinished UI.
 

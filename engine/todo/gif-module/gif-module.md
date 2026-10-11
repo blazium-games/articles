@@ -102,7 +102,7 @@ Over the canvas or frame cap, decode and import fail with `ERR_OUT_OF_MEMORY` an
 
 ## What we validated
 
-We validated import, playback, and capture in-house. That pass does not name a title that ships GIF capture as a feature. The module is there because the art pipeline needed a texture, not a video player. Autowork coverage for the script-facing API lives in [gif_module_tests](https://github.com/blazium-games/gif_module_tests). Align script against the classes registered in your build’s `modules/gif` doc_classes and ClassDB; the texture-centric API above is what this engine tree documents.
+We validated import, playback, and capture in-house. That pass does not name a title that ships GIF capture as a feature. The module is there because the art pipeline needed a texture, not a video player. The public [gif_module_tests](https://github.com/blazium-games/gif_module_tests) suite still names the older `GIFAnimation` and `GIFSprite2D` API, so do not treat it as current coverage for this tree. Align scripts against the classes registered in your build’s `modules/gif` doc_classes and ClassDB; the texture-centric API above is what this engine tree documents.
 
 ## Links
 

@@ -149,15 +149,9 @@ Keep the fps in the 10 to 15 range and keep the clip short. A long full-screen c
 - Hotkey capture writes under `capture_output_dir` and ignores the editor hint path; bind a key only in game builds where you want that behavior.
 - Movie writer and recorder share palette encode and project caps. Neither records audio into the GIF.
 
-## Checks from the Autowork suite
+## Test-suite status
 
-[gif_module_tests](https://github.com/blazium-games/gif_module_tests) exercises recorder defaults (`fps` 12, `max_size` 480×270, `loop_count` 0, `max_frames` 0), `add_frame` / `stop` / `save`, max-frame and max-size gates, and `start_viewport` on a SubViewport. Editor import UI, Movie Maker `--write-movie`, the capture hotkey, and window/screen grab are out of scope for that script suite—cover those manually against the APIs above. Run:
-
-```text
-blazium --headless -s run_tests.gd
-```
-
-Align class names with the ClassDB of your build. This engine tree’s doc_classes center on `GIFTexture` and `GIFRecorder` as documented above.
+The public [gif_module_tests](https://github.com/blazium-games/gif_module_tests) suite still expects the older `GIFAnimation` and `GIFSprite2D` surface, including a recorder signal typed with `GIFAnimation`. The current engine binds recorder results as `GIFTexture`, so that suite is stale against `blazium-dev` and is not proof for the API documented here. Verify current behavior against this tree's `GIFTexture` and `GIFRecorder` class XML and ClassDB. Editor import UI, Movie Maker `--write-movie`, the capture hotkey, and window/screen grab still need manual coverage.
 
 ## Links
 

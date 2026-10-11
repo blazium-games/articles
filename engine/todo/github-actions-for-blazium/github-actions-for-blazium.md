@@ -30,7 +30,7 @@ The public actions are four repositories. They are not a folder in the engine. C
 | [export-blazium-game](https://github.com/blazium-games/export-blazium-game) | `v0.3.2` | Export a preset |
 | [deploy-blazium-game](https://github.com/blazium-games/deploy-blazium-game) | `v0.0.2` | Push an already-exported artifact |
 
-`v0.2.1` and `v0.3.0` are git tags. The latest GitHub Release objects for those two repos are older (`v0.2.0` and `v0.1.1`). Pin the tag the action README uses, not whatever the Releases page calls Latest, until you have read the newer tag. Older examples that say `blazium-engine/export-blazium-game@master` use an org name that is not the repository. Prefer `blazium-games/…` and a version tag.
+`v0.2.1` and `v0.3.0` are git tags. The latest GitHub Release objects for those two repos are older (`v0.2.0` and `v0.1.1`). Pin the tag the action README uses, not whatever the Releases page calls Latest, until you have read the newer tag. Older examples that say `blazium-engine/export-blazium-game@master` use the former organization path. The current export action also self-checks out that old path, which GitHub redirects today. Prefer `blazium-games/…` and a version tag in new workflows.
 
 ![blazium-cli --help](assets/cli-help.svg)
 

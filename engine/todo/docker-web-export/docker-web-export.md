@@ -57,7 +57,7 @@ The clone URL in that README still says `blazium-engine/docker-webbuild-template
 | `/.proxy/` | Alias of the same root for Discord asset URLs; same COOP/COEP |
 | `/ytgame` | Same files without COOP/COEP (YouTube Playables) |
 | `~* \.(wasm)$` | `gzip_static on`; serves `.wasm.gz` when the client accepts gzip |
-| `/health` | `OK` text, or `{"status":"ok"}` when `Accept` asks for JSON |
+| `/health` | `OK` text, or `{"status": "ok"}` when `Accept` asks for JSON |
 
 ```text
 Cross-Origin-Opener-Policy: same-origin
@@ -129,7 +129,7 @@ A typical pipeline is: `setup-blazium-engine` with `download_template: true` →
 ## Limits
 
 - Base image is `nginx:latest`; pin a digest in your fork if you need bit-for-bit rebuilds.
-- `deploy-docker.yml` still checks out `blazium-engine/docker-webbuild-template` in its workflow file even though the canonical repo is under `blazium-games`. Fork or patch the workflow if that clone path breaks for you.
+- `deploy-docker.yml` still checks out `blazium-engine/docker-webbuild-template` in its workflow file even though the canonical repo is under `blazium-games`; GitHub currently redirects that old organization path. Prefer the canonical path when copying the workflow into a new repository.
 - COOP/COEP on `/` will break some third-party embeds that are not Discord; use `/ytgame` only for the YouTube path that needs headers off.
 - This container does not terminate TLS. Put a reverse proxy or platform load balancer in front for `https` Discord/YouTube URLs.
 - Worker count is `worker_processes 1` and `worker_connections 1024` in the shipped `nginx.conf`. That is enough for an activity or Playables page; it is not a general CDN substitute for large concurrent downloads of unrelated assets.

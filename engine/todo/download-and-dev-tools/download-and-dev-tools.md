@@ -94,7 +94,7 @@ Steam and itch reusable workflows inside deploy-blazium-game are deprecated. The
 | https://cdn.blazium.app/… | Bytes and JSON catalogs every tool reads |
 | https://blazium.games | Store. Not an engine download |
 
-Internal game builds use the same CDN downloads the public gets. The store at [blazium.games](https://blazium.games) is not this page. Store uploads are `blazium-cli games` or the standalone games CLI, not the editor zip.
+CI and public installs use the same CDN catalogs. The store at [blazium.games](https://blazium.games) is not this page. Store uploads are `blazium-cli games` or the standalone games CLI, not the editor zip.
 
 ## Practical install order
 

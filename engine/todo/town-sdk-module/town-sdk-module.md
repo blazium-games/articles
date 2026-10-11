@@ -49,7 +49,7 @@ assert(sdk != null)
 assert(ClassDB.class_exists("TownSdkClient"))
 ```
 
-If the singleton is missing, your editor or template build does not include the Town SDK module. Rebuild with the module enabled before expecting these APIs.
+If the singleton is missing, your editor or template build does not include the Town SDK module. Build an engine that includes `modules/town_sdk` from the public `port-bioblaze-modules-4.8` branch before expecting these APIs.
 
 ## Connect and poll
 
@@ -252,7 +252,6 @@ Always `poll` while waiting on signals. The client is not a blocking RPC layer i
 
 - Tests: https://github.com/blazium-games/town_sdk_module_tests
 - Module branch: https://github.com/blazium-games/blazium/tree/port-bioblaze-modules-4.8/modules/town_sdk
-- Download: https://blazium.app/download
 - Blazium Games: https://blazium.games
 
 ---

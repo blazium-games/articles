@@ -74,7 +74,7 @@ Do not copy those trees into `blazium/` or link them into the editor. That sente
 
 ## What "no mkisofs" means
 
-Interactive DVD mastering writes ISO9660 and UDF 1.02 inside the Go process. It does not shell out to `mkisofs` or `oscdimg`. You do not install those tools. The folder you pass already has `VIDEO_TS/`. Language and region fields in `disc.interdvd.json` are metadata for that JSON file. They are not written into the IFO or UDF.
+Interactive DVD mastering writes ISO9660 and UDF 1.02 inside the Go process. It does not shell out to `mkisofs` or `oscdimg`. You do not install those tools. The folder you pass already has `VIDEO_TS/`. Language and region fields in the CLI's `disc.interdvd.json` are metadata for that JSON file and are not written into the IFO or UDF by the CLI ISO path. The engine's separate IFO authoring path has its own region, parental, menu, and audio options.
 
 PS1 is a different command. `ps1 iso` uses mkpsxiso, which `ps1 setup` downloads into the toolchain cache. Saying the toolchain never calls an external ISO tool would be wrong. The Interactive DVD path is the one that does not.
 
@@ -86,7 +86,7 @@ SteamCMD is another supported platform in the same binary: `steam setup` caches 
 
 A macOS build of the CLI can master an Interactive DVD. PS1, PS2, and N64 setup and build exit `2` on that host. CI does not publish a macOS binary. CI does run `go test`, `go vet`, `ps2 build --out hello.elf`, and `n64 build --out hello.z64` on Ubuntu and Windows.
 
-Sony BIOS images and N64 PIF dumps are never fetched. `C:\ultra` is ignored. Emulators are smoke validators (`ps1 run`, `ps2 run`, `n64 run`), not a substitute for hardware. Cook ABI numbers (`BLAZIUM_PS1_COOK_ABI`, `BLAZIUM_PS2_COOK_ABI`, `BLAZIUM_N64_COOK_ABI`) stay aligned with the editor cooker and are not shared across platforms.
+Sony BIOS images and N64 PIF dumps are never fetched. `C:\ultra` is ignored. Emulators are smoke validators (`ps1 run`, `ps2 run`, `n64 run`), not a substitute for hardware. Cook ABI numbers (`BLAZIUM_PS1_COOK_ABI`, `BLAZIUM_PS2_COOK_ABI`, `BLAZIUM_N64_COOK_ABI`) belong to the toolchain's guest interfaces and are not shared across platforms.
 
 ## Exit codes and report shape
 
@@ -98,7 +98,7 @@ That contract matters for the architecture story: the MIT editor only needs to s
 
 We used the CLI in-house to validate the four console-adjacent targets and the Interactive DVD editor path. That is not a shipped console title on a storefront. The architecture exists so the MIT editor can stay MIT while authors who need those compilers have one place to fetch them.
 
-Guest cook flags (`--tim`, `--node`, `--luau`, and the rest) read paths you name. The CLI does not sandbox those paths. Treat them like any other build tool that trusts the working tree. Cook ABI constants (`BLAZIUM_PS1_COOK_ABI`, `BLAZIUM_PS2_COOK_ABI`, `BLAZIUM_N64_COOK_ABI`) stay aligned with the editor cooker and are not shared across platforms—another reason the guest trees live beside the CLI instead of inside `blazium.git`.
+Guest cook flags (`--tim`, `--node`, `--luau`, and the rest) read paths you name. The CLI does not sandbox those paths. Treat them like any other build tool that trusts the working tree. Cook ABI constants (`BLAZIUM_PS1_COOK_ABI`, `BLAZIUM_PS2_COOK_ABI`, `BLAZIUM_N64_COOK_ABI`) version the toolchain's guest interfaces and are not shared across platforms—another reason the guest trees live beside the CLI instead of inside `blazium.git`.
 
 ## Links
 

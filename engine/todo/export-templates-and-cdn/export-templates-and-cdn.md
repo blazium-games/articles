@@ -121,7 +121,7 @@ The `.tpz` bytes on GitHub and on the CDN for a given version are meant to be th
 
 ## How CI installs the same packs
 
-[setup-blazium-engine](https://github.com/blazium-games/setup-blazium-engine) at `v0.3.0` passes `--templates` into `blazium-cli install` when `download_template: true`. On a cache hit it calls `blazium-cli templates download <version> --tpz` instead of re-fetching the editor zip. The action then exports `BLAZIUM_TEMPLATE` as the templates root (`blazium-cli templates path`, or the OS default). Android export jobs look under that root for `android_source.zip` and write `android/.build_version` as `{version}.release` or the nightly form with `-` turned into `.`.
+[setup-blazium-engine](https://github.com/blazium-games/setup-blazium-engine) at `v0.3.0` passes `--templates` into `blazium-cli install` when `download_template: true`. On a cache hit it calls `blazium-cli templates download <version> --tpz` instead of re-fetching the editor zip. The action then exports `BLAZIUM_TEMPLATE` as the templates root (`blazium-cli templates path`, or the OS default). The separate `export-blazium-game` action expects `android_source.zip` directly under that root for Android exports and writes `android/.build_version` as `{version}.release` or the nightly form with `-` turned into `.`.
 
 That is the same folder layout a desktop CLI install creates. There is no parallel "Actions-only" template tree.
 

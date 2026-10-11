@@ -40,7 +40,7 @@ There is no official Flatpak. [blazium#428](https://github.com/blazium-games/bla
 asciinema play assets/cli-help.cast
 ```
 
-Most mutating commands accept `--json` and `--quiet`. CI should use both when a later step parses stdout.
+`--json` and `--quiet` are global flags, and `--json` implies quiet output. CI should use `--json` when a later step parses stdout.
 
 ## Install an editor
 
@@ -109,7 +109,7 @@ Unset policy is the latest installed editor on the `release` channel. A hard pin
 
 `run` (alias `play`) starts the game with `--path` and without `--editor`. If `application/run/main_scene` is empty, the CLI returns an error and does not start the binary. Remote control stays off for `run`. `project-manager` starts the default editor with `--project-manager` and no project path.
 
-The registry file is the same one Hub uses: `%APPDATA%\blazium\hub.json` or `~/.config/blazium\hub.json`.
+The registry file is the same one Hub uses: `%APPDATA%\blazium\hub.json` or `~/.config/blazium/hub.json`.
 
 ![blazium-cli editors](assets/cli-editors.svg)
 
@@ -146,7 +146,7 @@ blazium-cli update apply --product launcher --install-root "C:\Program Files\Bla
 
 ## Remote
 
-The editor module listens on `127.0.0.1:6508` by default. Routes include `GET /v1/health`, `GET /v1/status`, `POST /v1/exec`, and `POST /v1/eval`. Eval stays off until `blazium/remote_control/allow_eval` is true. JustAMCP, the editor MCP server, is port 6506. A game export port of `0` means 6507. Do not point this CLI at 6507.
+The editor module listens on `127.0.0.1:6508` by default. Routes include `GET /v1/health`, `GET /v1/status`, `POST /v1/exec`, and `POST /v1/eval`. Eval stays off until `blazium/remote_control/allow_eval` is true. JustAMCP, the editor MCP server, is port 6506. Its export port setting defaults to `0`, which resolves to the editor port plus one—6507 with the defaults. Do not point this CLI at 6507.
 
 | Command | Job |
 |---|---|
@@ -157,17 +157,17 @@ The editor module listens on `127.0.0.1:6508` by default. Routes include `GET /v
 | `remote eval` / `eval-gdscript` / `eval-lua` | Expressions, if `allow_eval` is on |
 | `remote logs` / `errors` | Engine log |
 | `remote debugger info` / `clear` | Debugger state |
-| `remote failed-run` | Last failed run |
+| `remote failed-run` | Bundle logs, debugger, Autowork, and evidence files from the last failure |
 | `remote autowork run --wait` | Run Autowork |
 | `remote snapshot editor` | PNG of the editor |
-| `remote doctor` | Config check |
+| `remote doctor` | Diagnose connectivity and configuration |
 | `remote enable --path ./MyProject` | Write remote settings into a project |
 
 ![remote --help](assets/cli-remote-help.svg)
 
 One live instance is used automatically. Two or more: the newest is the default, and the CLI prints a warning unless you pass `--quiet`. Select with `--instance <id>` or `--project <path>`.
 
-Env overrides: `BLAZIUM_REMOTE_HOST`, `BLAZIUM_REMOTE_PORT`, `BLAZIUM_REMOTE_TOKEN`, `BLAZIUM_REMOTE_EVAL_DEFAULT`. CLI prefs live in `%APPDATA%\blazium\cli.json` or `~/.config/blazium\cli.json`.
+Env overrides: `BLAZIUM_REMOTE_HOST`, `BLAZIUM_REMOTE_PORT`, `BLAZIUM_REMOTE_TOKEN`, `BLAZIUM_REMOTE_EVAL_DEFAULT`. CLI prefs live in `%APPDATA%\blazium\cli.json` or `~/.config/blazium/cli.json`.
 
 ## URI handler and deploy
 
