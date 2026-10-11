@@ -27,11 +27,14 @@ We used that split in-house to validate PS1, PS2, N64, and Interactive DVD expor
 
 ## Install
 
-Published binaries are Linux and Windows, x86_64 and x86_32. Catalog: `https://cdn.blazium.app/toolchain/toolchain.json` (latest 0.1.9 when this was checked). npm:
+Published binaries are Linux and Windows, x86_64 and x86_32. Catalog: `https://cdn.blazium.app/toolchain/toolchain.json` (latest `0.1.9` when this was checked). npm:
 
 ```text
 npm install -g @blazium-engine/toolchain
+npx @blazium-engine/toolchain
 ```
+
+Optional platform packages supply the binary without a CDN download: `@blazium-engine/toolchain-linux-x64`, `toolchain-linux-ia32`, `toolchain-win32-x64`, and `toolchain-win32-ia32`. The command name is always `blazium-toolchain`.
 
 Or build it. Go 1.23.8 or later.
 
@@ -42,13 +45,26 @@ go test ./...
 go build -o blazium-toolchain ./cmd/blazium-toolchain
 ```
 
-A local macOS build can master an Interactive DVD. PS1, PS2, and N64 setup and build exit `2` on that host. CI does not ship a macOS binary.
+Drop `.exe` on Windows. A local macOS build can master an Interactive DVD. PS1, PS2, and N64 setup and build exit `2` on that host. CI does not ship a macOS binary.
 
-Cache: `%LOCALAPPDATA%\Blazium\blazium-toolchain` on Windows, `~/.local/share/blazium-toolchain` elsewhere. Override with `--prefix` or `BLAZIUM_TOOLCHAIN_PREFIX`. SHA pins live in the embedded `pins.json`.
+Cache: `%LOCALAPPDATA%\Blazium\blazium-toolchain` on Windows, `~/.local/share/blazium-toolchain` elsewhere. Override with `--prefix` or `BLAZIUM_TOOLCHAIN_PREFIX`. SHA pins live in the embedded `pins.json`. Lookup order for tools: process env, then `<prefix>/<plat>/`, then a portable copy next to the executable, then `PATH`.
 
-Stdout is one verb per line (`fetching`, `installing`, `skip`, `wrote`, `ready`, `error`). Exit `2` means a reserved platform or a host that cannot compile. Exit `3` means a host tool is missing.
+Stdout is one verb per line (`fetching`, `installing`, `skip`, `wrote`, `ready`, `error`). `--json` emits the same fields as one object. Exit `2` means a reserved platform or a host that cannot compile. Exit `3` means a host tool is missing.
 
-The editor preset key is `export/inter_dvd/toolchain`. Empty means `BLAZIUM_TOOLCHAIN`, then `PATH`. Dummy-VOB export works without the CLI. ISO export does not.
+Project settings load from `--settings FILE`, then `$BLAZIUM_TOOLCHAIN_SETTINGS`, then `blazium-toolchain.yml` / `.blazium-toolchain.yml` walking up from cwd. `blazium-toolchain settings` dumps the resolved file; `--json settings` is the machine-readable form.
+
+The editor preset key is `export/inter_dvd/toolchain` (also mirrored from the Interactive DVD export option `inter_dvd/toolchain`). Empty means `BLAZIUM_TOOLCHAIN`, then `PATH`. Dummy-VOB export works without the CLI. ISO export and scene bake that need FFmpeg do not.
+
+## Common commands
+
+```text
+blazium-toolchain [--json] [--prefix DIR] version
+blazium-toolchain [--json] list
+blazium-toolchain [--json] [--prefix DIR] ps1|ps2|n64|interdvd|steam env
+blazium-toolchain [--json] [--prefix DIR] ps1|ps2|n64|interdvd|steam status
+```
+
+`version` reports name, version, and license. `list` prints the platform catalog from the embedded `manifest.json`. `env` and `status` work even on hosts that cannot compile console guests.
 
 ## PS1
 
@@ -62,13 +78,16 @@ The editor preset key is `export/inter_dvd/toolchain`. Empty means `BLAZIUM_TOOL
 blazium-toolchain ps1 setup --profile dev
 blazium-toolchain ps1 build --out GAME.EXE --sample template
 blazium-toolchain ps1 run --timeout 120s GAME.EXE
+blazium-toolchain ps1 iso --xml FILE [--out PATH]
+blazium-toolchain ps1 export-guest --out DIR
+blazium-toolchain ps1 fmv
 ```
 
-`--offline` skips the network. `ps1 run` is headless unless you pass `--ui`. `ps1 build` without `--src` uses the MIT guest stub embedded in the CLI. Sony BIOS images are not fetched. The PS1 ISO step uses mkpsxiso, which `setup` downloads. That is not the Interactive DVD path.
+`--offline` skips the network. `ps1 run` is headless unless you pass `--ui`. `ps1 build` without `--src` uses the MIT guest stub embedded in the CLI. `--overlay DIR` layers replacement `*.cpp` on top; `--export-src DIR` writes the resolved tree. Cook flags such as `--tim`, `--mesh`, `--vag`, `--node`, `--script`, `--gdbc`, and `--luau` read the paths you name; the CLI does not sandbox those paths. Sony BIOS images are not fetched. The PS1 ISO step uses mkpsxiso, which `setup` downloads. That is not the Interactive DVD path.
 
 ## PS2
 
-`ps2` ships. It does not exit 2.
+`ps2` ships. It does not exit 2 on Windows or Linux.
 
 | Profile | Contents |
 |---|---|
@@ -80,13 +99,16 @@ blazium-toolchain ps1 run --timeout 120s GAME.EXE
 blazium-toolchain ps2 setup --profile compile
 blazium-toolchain ps2 build --out hello.elf --sample cube
 blazium-toolchain ps2 iso --dir ./tree --out game.iso
+blazium-toolchain ps2 elf-info FILE.elf
+blazium-toolchain ps2 chd --iso FILE.iso --out FILE.chd
+blazium-toolchain ps2 run [--iso FILE.iso] [--timeout 120s] [--ui] GAME.elf
 ```
 
-Set `PCSX2_EXE` before `ps2 run`. `ps2 chd` wraps an ISO with `chdman` when that tool is on `PATH`.
+Set `PCSX2_EXE` (and `PS2_BIOS_DIR` if you have a legal BIOS) before `ps2 run`. Size gates `ps2.elf_text_max` (default 512 KiB) and `ps2.elf_file_max` (default 3 MiB) apply to `ps2 build` and `ps2 elf-info`. `ps2 chd` wraps an ISO with `chdman` when that tool is on `PATH`. Cook flags include `--node`, `--mesh`, `--gtex`, and `--script`. Sample `cube` comes from ps2sdk. CI builds `hello.elf` on Ubuntu and Windows.
 
 ## N64
 
-There is no ISO command. `n64 iso` is rejected. The product is a big-endian `.z64`.
+There is no ISO command. `n64 iso` is rejected. The product is a big-endian `.z64` (magic `80 37 12 40`).
 
 | Profile | Contents |
 |---|---|
@@ -98,28 +120,52 @@ There is no ISO command. `n64 iso` is rejected. The product is a big-endian `.z6
 blazium-toolchain n64 setup --profile compile
 blazium-toolchain n64 build --out hello.z64 --display 320
 blazium-toolchain n64 run --emu ares --rdram 8 hello.z64
+blazium-toolchain n64 rom --dir TREE --out FILE.z64 [--elf FILE.elf]
 ```
 
-`--display` is `320` or `640`. `--rdram 8` is the Expansion Pak size. Samples include `helloworld`, `rdpqdemo`, `t3dquad`, and `ovldemo`. `C:\ultra` is ignored. PIF dumps are not fetched.
+| Flag | Effect |
+|---|---|
+| `--display 320\|640` | Framebuffer; default 320 |
+| `--rumble` | Drive a Rumble Pak when present |
+| `--rdram 8\|4` | 8 MiB Expansion Pak (default) or 4 MiB |
+| `--sample helloworld\|rdpqdemo\|t3dquad\|ovldemo` | libdragon / Tiny3D samples |
+| `--emu ares\|project64\|both` | Validators for `n64 run` (default `both`) |
+
+`C:\ultra` is ignored. PIF dumps are not fetched. A missing single emulator is a `skip`. `n64 run` uses Parallel-RDP or Angrylion, not Jabo. Cart size gate `n64.cart_max` defaults to 64 MiB. CI builds `hello.z64` on Ubuntu and Windows.
 
 ## Interactive DVD
 
 ```text
+blazium-toolchain interdvd setup [--offline]
 blazium-toolchain interdvd meta init --out disc.interdvd.json
+blazium-toolchain interdvd meta validate --meta disc.interdvd.json
 blazium-toolchain interdvd iso --dir ./disc --out disc.iso --meta disc.interdvd.json
+blazium-toolchain interdvd ffmpeg -- <args>
+blazium-toolchain interdvd ffprobe -- <args>
 ```
 
-The folder must already contain `VIDEO_TS/`. `AUDIO_TS/` is optional. **No mkisofs** means this command writes ISO9660 and UDF 1.02 itself. It does not shell out to `mkisofs` or `oscdimg`. The engine's `InterDVDIfoWriter` documents the same limit: the argument list is `--dir`, `--out`, `--meta`, `--write-meta`, and `--json`.
+The folder must already contain `VIDEO_TS/`. `AUDIO_TS/` is optional. **No mkisofs** means this command writes ISO9660 and UDF 1.02 itself. It does not shell out to `mkisofs` or `oscdimg`. Extra host files sit beside the video folders via `--extra HOST[:DISC]` and `--recursive`. The engine's `InterDVDIfoWriter.toolchain_iso_args` documents the same argument list shape: `--dir`, `--out`, `--meta`, `--write-meta`, and `--json`.
 
 `menu_language`, `audio_language`, `subtitle_language`, `region_mask`, and `parental_level` are stored in `disc.interdvd.json`. They are not written into the IFO.
 
-`interdvd setup` can fetch a pinned FFmpeg on Windows and Linux. The editor's scene baker runs `blazium-toolchain interdvd ffmpeg` to encode a cell. If the CLI is missing, bake fails with "blazium-toolchain is not ready."
+`interdvd setup` can fetch a pinned FFmpeg on Windows and Linux. The editor's scene baker and VOB mux run `blazium-toolchain interdvd ffmpeg` to encode a cell. If the CLI is missing, bake fails with "blazium-toolchain is not ready." Dummy-VOB paths that never call FFmpeg still work without it.
 
-## Reserved
+## SteamCMD cache
 
-`ps3` and `ps4` are names the CLI accepts so scripts fail clearly. Every command exits `2`. They are not a shipping target, and there is no date on them.
+`steam` is a supported platform with `setup`, `env`, and `status` only. It caches Valve `steamcmd` under the prefix for `blazium-cli deploy steam upload`. It does not log in and does not push builds. `steam build`, `steam run`, and `steam iso` print usage and fail.
+
+```text
+blazium-toolchain steam setup
+blazium-toolchain steam status
+```
+
+## Reserved and limits
+
+`ps3` and `ps4` are names the CLI accepts so scripts fail clearly. Every command exits `2`. Manifest status is `planned`. There is no date on them.
 
 Compilers are downloaded into the cache on `setup`. They are not inside the Go binary. The MIT guest sources are. `export-guest --out DIR` writes that stub. Third-party licenses are in `THIRDPARTY.md` in the toolchain repo. libpsn00b, ps2sdk, and libdragon link into the exported guest, not into the editor.
+
+Hosts: PS1, PS2, and N64 setup/build/run/iso/rom are Windows and Linux. Other hosts exit `2` for those compile paths. `env`, `status`, and `export-guest` still work. Published release binaries are Linux and Windows only.
 
 ## Links
 

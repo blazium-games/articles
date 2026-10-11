@@ -31,11 +31,25 @@ Hub's own executable is a different binary, built from `blazium_4.8`. The editor
 
 ![How a template pack is found](assets/template-mirrors.png)
 
+## Catalog pointers worth bookmarking
+
+| URL | What it answers |
+|---|---|
+| `https://cdn.blazium.app/catalog/versions/release/latest.json` | Current release editor/templates version |
+| `https://cdn.blazium.app/catalog/versions/nightly/latest.json` | Current nightly |
+| `https://cdn.blazium.app/cli/cli.json` | CLI versions, download URLs, checksums |
+| `https://cdn.blazium.app/catalog/tools/hub/manifest.json` | Hub installer index |
+| `https://cdn.blazium.app/crash_reporter/crash_reporter.json` | Crash sidecar catalog |
+| `https://cdn.blazium.app/toolchain/toolchain.json` | Toolchain catalog |
+| `https://cdn.blazium.app/starters/starters.json` | Project starters |
+
+There is no `hub/` prefix at the CDN root for installers. Hub packages are indexed from `catalog/tools/hub/`. Versioned editor zips and `.tpz` packs live under `/{channel}/{version}/` with `editors.json`, `details.json`, and friends.
+
 ## Hub and CLI
 
-Windows Inno, Linux `.deb`. The Hub installer also installs `blazium-cli` and `crash_reporter`, so you do not download those separately. Start at [the Hub download](https://blazium.app/dev-tools/download?tool=hub).
+Windows Inno, Linux `.deb`. The Hub installer also installs `blazium-cli` and `crash_reporter`, so you do not download those separately. Start at [the Hub download](https://blazium.app/dev-tools/download?tool=hub). On Windows that is machine-wide under `{autopf}\Blazium`, Hub in `\Engine`, tools beside it, `blazium://` registered to the CLI.
 
-The CLI on its own is for a terminal or a runner: GitHub Releases, `npm install -g @blazium-engine/cli`, or `https://cdn.blazium.app/cli/cli.json`. Direct page: [the CLI download](https://blazium.app/dev-tools/download?tool=cli).
+The CLI on its own is for a terminal or a runner: GitHub Releases, `npm install -g @blazium-engine/cli`, or `https://cdn.blazium.app/cli/cli.json`. Direct page: [the CLI download](https://blazium.app/dev-tools/download?tool=cli). Optional npm platform packages skip the CDN fetch when present.
 
 ![blazium-cli version](assets/cli-version.svg)
 
@@ -43,7 +57,14 @@ The CLI on its own is for a terminal or a runner: GitHub Releases, `npm install 
 asciinema play assets/cli-version.cast
 ```
 
-You can unpack an editor zip by hand. The CLI is what records it in `hub.json` so Hub and `blazium-cli open` can find it. `blazium-cli install <version> --templates` pulls the template pack from the CDN into the Blazium template root.
+You can unpack an editor zip by hand. The CLI is what records it in `hub.json` so Hub and `blazium-cli open` can find it:
+
+```text
+blazium-cli editors add /path/to/Blazium --version 0.6.838
+blazium-cli install 0.6.838 --templates
+```
+
+`blazium-cli install <version> --templates` pulls the template pack from the CDN into the Blazium template root. A zip alone on disk is not enough for Hub to list that editor as installed.
 
 ## The rest of the dev tools
 
@@ -64,7 +85,40 @@ Steam and itch reusable workflows inside deploy-blazium-game are deprecated. The
 
 ![GitHub Actions flow](assets/github-actions-flow.png)
 
+## What each page is for
+
+| Page | Job |
+|---|---|
+| https://blazium.app/download | Pick an editor channel/version; link to CDN zip |
+| https://blazium.app/dev-tools | Hub installer and CLI; links into Actions and Docker |
+| https://cdn.blazium.app/… | Bytes and JSON catalogs every tool reads |
+| https://blazium.games | Store. Not an engine download |
+
 Internal game builds use the same CDN downloads the public gets. The store at [blazium.games](https://blazium.games) is not this page. Store uploads are `blazium-cli games` or the standalone games CLI, not the editor zip.
+
+## Practical install order
+
+1. Desktop: install Hub from dev-tools. That gives you Hub, CLI, crash sidecar, and `blazium://`.
+2. From Hub's Editors tab, or `blazium-cli install 0.6.838 --templates`, pull the editor and templates you will export with.
+3. CI: pin `setup-blazium-engine@v0.3.0` with `version: latest-release` unless you intentionally want nightly.
+4. Web host: export preset `Web`, drop files into [docker-webbuild-template](https://github.com/blazium-games/docker-webbuild-template) `static/`, then `docker compose up --build`.
+
+If you only grab the editor zip from the download page and never run the CLI, Hub will not know that build exists until you `editors add` it.
+
+## Channels and what "latest" means
+
+The download page and Hub Editors tab both speak in channels: `release`, `prerelease`, and `nightly`. Catalog pointers are per channel under `catalog/versions/{channel}/latest.json`. That is separate from CLI versioning in `cli/cli.json`, which has its own `.latest` field.
+
+When a GitHub Action says `version: latest` on setup-engine, that alias tracks **nightly**, not release. When the same string appears as an empty CLI version on setup-cli, it means `.latest` inside `cli.json`. Those are different catalogs. Mixing them up is the usual reason a runner suddenly compiles against a newer engine than the editor on your desktop.
+
+Nightly and release can share a version number shape (`0.6.x`) while living in different CDN prefixes. Always read the channel field in the catalog JSON you fetched, not only the semver string.
+
+## Limits
+
+- macOS Hub/CLI packages are not in the public packaging tree. macOS editor zips on the CDN are still installable from a CLI you build yourself or from setup-engine on a macOS runner.
+- The in-editor template download path and the CLI template path are not the same mirror today.
+- Action org typos in old examples (`blazium-engine/…`) are not the current repositories (`blazium-games/…`).
+- Toolchain `ps3` / `ps4` names are reserved in the catalog story and do not ship as downloadable targets.
 
 ## Links
 
@@ -72,6 +126,7 @@ Internal game builds use the same CDN downloads the public gets. The store at [b
 - Dev tools: https://blazium.app/dev-tools
 - Release catalog: https://cdn.blazium.app/catalog/versions/release/latest.json
 - CLI manifest: https://cdn.blazium.app/cli/cli.json
+- Hub manifest: https://cdn.blazium.app/catalog/tools/hub/manifest.json
 - Blazium Games: https://blazium.games
 
 ---
