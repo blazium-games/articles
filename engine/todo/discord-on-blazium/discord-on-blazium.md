@@ -42,6 +42,17 @@ The web export writes `{name}.discord.embed.js` when `blazium/discord_embed/enab
 
 Hangman's `export_presets.cfg` already names a `Web` preset aimed at `../build/hangman/index.html`. Enabling Discord embed is a preset checkbox on top of that web export, not a separate platform row.
 
+![Web export Discord embed flags](assets/embed-export-flags.png)
+
+| Web export option | Default | Effect |
+|---|---|---|
+| `blazium/discord_embed/enabled` | `false` | writes `{name}.discord.embed.js` into the pack |
+| `blazium/discord_embed/autodetect` | `false` | substitutes `$BLAZIUM_DISCORD_AUTODETECT` |
+| `blazium/youtube_playable/enabled` | `false` | separate host path; not Discord |
+| `blazium/web_headers/enabled` | `false` | optional header helpers on the same platform |
+
+Both Discord embed and YouTube Playables share the third-party JS packing path in `platform/web/export/export_plugin.cpp`. Enabling YouTube does not enable Discord embed. Advanced options must be visible in the preset inspector to find the Discord checkboxes when they are marked advanced.
+
 ![DiscordEmbeddedAppClient in the tree](assets/embedded-nodes.png)
 
 ![Discord URL mappings](assets/discord-admin-map.png)
@@ -66,6 +77,25 @@ func _ready() -> void:
 ```
 
 That `authorize` signature is the one in the class reference: response type, state, prompt, and the scope list as an `Array`. Other methods on the same class include `authenticate`, `get_channel`, `get_channel_permissions`, `get_entitlements`, `get_instance_connected_participants`, `get_skus`, `set_activity`, `open_invite_dialog`, `open_share_moment_dialog`, `start_purchase`, `initiate_image_upload`, `open_external_link`, `set_orientation_lock_state`, and `subscribe_to_all_events`. Instance context getters cover `get_user_id`, `get_client_id`, `get_guild_id`, `get_channel_id`, `get_frame_id`, and related fields. You wait on `finished`.
+
+### Authenticate after authorize
+
+`authorize` returns OAuth material in `DiscordEmbeddedAppResult.data`. Exchange that with your backend (or Discord's token endpoint via your server), then call `authenticate(access_token)` so the Embedded App SDK session is established. Do not skip `is_ready` before either call.
+
+```gdscript
+func finish_embed_session(access_token: String) -> void:
+    var auth: DiscordEmbeddedAppResult = await discord.authenticate(access_token).finished
+    if auth.has_error():
+        push_error(auth.error)
+        return
+    var channel: DiscordEmbeddedAppResult = await discord.get_channel(
+        discord.get_channel_id()
+    ).finished
+    if channel.has_error():
+        push_error(channel.error)
+```
+
+Purchase and entitlement helpers (`get_skus`, `get_entitlements`, `start_purchase`) only make sense after the activity application is configured for Discord monetization. `open_external_link` and `encourage_hardware_acceleration` are UI bridges into the Discord client, not browser `window.open` replacements outside the embed.
 
 ## Where LoginClient fits
 
@@ -132,6 +162,40 @@ Do not put activity-only APIs on a desktop export, and do not expect `initialize
 
 The engine does not invent a Blazium-hosted Discord auth hostname for that POST. You own the URL. The client only requires a JSON `jwt` field on success.
 
+### Presence-only versus OAuth surface
+
+| Need | Call |
+|---|---|
+| Rich presence only | `initialize_presence_only` |
+| Friends / invites / relationships | `initialize` then wait for `AUTH_READY` |
+| Backend session JWT | `authenticate_with_server` after OAuth |
+| Discord lobby | `create_or_join_lobby(secret)` |
+| Clear activity | `clear_rich_presence` |
+
+`get_granted_scopes` is meaningful only after OAuth. Relationship helpers such as `accept_discord_friend_request`, `get_relationships`, and `block_user` fail the mental model if you stayed in presence-only mode. Frame callbacks still matter: after `initialize`, the module hooks a per-frame `run_callbacks` pass; if you drive the SDK manually in tests, call `run_callbacks()` yourself.
+
+## Embed host checklist
+
+1. Export `Web` with `blazium/discord_embed/enabled` true.
+2. Copy the build into `static/` of [docker-webbuild-template](https://github.com/blazium-games/docker-webbuild-template) (or an equivalent host that answers `/.proxy/` with COOP/COEP).
+3. Create the Discord application and URL mappings for your activity paths.
+4. Map SDK login/lobby proxy suffixes if you use those clients (`blazium/login`, `blazium/lobby/connect`, and related).
+5. In the scene, guard on `is_discord_environment()`, await `is_ready`, then `authorize` / `authenticate`.
+
+Missing step 2 with a correct export still fails inside Discord: the iframe needs the proxy and headers, not only the `.discord.embed.js` file.
+
+## Social SDK failure cases
+
+| Check | If it fails |
+|---|---|
+| `Discord.initialize(client_id)` | wrong client id, or Social SDK binary missing from the build |
+| `get_auth_state() == AUTH_READY` | OAuth incomplete; do not call `authenticate_with_server` yet |
+| `is_presence_only_mode` | OAuth methods are the wrong mode; re-init with `initialize` |
+| HTTP body without `jwt` | your backend contract failed; engine returns error on `DiscordAuthResult` |
+| `create_or_join_lobby` | Discord lobby secret/path issue; unrelated to Blazium lobby hosts |
+
+Presence-only is enough for rich presence updates. Friends, invites, relationships, and `authenticate_with_server` need the full `initialize` path. Module tests in [discord_module_tests](https://github.com/blazium-games/discord_module_tests) cover auth and smoke cases against that singleton.
+
 ## Edge cases
 
 - `is_discord_environment()` false outside the Discord client: guard before awaiting `is_ready`.
@@ -140,6 +204,19 @@ The engine does not invent a Blazium-hosted Discord auth hostname for that POST.
 - COOP/COEP must be present on the host; the template sets them on `/` and `/.proxy/`. YouTube Playables uses `/ytgame` without those headers for a different host rule.
 - Do not expect `LoginClient` in a stock editor. Compile the SDK or talk to your own auth endpoint from the embed token.
 - `create_or_join_lobby` and SDK `LobbyClient` can both exist in one custom build; they still talk to different backends.
+- Leaving `client_id` unset on `DiscordEmbeddedAppClient` makes `authorize` fail before any network call.
+- Desktop `Discord` and embed `DiscordEmbeddedAppClient` can both sit in one project tree; export presets decide which binary path actually runs.
+- `subscribe_to_all_events` increases callback volume inside the activity; connect only the handlers you handle.
+- `set_orientation_lock_state` uses the embed orientation enum constants; it does nothing on a desktop Social SDK build.
+
+### Embed versus Social SDK auth results
+
+| Result type | Module | Success fields to keep |
+|---|---|---|
+| `DiscordEmbeddedAppResult` | `socialexports` | `data` dictionary from authorize/authenticate; check `has_error()` |
+| `DiscordAuthResult` | `discord_module` | `get_jwt()`, optional `get_discord_id` / `get_username` / `get_client_id` |
+
+Do not cast across those types. An activity token is not a `DiscordAuthResult`, and a desktop OAuth access token is not an embed `authenticate` argument unless your backend minted or exchanged it for that purpose. Keep embed session code under web export autoloads and desktop Social SDK code under desktop export autoloads so a single scene does not call both without an environment guard.
 
 ## Links
 

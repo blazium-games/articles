@@ -53,14 +53,22 @@ Hierarchy lives in `AssetTagHierarchy`: prefix match, rename remap, dedup. Stric
 
 `semanticsearch` declares a hard dependency on `assettags` in `config.py`. It does not build for export templates. The semantic store is `res://.blazium/semantic_index/index.json`.
 
+![lexical, embedding, and hybrid backends with providers](assets/semantic-backends.png)
+
 `SemanticSearchBackendFactory` picks `lexical`, `embedding`, or `hybrid`. Embedding providers are `hash_vector`, `ngram`, and `http`. Session backends are invalidated when settings change; `backend` and `embedding_provider` require an editor restart. HTTP embedding stays locked until the first project scan finishes, then unlocks deferred so startup does not block on a network round-trip. Failed or unavailable HTTP calls fall back to `hash_vector` and mark `used_fallback`.
+
+| Backend | Role | Provider notes |
+|---|---|---|
+| `lexical` | Default; tag/metadata text match | No embedding provider required |
+| `embedding` | Vector similarity over indexed assets | `hash_vector` (default), `ngram`, or `http` |
+| `hybrid` | Rank fusion of lexical + embedding | Stale embeddings show in `blazium_semantic_index_stats` |
 
 Async workers:
 
 - `SemanticAsyncSearchWorker` — job TTL from `blazium/semanticsearch/async_job_ttl_ms` (default 1800000). Rejects HTTP provider off the main thread.
 - `SemanticAsyncEmbedWorker` — refresh/stale refresh; also refuses HTTP for async embed refresh. Concurrent job caps come from `max_concurrent_async_jobs` (default 8).
 
-`SemanticAssetIndex` exposes filtered lexical search, embedding/hybrid search, similarity, stats (`configured_backend`, `effective_backend`, stale embedding counts), and rebuild. Rank fusion sits behind the hybrid path.
+`SemanticAssetIndex` exposes filtered lexical search, embedding/hybrid search, similarity, stats (`configured_backend`, `effective_backend`, stale embedding counts), and rebuild. Rank fusion sits behind the hybrid path. Prefer `lexical` until `blazium_semantic_index_stats` shows embeddings ready.
 
 ## What MCP sees
 

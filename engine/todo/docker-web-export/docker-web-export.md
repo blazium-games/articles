@@ -51,6 +51,8 @@ The clone URL in that README still says `blazium-engine/docker-webbuild-template
 
 ## Nginx map
 
+![Nginx locations for Discord, YouTube, wasm, and health](assets/nginx-map.png)
+
 | Location | Behavior |
 |---|---|
 | `/` | Static files; COOP `same-origin` + COEP `require-corp` |
@@ -64,7 +66,7 @@ Cross-Origin-Opener-Policy: same-origin
 Cross-Origin-Embedder-Policy: require-corp
 ```
 
-Those two headers are on `/` and `/.proxy/`. They are intentionally absent on `/ytgame`.
+Those two headers are on `/` and `/.proxy/`. They are intentionally absent on `/ytgame`. The health JSON body includes a space after the colon: `{"status": "ok"}` — match that string in probes that parse literally. Plain `OK` is the default when `Accept` does not ask for JSON. `/health` does not prove Discord URL mappings or YouTube package size; it only proves Nginx is answering.
 
 ## Discord
 
@@ -125,6 +127,8 @@ curl -sS -H 'Accept: application/json' http://localhost:8080/health
 ## From export action to this image
 
 A typical pipeline is: `setup-blazium-engine` with `download_template: true` → `export-blazium-game` with `platform-name: Web` → upload the `build/` artifact → `deploy-docker.yml` with `artifact-name: Web`. The deploy workflow does not re-export. If the artifact is missing `index.html` or the wasm file, Nginx will still start and `/health` will still pass. Check the artifact listing step in the workflow log before you chase Discord config.
+
+Probe both health shapes after `docker compose up --build`: plain `OK` without a special `Accept` header, and JSON `{"status": "ok"}` when `Accept: application/json` is set. If Discord assets 404, verify URL mappings point at `/.proxy/` before changing Nginx. If YouTube rejects the package for size, confirm `blazium/export_gzip_compressed_wasm/enabled` and that `gzip_static` can see the `.wasm.gz` sibling in `static/`.
 
 ## Limits
 

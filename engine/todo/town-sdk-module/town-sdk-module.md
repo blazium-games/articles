@@ -53,6 +53,8 @@ If the singleton is missing, your editor or template build does not include the 
 
 ## Connect and poll
 
+![Connect → poll → auth → region frame loop](assets/town-frame-loop.png)
+
 ```gdscript
 var ok: bool = sdk.connect_to_server("127.0.0.1", 7005)
 assert(ok)
@@ -75,6 +77,16 @@ sdk.disconnect_from_server()
 | `disconnect_from_server()` | Tear down |
 
 Live tests default to `127.0.0.1:7005` against a local `turnbattle` server. They are gated on `TOWN_LIVE_TESTS=1` and a local server binary; without that environment the suite marks cases pending.
+
+The client is a pumped socket, not a blocking RPC layer. Autowork cases call `poll` between waits and again while waiting on signals such as `snapshot_received` or `move_state`. A game `_process` that never calls `poll` will stall on connect and never see region snapshots. Treat `connect_to_server` success as “initiation started,” then loop on `is_client_connected()` with `poll` until true or you give up.
+
+```gdscript
+func _process(delta: float) -> void:
+	var sdk = Engine.get_singleton("TownSDK")
+	if sdk == null:
+		return
+	sdk.poll(delta)
+```
 
 ## JWT authentication
 
@@ -239,6 +251,19 @@ sdk.disconnect_from_server()
 ```
 
 Always `poll` while waiting on signals. The client is not a blocking RPC layer in the tests; it is a pumped socket client.
+
+## Failure cases the suite teaches
+
+| Situation | Observation |
+|---|---|
+| Module not in binary | `Engine.get_singleton("TownSDK")` is `null`; `ClassDB.class_exists("TownSdkClient")` is false |
+| Invalid JWT after connect | Stay connected briefly, then `disconnected(reason)` fires |
+| Fake `battle_id` | `battle_action` / `leave_battle` must not crash the client |
+| Non-admin token + `admin_stats_request` | Must not receive `admin_stats_received` with stats |
+| Auto-reconnect after server kill | `reconnecting(attempt, next_delay)` then `reconnected(resume_state)` when the server returns; ENet drop detection can take tens of seconds in the harness |
+| Missing `TOWN_LIVE_TESTS=1` | Live cases call `pending(...)` instead of failing hard |
+
+There is no project setting that registers native Town SDK code missing from the binary. Build from `port-bioblaze-modules-4.8` (or an equivalent that includes `modules/town_sdk`) before expecting the singleton.
 
 ## Limits and omissions
 

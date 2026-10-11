@@ -25,6 +25,8 @@ Godot does not ship either one. Both default to off in Project Settings and come
 
 ![6506, 6507, and 6508](assets/editor-ports.png)
 
+![Which process owns each loopback port](assets/port-owners.png)
+
 ## Orchestration vs tools
 
 | Surface | Port (default) | Client | Job |
@@ -57,9 +59,13 @@ Built-in exec names include `play_main_scene`, `play_current_scene`, `play_custo
 blazium-cli open ./MyProject
 blazium-cli remote status --format json
 blazium-cli remote doctor
+blazium-cli remote list
+blazium-cli remote instances
 blazium-cli remote exec ping
 blazium-cli remote autowork run --wait
 ```
+
+`remote list` prints commands registered on the connected instance (`GET /v1/commands`). `remote instances` lists active remote_control editor instances. There is no `blazium-cli remote ping` subcommand; health probes go through `remote status`, `remote doctor`, or `remote exec ping` (the built-in `ping` exec command).
 
 ```text
 curl -sS http://127.0.0.1:6508/v1/health
@@ -70,7 +76,7 @@ curl -sS -X POST http://127.0.0.1:6508/v1/exec \
 
 `open` waits until `/v1/health` responds, then `POST /v1/instance` stores a 6-character id. One editor is selected for you. Two editors: the newest is the default, and the CLI warns unless `--quiet`. Select with `--instance` or `--project`.
 
-`remote eval-gdscript` returns nothing useful until `allow_eval` is true. [remote_control_module_tests](https://github.com/blazium-games/remote_control_module_tests) covers lifecycle, health/status, exec ping, command list, and gated eval (Luau cases pending without `LuaState`).
+`remote eval-gdscript` / `remote eval-lua` / `remote eval` return nothing useful until `allow_eval` is true (`blazium/remote_control/allow_eval`, default **false**). [remote_control_module_tests](https://github.com/blazium-games/remote_control_module_tests) covers lifecycle, health/status, exec ping, command list, and gated eval (Luau cases pending without `LuaState`).
 
 ![remote --help](assets/cli-remote-help.svg)
 
@@ -88,13 +94,25 @@ SCons `hub_register=yes` registers a freshly built editor with Hub after the bui
 
 Editor settings: `blazium/justamcp/server_enabled` (default false), `server_port` (default **6506**), `project_mcp_dir` (default `res://mcp`). OAuth (`oauth_enabled`) defaults to false. Game export: `export_port` defaults to **0**, which means editor port plus one, **6507**. CLI flags are `--enable-mcp`, `--mcp-port`, `--mcp-client-id`, and `--mcp-client-secret`.
 
-Tool names are prefixed `blazium_` for much of the editor surface: project info, scene tree, scripts, resources, docs, Autowork, export. Asset tags are `blazium_tags_*`. Semantic search is `blazium_semantic_search` and the related prefixed index tools. The prompt `blazium_asset_tagging_workflow` is the tagging walk. Those tag tools are how an agent edits the project's tag dictionary without a sidecar database.
+Tool names are prefixed `blazium_` for much of the editor surface: project info, scene tree, scripts, resources, docs, Autowork, export. Asset tags are `blazium_tags_*`. Semantic search is `blazium_semantic_search` and the related prefixed index tools (`blazium_semantic_*`). The prompt `blazium_asset_tagging_workflow` is the tagging walk. Those tag tools are how an agent edits the project's tag dictionary without a sidecar database.
 
 `mcp_status` on remote_control reports whether JustAMCP is up. It is not a proxy into MCP tool calls.
 
 ![JustAMCP settings](assets/mcp-settings.png)
 
 ![MCP prompts](assets/mcp-prompts.png)
+
+### JustAMCP port options
+
+| Setting | Default | Meaning |
+|---|---|---|
+| `blazium/justamcp/server_enabled` | `false` | editor MCP listen |
+| `blazium/justamcp/server_port` | `6506` | editor MCP bind |
+| `blazium/justamcp/export_port` | `0` | **0 means editor port + 1** (6507) |
+| `blazium/justamcp/project_mcp_dir` | `res://mcp` | project MCP files |
+| `blazium/justamcp/oauth_enabled` | `false` | OAuth + `/.well-known/` |
+
+CLI overrides: `--enable-mcp`, `--mcp-port`, `--mcp-client-id`, `--mcp-client-secret`. A non-zero `export_port` pins the game MCP port explicitly; leave `0` unless you need to avoid a collision with another local service.
 
 ## Two owners of blazium://
 
@@ -118,6 +136,48 @@ Autowork is the native test runner. remote_control starts it with `autowork_run`
 
 Use remote_control Autowork from CI shells. Use JustAMCP Autowork from an agent session that is already on port 6506. Do not run both starters against the same editor at once unless you have checked status first.
 
+## CI workflow sketch
+
+1. `blazium-cli open ./MyProject` (enables remote control when `remote.enable_on_open` is true).
+2. `blazium-cli remote doctor` / `remote status --format json`.
+3. `blazium-cli remote list` to confirm `play_main_scene`, `snapshot_editor`, and `autowork_run` are registered.
+4. `blazium-cli remote exec play_main_scene` then `remote exec snapshot_editor` (or the dedicated snapshot helpers).
+5. `blazium-cli remote autowork run --wait` and read `user://autowork_results.json` via `autowork_results`.
+6. For agent edits in the same session, enable JustAMCP (`--enable-mcp` or settings) on **6506**; keep remote_control on **6508**.
+
+```text
+blazium-cli remote exec play_main_scene
+blazium-cli remote exec snapshot_editor
+blazium-cli remote exec mcp_status
+```
+
+If `allow_eval` must be on for a job, set it in the project or `blazium-cli remote enable --allow-eval`, run the eval, and turn it off afterward. Do not leave eval enabled on shared engineer machines.
+
+### remote_control settings table
+
+| Setting | Default | Role |
+|---|---|---|
+| `blazium/remote_control/server_enabled` | `false` | listen for `/v1/*` |
+| bind address | `127.0.0.1` | loopback only by default |
+| port | `6508` | CLI remote target |
+| `allow_eval` | **false** | gates `POST /v1/eval` and CLI eval helpers |
+| `allow_runtime` | `false` | templates need this to start the server |
+| token | empty | when set, require `Authorization: Bearer` or `X-Remote-Control-Token` |
+
+`blazium-cli remote config set enable-on-open false` stops later `open`/`load` launches from forcing the server on. `remote config set enable-mcp-on-load true` turns JustAMCP on when the CLI loads a project — still a different port from remote_control. `SCons hub_register=yes` registers a built editor with Hub through the CLI after compile; that is unrelated to runtime `/v1/exec`.
+
+### Failure cases
+
+| Symptom | Check |
+|---|---|
+| `remote ping` unknown | use `remote exec ping` or `remote status` |
+| `remote list` empty / wrong | not connected; run `remote instances` and pick `--instance` |
+| eval 403 | `allow_eval` still false |
+| MCP tools missing on 6508 | wrong server; MCP is 6506 |
+| game tools on 6507 while editor idle | export/runtime MCP only during play when enabled |
+| `autowork already running` | poll `autowork_status` before a second start |
+| template without routes | build lacked `hub_build=yes` |
+
 ## Limits
 
 - remote_control bind defaults to loopback; it is not a cloud relay.
@@ -129,6 +189,22 @@ Use remote_control Autowork from CI shells. Use JustAMCP Autowork from an agent 
 - CORS `OPTIONS` handlers exist on the remote_control `/v1/*` routes for browser-based tools on loopback; do not treat that as permission to bind publicly.
 - `JustAMCPRuntime` surviving scene changes does not mean remote_control play state is MCP state — query each server on its own port.
 - Module tests for remote_control live at https://github.com/blazium-games/remote_control_module_tests.
+- `export_port=0` is not "MCP disabled"; it means editor port plus one.
+- `remote instances` naming editors and `remote list` naming commands is easy to invert in muscle memory; check the subcommand help when the output shape looks wrong.
+
+### Exec command groups
+
+Built-ins cluster by job:
+
+- Play: `play_main_scene`, `play_current_scene`, `play_custom_scene`, `stop_playing`, `pause_playing`, `resume_playing`, `play_status`
+- Capture: `snapshot_editor`, `snapshot_scene` (`png_base64`, optional path)
+- Diagnostics: `ping`, `get_logs`, `debugger_info`, `focus_window`
+- Autowork: `autowork_run`, `autowork_status`, `autowork_results`
+- Bridge: `mcp_status` (liveness only)
+
+Play and snapshot work is deferred to the main thread so the HTTP poll thread does not block the scene tree. Autowork still has a single job mutex: a second `autowork_run` while busy returns `autowork already running`. Prefer JustAMCP's Autowork tools only when the agent session is already on port 6506; prefer `blazium-cli remote autowork` from CI shells.
+
+Semantic and tag tools stay on the MCP side: `blazium_semantic_search` and other `blazium_semantic_*` index helpers, plus `blazium_tags_*` and the `blazium_asset_tagging_workflow` prompt. remote_control cannot invoke those tool names through `/v1/exec`; it can only report `mcp_status`. Keep agent project edits on 6506 and CI play/snapshot/Autowork on 6508 so a tool call never hits the wrong JSON server.
 
 ## Links
 

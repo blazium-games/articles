@@ -32,6 +32,8 @@ The public actions are four repositories. They are not a folder in the engine. C
 
 `v0.2.1` and `v0.3.0` are git tags. The latest GitHub Release objects for those two repos are older (`v0.2.0` and `v0.1.1`). Pin the tag the action README uses, not whatever the Releases page calls Latest, until you have read the newer tag. Older examples that say `blazium-engine/export-blazium-game@master` use the former organization path. The current export action also self-checks out that old path, which GitHub redirects today. Prefer `blazium-games/…` and a version tag in new workflows.
 
+![Pin setup-blazium-cli v0.2.1, setup-blazium-engine v0.3.0, export-blazium-game v0.3.2, and deploy-blazium-game v0.0.2](assets/pinned-actions.png)
+
 ![blazium-cli --help](assets/cli-help.svg)
 
 ```text
@@ -62,6 +64,8 @@ jobs:
 ```
 
 `setup-blazium-engine` calls `setup-blazium-cli` for you. After a successful install it exports `BLAZIUM_EDITOR`, `BLAZIUM_EDITOR_BIN`, `BLAZIUM_INSTALLED_VERSION`, `BLAZIUM_INSTALL_PATH`, and `BLAZIUM_TEMPLATE`.
+
+![setup-blazium-engine installs through blazium-cli, exports BLAZIUM_EDITOR and BLAZIUM_TEMPLATE, then export-blazium-game builds an artifact for a deploy workflow or blazium-cli deploy](assets/setup-then-export.png)
 
 ## setup-blazium-cli inputs
 
@@ -119,6 +123,8 @@ Required inputs: `game-name`, `platform-name`. Optional: `blazium-version` (defa
 
 Deploy runs on an artifact from export. Workflows in [deploy-blazium-game](https://github.com/blazium-games/deploy-blazium-game):
 
+![Active deploy-docker, deploy-android, deploy-ios, and deploy-macos workflows versus deprecated deploy-steam and deploy-itchio that redirect to blazium-cli deploy](assets/deploy-matrix.png)
+
 | Workflow | Status |
 |---|---|
 | `deploy-docker.yml` | Active. Expects artifact preset name `Web` |
@@ -172,6 +178,76 @@ Headless Autowork is `"$BLAZIUM_EDITOR" --headless --path . -s run_tests.gd`. If
 Use `"${BLAZIUM_EDITOR}" --headless …` rather than assuming `Blazium` is already on `PATH` from a previous job. Each job that needs the editor should run setup again or restore the cache the action manages.
 
 macOS CDN zips are universal and named `*_macos.zip`. When `platform` is `macos` and `arch` is empty, setup-engine sets arch to `macos` so the CLI can match that filename token. Nested `.zip` leftovers from older packages are extracted before the action exports `BLAZIUM_EDITOR`.
+
+## Matrix export workflow
+
+Desktop and web exports often share one workflow with a matrix. The export action README uses that shape: each matrix cell sets `platform-name` to a known preset string, and the job runs on a runner that can produce that artifact. Windows Desktop presets are commonly exported from `ubuntu-latest` because the action installs Wine and rcedit and writes the editor settings paths for them.
+
+```yml
+strategy:
+  fail-fast: false
+  matrix:
+    include:
+      - platform: Linux x86_64
+        runner: ubuntu-latest
+      - platform: Windows Desktop x86_64
+        runner: ubuntu-latest
+      - platform: Web
+        runner: ubuntu-latest
+jobs:
+  export:
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: blazium-games/setup-blazium-engine@v0.3.0
+        with:
+          version: latest-release
+          download_template: true
+      - uses: blazium-games/export-blazium-game@v0.3.2
+        with:
+          blazium-version: latest-release
+          game-name: MyGame
+          platform-name: ${{ matrix.platform }}
+```
+
+Keep `game-name` stable across cells so artifact names stay predictable for deploy jobs that download them. `fail-fast: false` matters when one preset needs signing secrets another cell does not; a missing Android keystore should not cancel a Linux binary that already passed.
+
+## Failure cases
+
+| Symptom | Likely cause | Fix |
+|---|---|---|
+| Editor looks like a nightly after you typed `latest` | `setup-blazium-engine` maps `latest` to the nightly channel | Use `latest-release` or an exact `0.6.x` |
+| Export cannot find a preset | `platform-name` does not match the name the action wrote into `export_presets.cfg` | Use the table names above, or accept that the action overwrites your local cfg |
+| Templates missing at export | `download_template` stayed false, or version channel folders do not match | Set `download_template: true` and keep Blazium version + channel aligned |
+| Android built as debug | No keystore secrets on the job | Supply `secret-android-keystore-*` for `--export-release` |
+| SHA-256 mismatch on CLI download | Manifest `sha256` does not match the file | Fail the job; do not skip verification. Check `manifest-url` and CDN health |
+| macOS runner cannot find `blazium-cli` | Published CLI packs are Linux and Windows | Run CLI steps on Linux/Windows, or host a darwin entry on your mirror |
+| Steam / itch reusable workflow surprises | `deploy-steam.yml` / `deploy-itchio.yml` are deprecated | Call `blazium-cli deploy steam upload` or `blazium-cli deploy itch push` |
+| Autowork cannot reach the editor | Wrong port or eval disabled | Editor remote control is `127.0.0.1:6508`; do not use JustAMCP `6507` |
+
+Headless Autowork in CI does not need a live remote session. Prefer `"${BLAZIUM_EDITOR}" --headless --path . -s run_tests.gd` in the same job that ran setup-engine. Reserve `blazium-cli remote autowork run --wait` for a machine that already has an editor with remote control up.
+
+## Secrets and job isolation
+
+Apple certificates, Android keystores, Docker tokens, butler keys, and Steam publisher credentials belong in GitHub Actions secrets or environment secrets, not in the workflow YAML body. Base64 keystore blobs still decode onto the runner disk for the export step; treat the workspace as sensitive until the job ends.
+
+Each job that needs the editor should run `setup-blazium-engine` again or restore the action-managed cache. Environment variables from one job do not appear in another. Cache keys include resolved version, platform, arch, and Mono; changing only game source leaves that cache valid, which is what you want for export-only pushes.
+
+For store deploys that moved to the CLI, install the CLI once (`setup-blazium-cli@v0.2.1` or via setup-engine), then run deploy commands with credentials from the environment (`BLAZIUM_STEAM_*`, `BLAZIUM_BUTLER_API_KEY`) or `blazium-deploy.yml`. Interactive Steam Guard setup stays off CI.
+
+## CLI-only and deploy follow-ups
+
+When you only need the CLI on a runner (no editor install), pin setup-cli alone:
+
+```yml
+- uses: blazium-games/setup-blazium-cli@v0.2.1
+- run: blazium-cli --version
+- run: blazium-cli deploy itch push ./build --target user/game:windows
+```
+
+Docker deploy still expects the export artifact preset name `Web`. The reusable workflow clones the webbuild template, drops the artifact into `static/`, and build-pushes with tags `latest` and `${{ github.sha }}`. Android, iOS, and macOS reusable workflows remain active in the same deploy repo for those storefronts; only Steam and itch were deprecated there in favor of CLI verbs.
+
+Export action inputs that gate store builds: `game-name` and `platform-name` are required. Optional signing and store fields include package ids, Apple/Android secret blobs, and `steam-app-id` with `store-name: steam`. Leaving Android keystore secrets empty selects `--export-debug`; providing them selects `--export-release`. Do not paste those blobs into the workflow file body where they land in logs.
 
 ## Limits
 

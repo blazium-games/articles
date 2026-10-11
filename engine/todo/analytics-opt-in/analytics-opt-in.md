@@ -25,6 +25,17 @@ Official editor analytics does not queue until consent is accepted. Exported gam
 
 ![Consent order](assets/analytics-consent.png)
 
+![Editor consent gate versus game require_user_consent](assets/consent-two-gates.png)
+
+## Two consent gates
+
+Editor analytics and game analytics do not share a consent default. Official editor builds need consent accepted (CLI, env, `set_consent`, or Editor Settings) and a non-empty baked endpoint before `_can_queue()` allows growth. Exported games read `application/analytics/require_user_consent`, which defaults to **false** — so enabling analytics without flipping that flag queues without a separate consent call. Crash reporter’s `require_user_consent` defaults the other way (true); do not copy assumptions across modules.
+
+| Context | Gate before queue |
+|---|---|
+| Editor (`editor_analytics=yes`) | Consent `accepted` + non-empty baked endpoint |
+| Game (`analytics=yes`) | `enabled=true`; consent only if `require_user_consent=true` |
+
 ## What is compiled
 
 The module is on `blazium-dev`. Export templates include the sender when SCons gets `analytics=yes`. Editor builds include the send path when `editor_analytics=yes` (that flag sets `ANALYTICS_ENABLED`). The singleton still registers without those flags; `_can_queue()` returns false and nothing is stored.

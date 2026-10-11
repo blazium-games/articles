@@ -23,6 +23,8 @@ Godot ships neither module. The crash path is opt-in upload with a confirm step,
 
 ![Where both sit](assets/ecosystem-map.png)
 
+![Crash multipart reports versus analytics event flush](assets/split-pipelines.png)
+
 ## Two problems, two modules
 
 | | Crash reporter | Analytics |
@@ -73,6 +75,40 @@ print(CrashReporter.get_resolved_config())
 print(Analytics.get_resolved_config())
 ```
 
+![Shared app id and build id across separate pipelines](assets/id-pairing.png)
+
+Equal ids mean correlation is possible after the fact. They do not mean one `flush` or one sidecar Send moves both payloads. A crash can upload while analytics consent is declined; an analytics flush can succeed while pending dumps stay on disk.
+
+## Analytics API sketch
+
+Class XML methods: `track`, `flush`, `set_consent`, `set_anonymous`, `identify`, `set_user_properties`, plus getters for consent, queue size, endpoint fields via `get_resolved_config`. Signals: `flush_succeeded(count)`, `flush_failed(message)`.
+
+```gdscript
+func _ready() -> void:
+    if not Analytics.is_available():
+        return
+    # Games: require_user_consent defaults false. Editors still need accepted + endpoint.
+    if Analytics.is_enabled():
+        Analytics.track("level_start", {"level": 1})
+        Analytics.flush()
+
+func on_privacy_accept() -> void:
+    Analytics.set_consent(true)
+    Analytics.set_anonymous(true)
+    Analytics.track("session_start", {})
+    Analytics.flush()
+```
+
+| Analytics gate | Editor | Game template |
+|---|---|---|
+| SCons send flag | `editor_analytics=yes` | `analytics=yes` |
+| Endpoint | bake non-empty or nothing queues | bake or Project Settings |
+| Consent | must be `accepted` | only if `require_user_consent` true |
+| `require_user_consent` default | n/a (editor gate) | **false** |
+| Quit behavior | queues end events; no auto POST | same — call `flush()` |
+
+Empty editor bake disables collection entirely. Empty template bake means "read Project Settings," not "off."
+
 ## Privacy defaults that disagree on purpose
 
 Crash dumps can hold stack memory and nearby process state. Defaults push toward an explicit human confirmation: sidecar dialog, `require_user_consent=true`, no editor in-process POST, `--auto-send` unused on Hub.
@@ -121,6 +157,46 @@ Analytics: understand editor demographics and optional game events after opt-in.
 Hangman and Demon Lord: Clicker used analytics while we were building and validating. They do not redefine the crash pipeline. A minidump from an editor Hub launched, or from a game that opted into crash upload, is still the input for an engine patch.
 
 If a studio asks for "telemetry," make them pick which module. A single privacy policy paragraph that names both paths is fine. A single Project Setting that claims to master both is not — the engine does not ship one. Ship templates with the SCons flags you mean; an empty bake is safer than a shared master switch that never existed. Sidecar catalog updates (`blazium-cli update apply --product crash_reporter`) refresh the UI binary only — they do not flip analytics consent or empty an events queue.
+
+## Hub launch pairing
+
+Hub can attach the crash sidecar and pass analytics CLI flags in the same editor launch without merging the modules. Accepted/anonymous data collection yields `--analytics=accepted` and `--analytics-mode=anonymous` plus `--crash-reporter <path>` when the binary exists. Declined yields `--analytics=declined` and `--no-crash-reporter`. Undecided still attaches the crash sidecar so a dump can prompt later; that is intentional asymmetry with analytics, which stays inert without `accepted` and a non-empty editor endpoint.
+
+Local example servers stay separate processes: [example_crash_reporter_server](https://github.com/blazium-games/example_crash_reporter_server) on `/v1/reports`, [example_analytics_server](https://github.com/blazium-games/example_analytics_server) on `/v1/events`. Point each module at its own URL even when you host both on one machine. Multipart dumps and JSONL event batches do not share a request body.
+
+### Failure cases that mix the two
+
+| Observation | Wrong conclusion | Actual check |
+|---|---|---|
+| Analytics flush works | crash upload is on | `CrashReporter.get_upload_mode` / sidecar Send |
+| Crash Send works | analytics consented | `Analytics.get_consent` / `is_enabled` |
+| Same `X-App-Id` | same queue | separate pending dump folder vs JSONL |
+| Hub declined collection | dumps disabled in engine | `--no-crash-reporter` only skips attach |
+| `flush` after quit hook | auto-upload on exit | quit queues end events; still need `flush` |
+
+```gdscript
+func debug_both_pipelines() -> void:
+    print(CrashReporter.get_resolved_config())
+    print(Analytics.get_resolved_config())
+    print(CrashReporter.has_pending_reports(), " ", Analytics.get_queue_size())
+```
+
+Use that pair in a support build before filing "telemetry is broken." One non-empty config never repairs the other module's empty endpoint.
+
+### Game analytics options that are easy to misread
+
+| Key | Default | Misread |
+|---|---|---|
+| `application/analytics/require_user_consent` | **false** | "same as crash reporter" — crash defaults **true** |
+| `application/analytics/enabled` | off until you enable | enabling does not upload dumps |
+| `application/analytics/endpoint` | empty or bake | empty template bake falls back to settings; empty editor bake disables |
+| anonymous mode | on | `identify` / `set_user_properties` are no-ops until you leave anonymous |
+
+Editor smoke: confirm `Analytics.get_consent() == "accepted"`, confirm `get_resolved_config()` shows a non-empty endpoint, `track` once, then `flush`. If `flush_failed` reports an empty endpoint, the bake is empty — Project Settings will not override a locked empty editor URL. Game smoke: enable the setting, set endpoint, `track`, `flush`, and ignore crash pending folders unless you also configured `CrashReporter`.
+
+Consent precedence for analytics is fixed: CLI `--analytics=accepted|declined`, then `BLAZIUM_ANALYTICS_CONSENT`, then `Analytics.set_consent`, then Editor Settings `blazium/analytics/consent`. Crash upload consent is the sidecar dialog (or your game UI before `upload_pending`), not that CLI flag. Passing `--analytics=declined` from Hub also adds `--no-crash-reporter`; that pairing is a Hub launch policy, not an engine Project Setting that couples the modules inside a custom game binary.
+
+When both example servers run locally, keep ports and paths distinct in Project Settings so a mistaken shared URL fails loudly instead of posting multipart dumps to an events parser. Headers `X-App-Id` and `X-Build-Id` match across modules when bakes match; body shapes never do.
 
 ## Links
 

@@ -117,14 +117,33 @@ The registry file is the same one Hub uses: `%APPDATA%\blazium\hub.json` or `~/.
 
 ## Starters
 
-Project starters are not export templates. The catalog is `https://cdn.blazium.app/starters/starters.json`. Each entry includes a GitHub clone URL.
+Project starters are not export templates. The catalog is `https://cdn.blazium.app/starters/starters.json`. Each entry includes a zip URL, sha256, size, pinned commit, and GitHub clone URL (`github` / `git`) so a failed unzip can be cloned instead.
+
+![starters --help](assets/cli-starters-help.svg)
+
+```text
+asciinema play assets/cli-starters-help.cast
+```
 
 ```text
 blazium-cli starters list
 blazium-cli starters download template_2d_empty -dir D:\games\my_game
 ```
 
-Hub's Projects tab calls the same commands. Export templates stay on `templates`.
+`download` creates the destination when it is missing and refuses a directory that already has files. The zip is capped at 64 MiB and checked against the catalog sha256 before unpack. Hub's Projects tab calls the same commands. Export templates stay on `templates`.
+
+As of 11 October 2026 the catalog `latest` field is `0.1.0` and includes starters such as `template_2d_empty`, `template_3d_empty`, and `template_android`. List with `--json` when a script needs the names.
+
+## Projects create and registry
+
+```text
+blazium-cli projects add ./MyProject
+blazium-cli projects create ./FreshGame --name "Fresh Game"
+blazium-cli projects remove FreshGame
+blazium-cli projects --json
+```
+
+`projects add` registers a directory that already has `project.blazium` or `project.godot` (Blazium preferred). `projects create` writes a minimal `project.blazium` with `config/name` set to `--name` or the folder name, then registers it. It fails if either settings file already exists. `remove` only unregisters; it does not delete the tree. The registry is local-only in `hub.json` — there is no cloud sync.
 
 ## Upgrade and update
 
@@ -175,12 +194,19 @@ OS installers point `blazium://` at `handle-uri`. `blazium://hub` focuses Hub on
 
 ![handle-uri --help](assets/cli-handle-uri-help.svg)
 
-Steam and itch.io deploys live here. Optional `blazium-deploy.yml` sits next to the game. Secrets come from flags, then the YAML after `${NAME}` expansion, then `BLAZIUM_*` environment variables.
+Steam and itch.io deploys live here. Optional `blazium-deploy.yml` sits next to the game. Secrets come from flags, then the YAML after `${NAME}` expansion, then `BLAZIUM_*` environment variables. `--config` overrides the walk-up search for that YAML.
+
+![deploy --help](assets/cli-deploy-help.svg)
+
+```text
+asciinema play assets/cli-deploy-help.cast
+```
 
 ```text
 blazium-cli deploy tools status
 blazium-cli deploy tools ensure
 blazium-cli deploy steam guard totp
+blazium-cli deploy steam dry-run
 blazium-cli deploy steam upload --dry-run
 blazium-cli deploy steam set-live --build-id ID --beta-key beta
 blazium-cli deploy itch login
@@ -188,9 +214,45 @@ blazium-cli deploy itch push ./build --target user/game:windows
 blazium-cli deploy itch steam-sync --dry-run
 ```
 
-`deploy steam guard setup` is interactive. Do not run it on a CI runner. Write down the Steam revocation code before Finalize. itch.io push uses butler as a Go module. It does not download broth. Steam Guard is in-process; there is no steamguard-cli step.
+| Subcommand | Job |
+|---|---|
+| `deploy tools` | steamcmd via blazium-toolchain (`status` / `ensure`) |
+| `deploy steam guard` | In-process TOTP, setup, maFile |
+| `deploy steam login` | Test steamcmd login with builder credentials |
+| `deploy steam dry-run` | Print a VDF plan without steamcmd login |
+| `deploy steam upload` | Generate VDFs and run steamcmd `+run_app_build` |
+| `deploy steam set-live` | `ISteamApps/SetAppBuildLive/v2/` |
+| `deploy itch` | butler push and Steam→itch steam-sync |
 
-`blazium-cli games` (alias `chauffeur`) uploads to the Blazium Games store API. That is not Steam and it is not itch. The older standalone uploader still lives in [games_cli](https://github.com/blazium-games/games_cli).
+`deploy steam guard setup` is interactive. Do not run it on a CI runner. Write down the Steam revocation code before Finalize. CI should set `BLAZIUM_STEAM_*` / `BLAZIUM_BUTLER_API_KEY` rather than running guard setup on the runner. itch.io push uses butler as a Go module. It does not download broth. Steam Guard is in-process; there is no steamguard-cli step. steam-sync login tokens are full Steam account access — use `deploy itch steam-logout` to delete local creds when you are done.
+
+## Games store uploads
+
+`blazium-cli games` (alias `chauffeur`) uploads to the Blazium Games store API. That is not Steam and it is not itch. Auth is `--access` / `--secret`, the `games:` block in `blazium-deploy.yml`, or `BLAZIUM_ACCESS_TOKEN` / `BLAZIUM_SECRET_KEY`. Optional `--url` and `--upload` override the API and upload bases.
+
+![games --help](assets/cli-games-help.svg)
+
+```text
+asciinema play assets/cli-games-help.cast
+```
+
+```text
+blazium-cli games genbuild
+blazium-cli games build --asset ./build.yml
+blazium-cli games addfiles --asset ./addfiles.yml
+blazium-cli games addchangelog
+blazium-cli games setfiles
+```
+
+| Command | Job |
+|---|---|
+| `games genbuild` | Generate a new `build.yml` |
+| `games build` | Upload a build from YAML (`--os` / `--arch` / `--channel` overrides) |
+| `games setfiles` | Generate a new `addfiles.yml` |
+| `games addfiles` | Upload files from that YAML |
+| `games addchangelog` | Add a changelog entry to `build.yml` |
+
+The DigitalOcean Spaces plumber from the older `games_cli/cmd/upload` path is not part of this command. The standalone uploader still lives in [games_cli](https://github.com/blazium-games/games_cli) if you need that separate tool.
 
 ## CI
 

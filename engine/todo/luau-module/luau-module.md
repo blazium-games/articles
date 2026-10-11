@@ -25,6 +25,8 @@ hosts: []
 
 This is not a claim about beating GDScript on every frame. It is a second language path with a documented VM API (`LuaState`), a compiler utility (`Luau.compile`), two script syntaxes exercised by Autowork fixtures, and export options for bytecode. Use it when your team wants Luau syntax and engine bindings in the same project as GDScript.
 
+![Registered Luau classes and editor-only peers](assets/luau-classes.png)
+
 ## Build and enablement
 
 `can_build` returns true for normal editor and template builds. Exceptions documented in `config.py`:
@@ -139,6 +141,8 @@ state.close()
 
 ## Require and package path
 
+![Default luau_module/package/path templates](assets/luau-package-path.png)
+
 `require` resolves modules for scripts and for embedded VMs. Fixtures under `fixtures/scripts/require/` load helpers via `res://…` paths. `LuauPackagePath::register_project_settings()` runs from `LuauScriptLanguage::init()`.
 
 | Setting | Default |
@@ -146,6 +150,18 @@ state.close()
 | `luau_module/package/path` | `res://?.luau;res://?.lua;res://?.mod.luau;res://?/init.luau` |
 
 Treat `require` as part of the language integration, not as an optional plugin. When you embed a `LuaState` yourself, open Blazium libs (`LIB_BASE | LIB_BLAZIUM` in the require tests) before expecting `res://` module resolution to match script-attached behavior.
+
+`LIB_BASE` is `1`; `LIB_BLAZIUM` is `2048`. `LIB_ALL` ORs the usual stdlibs with `LIB_BLAZIUM`. Narrow masks are fine for sandboxes that should not see OS or debug helpers. After `state.sandbox()`, mutating builtins fails with a non-`LUA_OK` status — that is the Autowork `test_002_compile_and_sandbox` assertion, not a general hostile-host boundary.
+
+```gdscript
+var state := LuaState.new()
+state.open_libs(LuaState.LIB_BASE | LuaState.LIB_BLAZIUM)
+var status := state.do_string('return require("res://helpers/math")', "req")
+assert(status == Luau.LUA_OK)
+state.close()
+```
+
+Failure cases to code for: missing `require` targets return a load error; opening without `LIB_BLAZIUM` will not match script-attached module resolution; web builds have no codegen (`module_luau_module_codegen` forced off); mold + ASan/UBSan linuxbsd editor builds skip the module entirely per `config.py`.
 
 ## Editor and export settings
 
@@ -188,6 +204,8 @@ var compact := LuauFormatter.minify_source(source)
 
 GDScript and Luau coexist. Autowork covers Callable bridges (`test_008_callable_gdscript`, `test_014_csharp_callable`), node notifications, export properties, global class names, autoload singletons, RPC smoke, soft reload, breakpoints, and placeholder `@tool` scripts. C# callbacks pushed into a `LuaState` must be wrapped in a `Callable` first (stated on the `LuaState` class description).
 
+`LuauScript` methods you actually call from tooling are small: `load_source_code(path)`, `compile(force_recompile=false)`, `new(...)`, and the placeholder-fallback check. Global helpers on `@Luau` include `gdclass`, `export`, `class`, `require`, `signal`, `await`, `wait`, and `wait_signal`. Annotations include `@abstract`, `@class`, `@icon`, `@property`, `@registerMethod`, `@rpc`, and `@tool`.
+
 Run the suite:
 
 ```text
@@ -196,6 +214,27 @@ blazium --headless --path . --aw-test=test_007_require
 ```
 
 Exit code equals the Autowork fail count (`0` = pass).
+
+| Export option | Default notes | Failure / caveat |
+|---|---|---|
+| `luau/compile_bytecode` | `true` | Missing sidecar falls back to source compile in tests |
+| `luau/strip_source` | default true on web | Changes what ships; keep VCS source |
+| `luau/minify` / `luau/tree_shake` | `false` | Not a proof of static safety |
+| `luau/encrypt` | hidden on web | Not available on web exports |
+
+## Checked compile path
+
+`Luau.compile(source, options)` returns `PackedByteArray` bytecode. Pass `null` for defaults (`optimization_level` 1, `debug_level` 1, `coverage_level` 0, `type_info_level` 0), or a `LuaCompileOptions` instance when you need other levels. Autowork `test_002_compile_and_sandbox` loads that bytecode with `state.load_bytecode(bytecode, "sandbox_chunk")`, calls `state.sandbox()`, then `pcall(0, 1)` and asserts `Luau.LUA_OK` plus `to_number(-1) == 42.0`.
+
+```gdscript
+var opts := LuaCompileOptions.new()
+opts.optimization_level = 1
+opts.debug_level = 1
+var bytecode := Luau.compile("return 1 + 1", opts)
+assert(bytecode.size() > 0)
+```
+
+`LuauScript.compile(force_recompile)` is the script-resource path that backs `.luauc` sidecars. Prefer keeping readable `.luau` in version control and treating bytecode as an export or editor-save artifact controlled by `luau/editor/bytecode_*_on_save` and `EditorExportLuau`. Empty compile output means the source failed to compile — check the returned buffer size before `load_bytecode`.
 
 ## Limits the source states
 

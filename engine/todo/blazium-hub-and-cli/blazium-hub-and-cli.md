@@ -86,6 +86,82 @@ A CI runner needs install, templates, export, and deploy without a GUI. A deskto
 
 The cost of the split is real: Hub cannot open a project if Settings points at the wrong CLI, and a CI job never gets News for free. The win is that every install path — desktop card, deep link, npm binary, GitHub Action — ends in the same `blazium-cli` code that writes `hub.json` and the channel-scoped editor tree.
 
+## Who owns what at a glance
+
+The split is easier to debug when you treat each surface as a single owner. Hub draws state. The CLI mutates disk. The CDN owns bytes. Cerebro stays opt-in and CLI-only.
+
+![Ownership map: Hub UI, CLI mutations, CDN bytes, Games on 39220](assets/who-owns-what.png)
+
+| You clicked / ran | Binary that runs | State that changes |
+|---|---|---|
+| Editors → Install | `blazium-cli install` | `{install-path}/{channel}/{version}`, `hub.json` editors |
+| Projects → Open | `blazium-cli open` | launches editor; may attach remote_control |
+| Projects → Run | `blazium-cli run` / `play` | launches game; needs `main_scene` |
+| Projects → Remove | `blazium-cli projects remove` | `hub.json` only |
+| Settings → install path | `blazium-cli install-path` | CLI install root pref |
+| `blazium://hub` | CLI `handle-uri` → Hub :39218 | focuses window |
+| `blazium://install?version=` | CLI install path | same as Editors → Install |
+| News article open | Hub HTTPS fetch | `user://news-cache.json` |
+
+Hub never writes an editor zip. The CLI never paints News. If you need a mutation that Hub's button does not expose yet, the terminal command is the supported path — not a private Hub API.
+
+## Shared JSON on disk
+
+Three files sit under the Blazium config roots. Mixing them by hand is how focus and open diverge.
+
+![Shared config: hub.json, cli.json, hub_remote.json](assets/shared-json.png)
+
+| File | Windows user path | Unix user path | Writer |
+|---|---|---|---|
+| `hub.json` | `%APPDATA%\blazium\hub.json` | `~/.config/blazium/hub.json` | CLI project/editor commands (Hub shells them) |
+| `cli.json` | `%APPDATA%\blazium\cli.json` | `~/.config/blazium/cli.json` | CLI prefs (remote, defaults that are not the project list) |
+| `hub_remote.json` | `%APPDATA%\blazium\` then `%ProgramData%\blazium\` | `~/.config/blazium/` then `/etc/blazium/` | Installer / `hub-remote ensure` / Hub headless ensure |
+
+`hub-remote ensure` creates a missing token file and does not rotate a token that is already valid. Load order is always user path, then machine path. Editor installs land outside these files: `{install-path}/{channel}/{version}` with the root from `install-path`.
+
+## How `blazium://` is routed
+
+The OS handler is the CLI. Hub is a client. Games is a different client on a different port. JustAMCP reuses the scheme for editor resources and is not an OS handler.
+
+![URI routing: CLI handle-uri to Hub 39218 or Games 39220](assets/blazium-uri.png)
+
+```text
+blazium-cli handle-uri "blazium://hub"
+blazium-cli handle-uri "blazium://open?path=C:/games/MyProject"
+blazium-cli hub-remote ensure
+```
+
+| URI family | Destination |
+|---|---|
+| `blazium://hub` | Hub :39218 (`show_hub` / focus) |
+| `blazium://open`, `load`, `project/…` | CLI opens the project |
+| `blazium://install?version=` | CLI editor install |
+| `blazium://register?path=` | CLI registers a local editor binary |
+| `blazium://game/`, `buy/`, `install/<uuid>` | Games launcher :39220 |
+| `blazium://scene/…`, `tags/…` | JustAMCP inside a running editor (not Hub) |
+
+A poisoned `hub_remote.json` host is forced back to loopback. A Games UUID on the install path never lands in the Editors list. Those are contract boundaries, not retry loops.
+
+## Project registry from the CLI
+
+Hub's Projects tab is a view over commands you can run without the window. The registry is local-only; there is no cloud sync.
+
+![projects --help](assets/cli-projects-help.svg)
+
+```text
+asciinema play assets/cli-projects-help.cast
+```
+
+```text
+blazium-cli projects add ./MyProject
+blazium-cli projects create ./FreshGame --name "Fresh Game"
+blazium-cli projects remove FreshGame
+blazium-cli open ./MyProject
+blazium-cli run ./MyProject
+```
+
+Detection prefers `project.blazium`, then `project.godot` — the same rule Hub uses on import. `create` writes a minimal `project.blazium` and fails if a project file already exists. `add` requires one of those files. `remove` unregisters only. Open resolution after that is CLI policy: project `blazium/editor_version`, then features match, then the `hub.json` default (latest installed release unless pinned).
+
 ## Links
 
 - Hub: https://github.com/blazium-games/blazium-hub

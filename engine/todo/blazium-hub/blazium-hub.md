@@ -101,6 +101,56 @@ Hub's crash bake posts to `https://crash.blazium.app/v1/reports`. The sidecar st
 
 Hub is a state and workflow surface: which projects you have, which editors are installed, which news posts are unread, whether close-to-tray is on. It is not a second downloader. If the CLI path is wrong, every Install and Open fails in the console under the tab. If the CDN is reachable and the CLI is not, News still loads and Editors still show available builds, but Install stays broken until Settings points at a real binary.
 
+## How Hub finds a project
+
+Import and Open both go through the same detector. The folder scan prefers `project.blazium`. If that file is missing, it accepts `project.godot`. A path that points at either settings file resolves to its parent directory. Anything else is rejected with a status line that names both filenames.
+
+![Project detection prefers project.blazium, then project.godot](assets/hub-project-detect.png)
+
+Once the card exists, Open shells `blazium-cli open` and Run shells `blazium-cli run`. The CLI's own resolution order for which editor binary starts is separate from Hub's unfinished version dropdown:
+
+1. `blazium/editor_version` in the settings file, when that build is installed
+2. A matching installed editor for `config/features`
+3. The default editor policy in `hub.json` (latest installed `release` unless you pinned one)
+
+Pin a default from a terminal with `blazium-cli editors default 0.6.838`, or write `blazium/editor_version` into the project. Hub's card control does neither today.
+
+Starters stay on the same Projects tab. `starters list` reads `https://cdn.blazium.app/starters/starters.json`. Each catalog entry carries a zip URL, sha256, size, and GitHub clone fields so a failed unzip can fall back to `git`. `starters download <name> -dir <folder>` refuses a destination that already has files. That path creates a game project tree; it never installs export templates.
+
+## Update product order
+
+Check for updates asks the CLI for every product Hub knows about, then prompts in a fixed order: hub, cli, crash_reporter, toolchain, editor, templates. The queue builder skips entries that are already dismissed for the session. Declining a specific editor version persists so that same engine build is not asked again; templates for that declined version are skipped with it. A newer editor version still queues.
+
+![Update prompt order: hub, cli, crash_reporter, toolchain, editor, templates](assets/hub-update-order.png)
+
+While the catalog reports a Hub update as available, standalone cli and crash_reporter prompts are suppressed even if those products also show newer versions. Hub ships those two binaries. Toolchain is not in the Hub package, so it still prompts while a Hub update is outstanding. Editor and templates stay in the queue when they have updates; the editor prompt wording is "Install", not "Update", because the common case is pulling a CDN build you do not have yet.
+
+`blazium-cli update apply --product launcher` exists for the Games launcher. Hub's queue never prompts for it. Under Program Files, applying hub or cli may raise UAC because the install root is machine-wide.
+
+## Loopback ports around Hub
+
+Hub is one of four loopback listeners in the wider stack. Mixing them up is the usual reason a deep link "does nothing" in the wrong window.
+
+![Loopback owners: Hub 39218, Games 39220, JustAMCP 6506, remote_control 6508](assets/hub-local-ports.png)
+
+| Port | Owner | How you reach it |
+|---|---|---|
+| **39218** | Hub remote | `blazium://hub` and Hub-focused CLI talk; token in `hub_remote.json` |
+| **39220** | Games launcher | `blazium://game/`, `buy/`, `install/<uuid>` |
+| **6506** | JustAMCP in the editor | MCP resources under the same `blazium://` scheme |
+| **6508** | Editor `remote_control` | `blazium-cli remote …` after `open` / `load` |
+
+Hub forces its bind back to loopback if `hub_remote.json` is poisoned. It does not listen on 39220, 6506, or 6508. The OS still hands every `blazium://` string to `blazium-cli handle-uri` first; that binary decides which local port gets the request.
+
+## Failure cases worth knowing
+
+- **Folder has neither settings file.** Import stops with "Need a folder with project.blazium or project.godot".
+- **Both files present.** Hub and the CLI read `project.blazium` and ignore `project.godot` for identity.
+- **Open with no default editor and no matching install.** The CLI returns an error; Hub surfaces it in the tab console.
+- **Run with empty `application/run/main_scene`.** The CLI refuses to start the binary.
+- **Hub update outstanding, you only wanted the CLI bump.** Accept the Hub update, or wait until Hub is current; the standalone CLI prompt stays suppressed on purpose.
+- **URI for a store SKU.** That traffic leaves Hub for port 39220. It will never fill the Editors list.
+
 ## Links
 
 - Download Hub: https://blazium.app/dev-tools

@@ -38,6 +38,8 @@ Godot has no equivalent in core. We validated the pair in-house to confirm the d
 
 Tags are hierarchical with `.` separators. Querying `Environment` matches `Environment.Nature.Tree`. Querying the child does not match the parent alone. `AssetTagManager.matches_tag` and `container_has_tag` encode that rule. Renaming a parent remaps children (`Environment` → `Env` turns `Environment.Nature.Tree` into `Env.Nature.Tree`).
 
+![Dock and MCP query path into tags.json and asset_index.json](assets/tag-query-path.png)
+
 | Setting | Default | Effect |
 |---|---|---|
 | `blazium/assettags/strict_paths` | `false` | Reject tagging paths that do not exist on disk |
@@ -45,6 +47,8 @@ Tags are hierarchical with `.` separators. Querying `Environment` matches `Envir
 | `blazium/assettags/taggable_extensions` | `glb,gltf,obj,fbx,blend,png,jpg,...` | Comma-separated allow-list |
 
 `find_assets_by_tag(tag, match_parent=true)` returns paths. `search_assets(tags, type_filter, path_glob, path_regex, require_all)` combines filters; `require_all` defaults to true for AND semantics. `get_unused_tags()` is what **Cleanup Unused** uses.
+
+The dock and MCP tools write the same JSON. A typical agent path is: `blazium_tags_list` → (mutate with `confirmed=true`) → `blazium_tags_find_assets` / `blazium_tags_search_assets` → optional `blazium_semantic_search`. Mutating dictionary tools, asset assignment tools, and comment updates all need that confirmation flag after elicitation.
 
 ## Classes you touch from the dock
 
@@ -112,7 +116,7 @@ Mutating tools (`blazium_tags_add`, `blazium_tags_set_on_asset`, `blazium_tags_u
 
 If an agent invents a path, check these before opening a bug: the index files were never committed; the tag exists in the dictionary but was never assigned; `strict_tags` rejected an unknown name; the semantic backend is `embedding` with a stale index (run `blazium_semantic_rebuild_index`); or the agent read a resource URI instead of calling the search tools. Hierarchical match is prefix-based from parent toward child — querying the leaf will not return assets tagged only with the parent.
 
-After a mass rename in the FileSystem dock, call `blazium_tags_rescan` or wait for the deferred prune if paths disappeared. Similarity search needs an indexed path that still exists; a deleted `res://` target returns empty neighbors even when the dictionary is healthy. Prefer `lexical` until you have confirmed embeddings are populated via `blazium_semantic_index_stats`. Commit tag JSON with the feature that introduced the assets; regenerating tags on every clone is how agents invent paths again. Keep JustAMCP enabled only while you want agents writing the dictionary — the dock workflow does not require the MCP server.
+After a mass rename in the FileSystem dock, call `blazium_tags_rescan` or wait for the deferred prune if paths disappeared. Similarity search needs an indexed path that still exists; a deleted `res://` target returns empty neighbors even when the dictionary is healthy. Prefer `lexical` until you have confirmed embeddings are populated via `blazium_semantic_index_stats`. Commit tag JSON with the feature that introduced the assets; regenerating tags on every clone is how agents invent paths again. Keep JustAMCP enabled only while you want agents writing the dictionary — the dock workflow does not require the MCP server. Mutating tag tools without `confirmed=true` stop at elicitation; that includes asset assignment and comment updates, not only dictionary add/remove. The workflow stays dock-first; architecture of the JSON store is a separate topic.
 
 ## Links
 

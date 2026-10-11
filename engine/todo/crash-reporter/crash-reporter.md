@@ -27,6 +27,8 @@ Hangman, our example game, shipped on Steam, Discord, Google Play, and the Apple
 
 ![Confirm, then upload](assets/crash-flow.png)
 
+![Minidump and JSON sidecar pair on disk](assets/dump-pair.png)
+
 ## What is compiled
 
 `can_build` is Windows and Linux/BSD. macOS, web, Android, and iOS do not compile the module. That is the current `config.py`, not a promised follow-up.
@@ -49,6 +51,14 @@ Editor builds do not POST the dump. `is_http_upload_available()` is true only wh
 The engine launches the sidecar with `--crash-dir`, `--report-id`, `--endpoint`, `--app-id`, `--build-id`, `--contact-url`, and `--privacy-url`, plus any `reporter_args`. The dialog is Send, Discard, or Refresh, plus a "what happened" field and an anonymous option. The privacy URL is on the dialog so the upload target is visible before you send.
 
 Point the editor at a local sidecar with `--crash-reporter <path>`. Relative paths resolve next to the editor executable.
+
+![Upload mode and consent decide whether files leave the machine](assets/sidecar-decision.png)
+
+### Hub attach behavior
+
+Hub launches editors with crash-reporter flags from `HubCli.crash_reporter_cli_args_for`. When the sidecar binary is next to Hub, that helper returns `--crash-reporter` plus the absolute path. When the file is missing, it returns an empty argument list — no flag, no spawn. Hub settings tests require `should_attach_editor_crash_reporter()` to stay true while data collection is undecided or accepted, and false when the user declined (which also passes `--no-crash-reporter` on the editor launch). Declining analytics-style data collection is what skips the sidecar attach; undecided still attaches so a later crash can ask.
+
+`hub_updates.gd` lists `crash_reporter` in the product order with Hub, CLI, toolchain, editor, and templates. When a Hub update is outstanding, the crash-reporter product row is suppressed so the sidecar catalog refresh does not race a Hub package that already bundles it. `blazium-cli update apply --product crash_reporter` refreshes the binary from https://cdn.blazium.app/crash_reporter/crash_reporter.json when Hub itself is current.
 
 ## What gets written
 
@@ -97,6 +107,16 @@ curl -F dump=@crash.dmp -F metadata=@crash.json http://127.0.0.1:8090/v1/reports
 
 The sidecar catalog on the CDN is [crash_reporter.json](https://cdn.blazium.app/crash_reporter/crash_reporter.json). `blazium-cli update apply --product crash_reporter` can refresh the binary Hub shipped. The example ingest, [example_crash_reporter_server](https://github.com/blazium-games/example_crash_reporter_server), is a reference server (GET `/health`, POST `/v1/reports`, max body 64 MiB, optional stackwalk). It is not the Hub endpoint. Companion project: [example_crash_reporter_project](https://github.com/blazium-games/example_crash_reporter_project).
 
+![Hub crash endpoint versus local example ingest](assets/crash-endpoint.png)
+
+| Target | URL | Who sets it |
+|---|---|---|
+| Hub-baked editor/templates | `https://crash.blazium.app/v1/reports` | Hub CI bake |
+| Local example server | `http://127.0.0.1:8090/v1/reports` (typical) | your Project Settings / launch args |
+| Empty endpoint | dumps only | default template bake without override |
+
+Games do not inherit Hub's bake. Set `application/crash_reporter/endpoint` (or the matching SCons template bake) yourself.
+
 ## Sidecar UI contract
 
 [blazium_crash_reporter](https://github.com/blazium-games/blazium_crash_reporter) is a Blazium project, not a Breakpad host. `scripts/main.gd` parses `--crash-dir`, `--report-id`, `--endpoint`, `--app-id`, `--build-id`, `--contact-url`, and `--privacy-url`. The privacy link is shown when the URL is non-empty. Send builds the multipart POST; Discard deletes locally; Refresh reloads the on-disk pair. The anonymous checkbox is written into metadata as `anonymous` before upload. `--auto-send` short-circuits the dialog — useful for lab automation, wrong for Hub.
@@ -120,6 +140,39 @@ if CrashReporter.has_pending_reports():
 
 `write_minidump()` writes without killing the process. `induce_crash()` does not return. `cancel_upload()` aborts an in-flight in-engine POST.
 
+### Upload mode workflow
+
+| `upload_mode` | Constant | Behavior |
+|---|---|---|
+| `0` | `UPLOAD_DISABLED` | files stay on disk |
+| `1` | `UPLOAD_IN_ENGINE` | template HTTP POST when available |
+| `2` | `UPLOAD_SIDECAR` | spawn sidecar UI |
+| `3` | `UPLOAD_BOTH` | sidecar plus in-engine where allowed |
+
+```gdscript
+func after_player_accepts_crash_upload() -> void:
+    if not CrashReporter.is_available():
+        return
+    if CrashReporter.get_upload_mode() == CrashReporter.UPLOAD_DISABLED:
+        return
+    if CrashReporter.has_pending_reports():
+        CrashReporter.upload_pending()
+```
+
+Call that only after your own consent UI when `require_user_consent` is true. Prefer `launch_reporter` when you want the human dialog instead of a silent in-engine drain. `discard_report` / `mark_report_submitted` clean the pending folder without a second POST.
+
+Local loop against the example server: run the example ingest, point `endpoint` at its `/v1/reports`, compile a template with `crash_reporter=yes`, set `enabled` true and `upload_mode` to sidecar or in-engine, then `write_minidump()` or crash once. Confirm the `.dmp` / `.json` pair under the crash directory before you trust Send.
+
+### Editor versus template matrix
+
+| Build | Breakpad flag | HTTP upload | Typical leave-machine path |
+|---|---|---|---|
+| Editor | `editor_crash_reporter=yes` | never | `--crash-reporter` sidecar |
+| Export template | `crash_reporter=yes` | when mode is InEngine/Both | sidecar and/or in-engine POST |
+| macOS / web / mobile | module not built | n/a | none |
+
+Editor environment overrides (`BLAZIUM_CRASH_REPORTER_ENABLED`, `BLAZIUM_CRASH_REPORTER_CRASH_DIR`, `BLAZIUM_CRASH_REPORTER_ENDPOINT`, and the app name/version/channel/contact overrides) win over Project Settings for those fields. Read-only Editor Settings `blazium/crash_reporter/app_id` and `blazium/crash_reporter/build_id` expose the bake; they are not free-form toggles. Hub's bake uses `editor_app_id=blazium-hub` and endpoint `https://crash.blazium.app/v1/reports`.
+
 ## Edge cases
 
 - macOS/web/mobile: module does not build; there is no dump writer to enable in Project Settings for those targets.
@@ -130,6 +183,13 @@ if CrashReporter.has_pending_reports():
 - `max_upload_mb` rejects oversized dumps on the in-engine client before POST.
 - `upload_on_startup` with `require_user_consent=true` will not silently drain the pending folder.
 - `include_project_settings_dump` defaults false; turn it on only if you accept that metadata growth.
+- Hub declined data collection passes `--no-crash-reporter`; do not expect a dialog from that launch.
+- Empty `endpoint` still writes dumps; only upload is skipped.
+- `get_resolved_config()` is the source of truth after env overrides and bakes; print it in support builds instead of guessing Project Settings alone.
+- Pending pruning (`max_pending`, `retain_days`) can delete old pairs before you notice; copy dumps you need for local stackwalk first.
+- `delete_after_upload` defaults true; a successful Send removes the local pair unless you changed that setting.
+
+Signals for in-engine upload (`upload_started`, `upload_progress`, `upload_succeeded`, `upload_failed`) only fire on template HTTP paths. Sidecar uploads happen in the separate UI process; the game sees pending reports disappear after a successful Send when delete-after-upload is on.
 
 ## Links
 

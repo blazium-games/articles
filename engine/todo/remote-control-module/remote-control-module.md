@@ -46,6 +46,8 @@ Export templates do not include the module unless the build was made with `hub_b
 
 ## HTTP API mechanics
 
+![Registered /v1 routes on remote_control](assets/remote-routes.png)
+
 Routes register on the `HTTPServer` singleton:
 
 | Method | Path | Body / notes |
@@ -59,7 +61,7 @@ Routes register on the `HTTPServer` singleton:
 | GET | `/v1/logs` | Paginated engine log |
 | OPTIONS | same paths | CORS preflight |
 
-`POST /v1/exec` and `POST /v1/eval` are held and completed on the main thread so scene work does not block the HTTP poll thread.
+`POST /v1/exec` and `POST /v1/eval` are held and completed on the main thread so scene work does not block the HTTP poll thread. There is no separate privileged-exec switch: `exec` is available when the server is enabled; only evaluation is gated by `blazium/remote_control/allow_eval` (default `false`). A disabled eval returns HTTP 403 with a message that names that setting.
 
 ```text
 curl -sS http://127.0.0.1:6508/v1/health
@@ -105,6 +107,15 @@ Empty token: no auth header required (still loopback by default). Non-empty toke
 
 This is localhost automation. It is not a multiplayer API and not a public ingest. Binding off loopback is possible via `bind_address`, and that is a deliberate risk — leave it on `127.0.0.1` unless you know why you changed it.
 
+| Failure | Response / behavior |
+|---|---|
+| `allow_eval=false` + `POST /v1/eval` | HTTP 403 naming `blazium/remote_control/allow_eval` |
+| Bad / missing token when token set | Auth failure on every route |
+| Second `autowork_run` while busy | Rejected with `autowork already running` |
+| Luau eval without `luau_module` | Luau eval tests stay pending; do not expect Luau language |
+| Template without `hub_build=yes` | Module absent; also needs `allow_runtime` before listen |
+| Pointing CLI at JustAMCP 6506/6507 | Not remote control; use 6508 (or the CLI-allocated port) |
+
 ## Compile and test surface
 
 `config.py`: editor always; templates only with `hub_build=yes`. Hard dependency on `httpserver`. Soft dependency on `luau_module` for Luau eval. JustAMCP is an optional peer behind `MODULE_JUSTAMCP_ENABLED` for `mcp_status` only — no soft-dep edge that would cycle the module graph.
@@ -128,6 +139,8 @@ blazium-cli remote doctor
 ```
 
 Instance selection: with one live editor, the CLI uses it. With several, it picks the newest and warns unless `--quiet`. Retired ids error instead of silently targeting a dead port.
+
+Leave `allow_eval` false unless a CI job must post expressions. Prefer `exec` commands (`play_status`, `snapshot_editor`, `autowork_run`) for automation that should stay on the built-in surface. Eval is GDScript or Luau inside the editor process; enabling it is an explicit Project Setting change, not a second “privileged exec” toggle — that toggle does not exist. Run health and status first, then exec; reach for eval only when a built-in command cannot express the check you need.
 
 ## The other port (boundary only)
 

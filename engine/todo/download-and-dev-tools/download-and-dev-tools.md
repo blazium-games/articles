@@ -105,6 +105,51 @@ CI and public installs use the same CDN catalogs. The store at [blazium.games](h
 
 If you only grab the editor zip from the download page and never run the CLI, Hub will not know that build exists until you `editors add` it.
 
+![Install order: Hub bundle, then CLI install editor, then optional templates](assets/install-order.png)
+
+## The download page on 11 October 2026
+
+A capture of [blazium.app/download](https://blazium.app/download) on that date showed Release **0.6.838**, **64.1 MB**, dated **Sep 10 2026**, with controls for OS, architecture, and C#, plus links into export templates and buttons through to Hub and the CLI. Linux was selected in that capture; do not assume the page always defaults to Linux — pick the OS and architecture you need before you download.
+
+![blazium.app/download showing Release 0.6.838 with OS, architecture, and C# controls](assets/download-page.png)
+
+The page is a picker over CDN catalogs, not a second host for the bytes. Choosing a version points the button at `https://cdn.blazium.app/{channel}/{version}/`. Export-template links from the same page are how you grab packs without opening Hub; the CLI path `install … --templates` or `templates download … --tpz` records them in the Blazium template root the editor actually checks (`0.6.838.release`, not a Godot `4.3.x.stable` folder).
+
+Hub and CLI buttons leave this page for [dev-tools](https://blazium.app/dev-tools). That split is intentional: the editor zip alone does not register `blazium://` or write `hub.json`.
+
+## Desktop vs CI download paths
+
+| Goal | Desktop | CI runner |
+|---|---|---|
+| Get the CLI | Hub installer (or npm / GitHub asset) | `setup-blazium-cli@v0.2.1` or via setup-engine |
+| Get an editor | Hub Editors tab or `blazium-cli install` | `setup-blazium-engine@v0.3.0` |
+| Get templates | `install --templates` or `templates download --tpz` | `download_template: true` on setup-engine |
+| Export a preset | Editor Export dialog | `export-blazium-game@v0.3.2` |
+| Push an artifact | `blazium-cli deploy` / `games` | `deploy-blazium-game@v0.0.2` or CLI in the job |
+
+`setup-blazium-engine` with `download_template: true` passes `--templates` on a cold install. On a cache hit it runs `blazium-cli templates download <version> --tpz` instead of re-fetching the editor zip, then exports `BLAZIUM_TEMPLATE` as the templates root. Empty `version` on setup-cli means `.latest` inside `cli.json`. `version: latest` on setup-engine means **nightly**. Those aliases are the most common mismatch between a green desktop and a red runner.
+
+## Manual zip workflow
+
+When you already have an editor archive and need Hub to see it:
+
+```text
+# unpack the zip somewhere stable, then:
+blazium-cli editors add /path/to/Blazium --version 0.6.838
+blazium-cli editors default 0.6.838
+blazium-cli templates download 0.6.838 --tpz
+blazium-cli open ./MyProject
+```
+
+`editors add` labels the binary with `--version` (and optional `--platform`, `--arch`, `--mono`). It does not take a channel flag; channel scoping applies to CDN installs under `{install-path}/{channel}/{version}`. Without `editors add`, the Projects tab and `open` have no registry row. Without templates in the Blazium root, export claims the pack is missing even if a Godot-shaped folder exists nearby.
+
+Failure cases on this path:
+
+- **Download page zip only.** Binary runs if you double-click it, but Hub's installed list stays empty until the CLI registers it.
+- **Wrong template folder name.** The editor looks for `0.6.838.release` (or the nightly form), not `4.3.2.stable`.
+- **Hub path in Settings points at a missing CLI.** News still loads; Install and Open fail in the tab console.
+- **CI `version: latest` on setup-engine.** That alias is nightly. Desktop release 0.6.838 and a runner on 0.6.924 will disagree on templates and export output.
+
 ## Channels and what "latest" means
 
 The download page and Hub Editors tab both speak in channels: `release`, `prerelease`, and `nightly`. Catalog pointers are per channel under `catalog/versions/{channel}/latest.json`. That is separate from CLI versioning in `cli/cli.json`, which has its own `.latest` field.

@@ -17,7 +17,7 @@ hosts: []
 
 ---
 
-The commit that added `modules/gif` was for reading, writing, and playing animated GIFs. The follow-up narrowed it: the thing you assign is `GIFTexture`, and it can sit anywhere a `Texture2D` sits. Sprite2D, Sprite3D, TextureRect, a material, a shader uniform. Godot does not have that class. We wanted it because 2D games, including Demon Lord: Clicker, keep using GIFs as art, and importing them as a pile of loose frames was the workaround.
+The commit that added `modules/gif` was for reading, writing, and playing animated GIFs. The follow-up narrowed it: the thing you assign is `GIFTexture`, and it can sit anywhere a `Texture2D` sits. Sprite2D, Sprite3D, TextureRect, a material, a shader uniform. Godot does not have that class. We wanted a texture-shaped GIF because 2D pipelines still ship animated GIFs as art, and importing them as a pile of loose frames was the workaround. Demon Lord: Clicker validated the engine’s 2D side; it does not use this module in the released game yet.
 
 The class documentation states the model in one place: `GIFTexture` is the single resource for GIF content. It owns the decoded frame data and its playback state. Importing a `.gif` produces that resource. There is no separate animation object in the registered API for the tree we ship; the texture is the animation.
 
@@ -66,11 +66,25 @@ The same limit is why we expose `GIFTexture` as a texture and not as `VideoStrea
 
 ## Import path
 
+![Default GIFTexture import versus SpriteFrames alternate](assets/gif-import-path.png)
+
 `ResourceImporterGIF` is the default importer for `.gif`. Options mirror texture members: `autoplay_on_load`, `loop_count` (maps to `netscape_loop_count`), `speed_scale`, `dither`, `display_mode`, `bake_compress`, `bake_storage`.
 
 `ResourceImporterGIFFrames` is the alternate Import As path. It decodes into a `SpriteFrames` animation named `default` for `AnimatedSprite2D` / `AnimationPlayer` workflows. The texture importer stays the default because the texture is the product we wanted on Sprite2D and materials.
 
 `GIFTexture.from_sprite_frames` and `to_sprite_frames` exist so an animation you already authored as SpriteFrames can become a GIF and the reverse. `load_from_path` / `load_from_buffer` and `save_to_path` / `save_to_buffer` cover round trips without the Import dock.
+
+```gdscript
+var gif: GIFTexture = load("res://sprites/coin.gif")
+$Sprite2D.texture = gif
+gif.play = true
+gif.loop = true
+gif.display_mode = GIFTexture.DISPLAY_BAKED
+
+var err := gif.save_to_path("user://coin_roundtrip.gif")
+if err != OK:
+	push_error("GIF encode failed: ", err)
+```
 
 ## Caps and failure modes
 
@@ -98,11 +112,23 @@ Over the canvas or frame cap, decode and import fail with `ERR_OUT_OF_MEMORY` an
 
 `encode_optimize` defaults to true so ordinary `save_to_path` / `save_to_buffer` calls can use transparency and frame differencing. Recorder captures force it false so each captured frame is a full opaque picture—capture fidelity over file size. `dither` defaults to true for encode and bake edges. `bake_compress` is off by default; turning it on trades quality and load time for smaller stored baked frames when `bake_storage` is Store.
 
+![DISPLAY_SOURCE versus DISPLAY_BAKED](assets/gif-display-modes.png)
+
 `display_mode` chooses whether the GPU sees raw source patches (`DISPLAY_SOURCE`) or composited full-canvas frames (`DISPLAY_BAKED`). Disposal methods only make sense once you understand that GIF frames are often dirty rectangles on a canvas, not full replacement images. That is why the module bakes at all, and why the product is still a `Texture2D` with a playhead rather than a video decoder.
+
+Call `bake_frames()` after you edit source frames with `add_source_frame` when you need full-canvas composites. `get_active_texture(frame)` returns what the GPU should sample for that index under the current display mode; `get_source_image` / `get_baked_image` expose the two buffers when you are debugging disposal. `wrap_frame` maps an arbitrary index into range for scrubbers.
+
+| Failure | Result |
+|---|---|
+| Canvas pixels over `blazium/gif/max_canvas_pixels` | Decode / import → `ERR_OUT_OF_MEMORY` |
+| Frame count over `blazium/gif/max_frames` | Same OOM path; raise the setting only if you accept the RAM cost |
+| Empty `Image` to `GIFRecorder.add_frame` | `ERR_INVALID_PARAMETER` |
+| `GIFRecorder.save` with no frames | `ERR_UNCONFIGURED` |
+| Non-main-thread texture setup | Finishes through `call_deferred`; do not assume encode is free background work |
 
 ## What we validated
 
-We validated import, playback, and capture in-house. That pass does not name a title that ships GIF capture as a feature. The module is there because the art pipeline needed a texture, not a video player. The public [gif_module_tests](https://github.com/blazium-games/gif_module_tests) suite still names the older `GIFAnimation` and `GIFSprite2D` API, so do not treat it as current coverage for this tree. Align scripts against the classes registered in your build’s `modules/gif` doc_classes and ClassDB; the texture-centric API above is what this engine tree documents.
+We validated import, playback, and capture in-house. That pass does not name a title that ships GIF capture as a feature. The module is there because the art pipeline needed a texture, not a video player. The public [gif_module_tests](https://github.com/blazium-games/gif_module_tests) suite still names the older `GIFAnimation` and `GIFSprite2D` API, so do not treat it as current coverage for this tree. Align scripts against the classes registered in your build’s `modules/gif` doc_classes and ClassDB; the texture-centric API above is what this engine tree documents. Treat `GIFTexture` as the product: import produces it, sprites sample it, and the recorder’s `recording_finished` signal hands one back typed as `GIFTexture`. Keep clips short and fps near twelve so palette encode stays practical under the project caps.
 
 ## Links
 

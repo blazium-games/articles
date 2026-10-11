@@ -21,6 +21,8 @@ You install Hub. Hub asks the CLI to fetch an editor from the CDN. The editor is
 
 We split it this way because a full engine deploy should not depend on one person's laptop, and a download should not depend on GitHub being healthy. The website, Hub, and the CLI read `cdn.blazium.app`. The editor's export-template manager asks `https://blazium.app/api/mirrorlist/` for mirrors; as of 11 October 2026, the `0.6.838` details catalog names the CDN pack as its primary URL and the mirror list includes GitHub alongside it. The CLI installs editors from the CDN catalogs either way.
 
+![Public install chain from blazium.app through Hub and the CLI to CDN editor packs](assets/public-install-chain.png)
+
 ![The Blazium engine stack](assets/ecosystem-map.png)
 
 | Box | Job |
@@ -38,6 +40,14 @@ We split it this way because a full engine deploy should not depend on one perso
 There is a second engine line, `blazium_4.8`, which tracks Godot 4.8. Hub's own executable, the crash sidecar builds, and the skills tooling track that branch. The editors you install from the CDN are `0.6.x` from `blazium-dev`. As of 11 October 2026 the release catalog is [0.6.838](https://cdn.blazium.app/catalog/versions/release/latest.json) and nightly is 0.6.924. There is no `0.8` build on the CDN today.
 
 Published Hub and CLI binaries are Linux and Windows. There is no Flatpak. [blazium#428](https://github.com/blazium-games/blazium/issues/428) is the open request. The store at [blazium.games](https://blazium.games) is a different product. Uploads there go through `blazium-cli games` (alias `chauffeur`), not through `blazium-cli deploy`. Steam and itch are `deploy`.
+
+## What blazium.app shows
+
+![blazium.app home on 11 October 2026: Download, Features, and News in the nav; Download and Features buttons; Demon Lord: Clicker promo; Latest News cards including Release 0.6.725](assets/blazium-app-home.png)
+
+On 11 October 2026 the public site at [blazium.app](https://blazium.app) shows a dark landing page. The top bar has the Blazium mark and wordmark, then **Download**, **Features**, and **News**, with **Documentation** on the right. The hero reads "Blazium Game Engine. Stable, feature rich and community-driven." under a short open-source fork-of-Godot blurb, with purple **Download** and gray **Features** buttons. Beside that sits a Demon Lord: Clicker promo: pixel art with "Krush the Slime" and "Billy the Frog", overlays "REPORT BUG ONLINE", "VERSION 1.0.315", and "FPS: 60", plus credits to Blazium Games, Divine Games, Inc., and Pogr, Inc., and a Steam link.
+
+The **Latest News** block lists four cards visible in that capture: Blazium Game Engine: Release 0.6.725 (July 1, 2026); Discord Social SDK Module (June 30, 2026); MCP Module (June 29, 2026); and Multiuser Editor Module (June 29, 2026). That page is marketing and news. Operator install still goes through Hub plus the CDN catalogs, not through copying a version number from a news card into a template folder by hand.
 
 ## Two version numbers
 
@@ -126,6 +136,46 @@ Same scheme. Two owners. The OS handler is the CLI (`handle-uri`). Games launche
 6. Discord activity web host: docker-webbuild-template, not the toolchain.
 7. Crash dumps: confirm in the sidecar before anything leaves the machine.
 8. Keep Godot `4.3.x.stable` template folders out of Blazium `0.6.x` paths.
+
+## Failure cases on the install path
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| Templates missing after export | Folders named like Godot `4.3.2.stable` instead of Blazium `0.6.838.release` | Install templates for the Blazium version + channel you export with |
+| Project opens on the wrong editor | Hub project-card version dropdown is drawn and not read | Set the CLI default (`blazium-cli editors default`) until that UI is wired |
+| Remote CLI commands hang on the wrong port | Pointed at JustAMCP (6506/6507) or Hub remote (39218) | Editor remote control defaults to `127.0.0.1:6508` |
+| `blazium://` does nothing useful | Scheme owner mismatch | OS open uses CLI `handle-uri`; JustAMCP resources stay inside the editor |
+| Store upload rejected after a Steam deploy command | Wrong verb family | `games` / `chauffeur` for Blazium Games; `deploy` for Steam/itch |
+| Lobby client missing in a stock editor | SDK module not in the MIT zip | Build [blazium-sdk-module](https://github.com/blazium-games/blazium-sdk-module); only `login.blazium.app` answers among those baked hosts |
+| Dump uploaded without asking | Expecting silent editor HTTP upload | Sidecar must confirm Send; editor builds do not HTTP-upload dumps alone |
+| News empty in Hub | Article not marked deployed or RSS not on CDN | Hub reads `https://cdn.blazium.app/articles/rss.xml` after publish |
+
+Public install does not require Cerebro. If the CDN catalogs resolve, Hub and the CLI can fetch editors without GitHub or internal credentials on the operator machine. GitHub remains a mirror for some packs and the place you file issues; it is not the install root.
+
+## Ports and owners
+
+Keep these localhost ports straight when Hub, the editor, and MCP are all running:
+
+| Port | Owner | Config / file |
+|---|---|---|
+| **6508** | Editor remote control | `blazium/remote_control/server_port` |
+| **6506** | Editor JustAMCP HTTP | editor MCP default |
+| **6507** | Game JustAMCP default | editor port plus one |
+| **39218** | Hub remote | `hub_remote.json` |
+| **39220** | Games launcher remote | `launcher_remote.json` |
+
+Pointing `blazium-cli remote` at 6507 or 39218 is the usual cross-talk failure. Hub remote is for showing or focusing Hub, not for editor Autowork. Eval stays off unless `blazium/remote_control/allow_eval` is set.
+
+CDN catalogs operators actually hit after install:
+
+| URL | Role |
+|---|---|
+| `https://cdn.blazium.app/catalog/versions/release/latest.json` | Release editor pointer |
+| `https://cdn.blazium.app/catalog/versions/nightly/latest.json` | Nightly editor pointer |
+| `https://cdn.blazium.app/cli/cli.json` | CLI manifest |
+| `https://cdn.blazium.app/crash_reporter/crash_reporter.json` | Sidecar manifest |
+| `https://cdn.blazium.app/toolchain/toolchain.json` | Toolchain binary catalog |
+| `https://cdn.blazium.app/articles/rss.xml` | Hub News |
 
 ## Links
 

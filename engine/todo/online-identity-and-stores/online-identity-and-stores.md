@@ -25,6 +25,8 @@ The Blazium Games store at [blazium.games](https://blazium.games) is a different
 
 ![Steam ticket or Discord OAuth, then a JWT](assets/identity-flow.png)
 
+![Platform ticket exchanged for a backend-minted JWT](assets/ticket-jwt.png)
+
 `LoginClient` and `LobbyClient` on that diagram are the SDK module, not classes in a stock `blazium-dev` editor. The engine path is `Steam.authenticate_with_server` and `Discord.authenticate_with_server`, both of which return a token your backend minted. The platform ticket or OAuth access token proves the player to your server. The JWT is the game session you issue after that proof.
 
 ## JWT
@@ -43,6 +45,20 @@ var subject := decoded.get_claim_as_string("sub")
 ```
 
 `sign` takes a `String` secret for HS256 or a `CryptoKey` for RS256. `JWT.decode` / `get_payload` without signature checks are for inspection only; the class reference says not to use them for authentication. Prefer `JWT.parse` and signature validation with the matching key.
+
+| Builder / JWT call | Role |
+|---|---|
+| `set_issuer` / `set_subject` / `set_audience` | standard claims |
+| `set_expiration` | lifetime in seconds from issue |
+| `set_jwt_id` | `jti` for revoke lists |
+| `set_algorithm` | `"HS256"` or `"RS256"` |
+| `add_claim` | custom payload fields |
+| `sign` | produces the compact token |
+| `JWT.validate_with_map` | pick key by header `kid` |
+| `JWT.validate_timing` | `exp` / `nbf` with leeway |
+| `revoke_jti` / `is_revoked` / `clear_revoked` | in-process only |
+
+A multi-instance game must revoke on the server. Clearing the process list with `clear_revoked` does not notify other peers.
 
 ![Issue, kid, verify](assets/jwt-validate.png)
 
@@ -76,6 +92,26 @@ Achievements, stats, inventory, and workshop items are on this singleton. Leader
 
 Demon Lord: Clicker signs players in by exchanging a Steam ticket with its backend and keeps every item, chest, and reward as Steam inventory. That is why inventory landed in the module. Hangman's Steam store presence proved the export and upload path; do not read it as a claim that Hangman exercised inventory exchanges.
 
+### Inventory and workshop surface
+
+After `Steam.initialize`, inventory helpers include `load_item_definitions`, `get_all_items`, `get_items_by_id`, `exchange_items`, `consume_item`, `grant_promo_items`, and `deserialize_inventory`. Workshop helpers cover `create_workshop_item`, `delete_workshop_item`, download/install queries, and preview attachments. `has_inventory_support` / `has_workshop_support` report what the loaded library exposed. Call `poll_callbacks` (or rely on the module's callback pump where configured) so async Steam results land.
+
+```gdscript
+func refresh_inventory() -> void:
+    if not Steam.is_initialized():
+        return
+    if not Steam.has_inventory_support():
+        push_warning("inventory unavailable")
+        return
+    Steam.load_item_definitions()
+    var items := Steam.get_all_items()
+    for item in items:
+        # SteamInventoryItem rows; keep ids, not raw tickets, in logs.
+        pass
+```
+
+There is still no leaderboard find/upload/download API in `modules/steam`. Track [blazium#807](https://github.com/blazium-games/blazium/issues/807) if that is the gap you need closed.
+
 ## Discord on the desktop
 
 `Discord.initialize_presence_only(client_id)` is auth-less rich presence. `Discord.initialize(client_id)` is the OAuth path: friends, invites, and `authenticate_with_server`, which returns `DiscordAuthResult`. `get_jwt()` on that result is the token your backend minted, not Discord's access token.
@@ -103,9 +139,33 @@ The Embedded App client is a different module (`socialexports`) and a web export
 
 The script surface in the class reference is `GDK`: `initialize`, `shutdown`, `is_available`, `is_initialized`, `dispatch`. Access via `Engine.get_singleton("GDK")` as the XML describes. C++ getters for users, achievements, stats, leaderboards, store, and presence are in `modules/xbox_module/gdk/gdk.h`. Most of those sub-objects do not have class-reference XML yet. Read the header before calling them. Call `dispatch` each frame, or enable `gdk/runtime/embed_dispatch`.
 
-`EditorExportPlatformXbox` needs a GDK install on the machine doing the export. This is not a retail console-kit or signed-in test guide.
+`EditorExportPlatformXbox` needs a GDK install on the machine doing the export. This is not a retail console-kit or signed-in test guide. There is no `LIVE_TESTS=1` harness for GDK in this tree; enable the module, install the GDK, and call `initialize` / `dispatch` on a Windows machine that has those pieces.
 
 ![GDK export](assets/gdk-export.png)
+
+## Auth failure cases
+
+| Symptom | Likely cause |
+|---|---|
+| `Steam.initialize` != `OK` | missing library, Steam client, or bad app id |
+| empty `SteamAuthResult` error, no HTTP | empty `backend_url` or empty hex ticket |
+| `Auth response missing jwt` | backend JSON lacked a `jwt` string |
+| `Discord.get_auth_state()` never `AUTH_READY` | player abandoned OAuth, or presence-only mode |
+| `gdk_not_enabled` | build without `module_xbox_module_enabled=yes` |
+| JWT `is_expired()` true immediately | clock skew, or `set_expiration` too short |
+
+```gdscript
+func safe_steam_session(backend_url: String, hex_ticket: String, app_id: int) -> String:
+    if backend_url.is_empty() or hex_ticket.is_empty():
+        return ""
+    var result := Steam.authenticate_with_server(backend_url, hex_ticket, app_id)
+    if not result.is_success():
+        push_error(result.get_error_message())
+        return ""
+    return result.get_jwt()
+```
+
+Do not retry ticket exchange in a tight `_process` loop. Request a fresh web API ticket on failure, then exchange once.
 
 ## Platform ticket versus game session
 
@@ -126,6 +186,17 @@ Hangman proved export and store upload across Steam, Discord Embedded App, Googl
 
 Demon Lord: Clicker validated Steam inventory, ticket exchange against a game backend, achievements/stats surface, Discord presence, and 2D load after launch on Steam. Use that when you talk about live inventory auth. Do not flatten both games into one sentence that implies Hangman ran GDK.
 
+## Ticket to JWT workflow
+
+1. Desktop Steam: `Steam.initialize(app_id)` → `request_web_api_ticket` → wait for `web_api_ticket_ready` (or handle `web_api_ticket_failed`) → `authenticate_with_server(backend_url, hex_ticket, app_id)` → keep `SteamAuthResult.get_jwt()`.
+2. Desktop Discord: `Discord.initialize(client_id)` → wait for `AUTH_READY` → `authenticate_with_server(backend_url, access_token, client_id)` → keep `DiscordAuthResult.get_jwt()`.
+3. Backend: verify the platform proof, mint a JWT with `JWTBuilder` (`set_issuer`, `set_subject`, `set_algorithm`, `set_expiration`, `sign`), return JSON that includes `jwt`.
+4. Game: authorize your own APIs with that JWT; use `JWT.parse` / `validate_with_map` / `validate_timing` when the client must check claims locally.
+
+`request_web_api_ticket` takes an identity string argument in the class reference (the sample uses `"blazium"`). Pending ticket state is also readable with `get_pending_hex_ticket` / `get_pending_ticket_error` / `get_ticket_state` while you wait on signals. Cancel with `cancel_auth_ticket` if the player leaves the login screen.
+
+SDK `LoginClient` remains a separate path: Discord login URL or Steam ticket against `login.blazium.app`, signal `received_jwt`. Stock `blazium-dev` editors do not register that node. Do not mix claim expectations between a JWT from your `authenticate_with_server` URL and a JWT from the login host without reading both issuers.
+
 ## Edge cases and limits
 
 - Steam methods no-op safely when the dynamic library is missing; still check return values.
@@ -136,6 +207,9 @@ Demon Lord: Clicker validated Steam inventory, ticket exchange against a game ba
 - No Steam leaderboards until #807 lands.
 - Blazium Games uploads are `blazium-cli games`, not these singletons.
 - `LoginClient` JWT from `login.blazium.app` and `Steam.authenticate_with_server` JWT from your URL are different clients. Do not assume they share claim names.
+- `is_logged_on` false after a successful `initialize` means the Steam client session is not ready; delay ticket requests.
+- RS256 `sign` requires a `CryptoKey`; passing a string secret is the HS256 path only.
+- Workshop and inventory signals need callback polling; checking `get_all_items` once in `_ready` without a later poll misses async grants.
 
 ## Links
 

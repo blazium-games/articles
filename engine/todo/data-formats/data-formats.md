@@ -29,7 +29,9 @@ All three build on `blazium-dev` with no SCons opt-in (`can_build` returns true)
 
 The crash reporter does not read this file. A game's upload URL is `application/crash_reporter/endpoint`. Use `.env` for values your own scripts read.
 
-`auto_config(dir, mode)` loads, in order, `.env`, `.env.local`, `.env.{mode}`, and `.env.{mode}.local` under `dir` (default `res://`). Mode defaults to `development` in the editor and `production` in an export when you leave the argument empty. `config(file)` / `load_env_file` load one file. OS environment wins when `get_prioritize_os_env` is on.
+![auto_config load order for .env layers](assets/env-load-order.png)
+
+`auto_config(dir, mode)` loads, in order, `.env`, `.env.local`, `.env.{mode}`, and `.env.{mode}.local` under `dir` (default `res://`). Mode defaults to `development` in the editor and `production` in an export when you leave the argument empty. Later layers override earlier ones when the same key appears. Missing files are skipped, not errors. `config(file)` / `load_env_file` load one file. OS environment wins when `get_prioritize_os_env` is on.
 
 ```gdscript
 ENV.auto_config("res://")
@@ -84,6 +86,8 @@ print(subset.row_count())
 
 ## Which file for which job
 
+![Choose ENV, DotIniFile, CSVTable, or Project Settings](assets/format-choice.png)
+
 | Kind | Put it in |
 |---|---|
 | Secret or machine-local string a script reads | `.env` via `ENV` |
@@ -91,6 +95,15 @@ print(subset.row_count())
 | Bulk rows a designer edits | `.csv` via `CSVTable` or the import dock |
 | Crash upload URL, app id, analytics endpoint | `application/crash_reporter/*` / `application/analytics/*`, not `.env` |
 | Stock Godot INI without macros | `ConfigFile` |
+
+```gdscript
+# Fail closed when a required key is absent.
+ENV.auto_config("res://")
+if not ENV.require_envs(PackedStringArray(["API_URL", "FEATURE_FLAG"])):
+	push_error("missing: ", ENV.get_missing_envs(PackedStringArray(["API_URL", "FEATURE_FLAG"])))
+```
+
+`require_envs` / `get_missing_envs` are the checked path; `get_env` alone returns the default and does not raise. `clear` drops the module cache only — it does not unset OS environment variables. `push_to_os_env` is the optional reverse direction when a child process must see the same keys.
 
 ## Edge cases and limits
 
@@ -104,6 +117,16 @@ print(subset.row_count())
 - Module tests for dotenv: https://github.com/blazium-games/dotenv_module_tests
 
 `ENV` also exposes `export_json`, `save`, `get_envs_matching`, `get_env_group`, and `set_bool_whitelist` when you need stricter parsing than the defaults. `DotIniFile` can `merge_with` another document and toggle `autosave` / `read_only` for tool UIs. Prefer those APIs over hand-rolled parsers once the file is in-tree.
+
+| Failure | Behavior |
+|---|---|
+| Missing `.env` layer during `auto_config` | Skipped; next layer still loads |
+| Missing key in `get_env` | Returns the default; no exception |
+| `require_envs` with absent keys | Returns false; use `get_missing_envs` for the list |
+| `DotIniFile` type constraint mismatch | Constraint APIs reject bad types at set time |
+| CSV boolean token not in whitelist | Parse does not invent truthiness; configure the dialect |
+| Calling `CSVTable` query then treating it as an array | Use `get_rows()` on the returned table |
+| Putting crash or analytics URLs only in `.env` | Engine modules ignore them unless a script copies into Project Settings |
 
 ## Streaming and import path (CSV)
 

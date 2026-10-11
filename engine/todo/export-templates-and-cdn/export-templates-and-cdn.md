@@ -117,7 +117,11 @@ Per-engine-line catalog keys (`catalog/versions/{channel}/{line}/latest.json`) a
 | `blazium-cli` / Hub install | `template_files.json` → `templates.json` → `details.json` | `cdn.blazium.app` |
 | Website download buttons | Catalog `latest.json` → version folder | `cdn.blazium.app` |
 
+![Same .tpz bytes: GitHub mirror list for the editor, CDN catalogs for CLI and Hub](assets/template-consumers.png)
+
 The `.tpz` bytes on GitHub and on the CDN for a given version are meant to be the same publish. The split is the discovery path, not a second pack format. Prefer the CLI for automation. Prefer the in-editor button only when you are already inside that editor and accept the live mirror list.
+
+Hub's update queue can prompt for templates after an editor install prompt. That path still shells the CLI; Hub does not unpack the `.tpz` itself. Declining a specific editor version also skips the templates prompt for that version until a newer engine build appears.
 
 ## How CI installs the same packs
 
@@ -132,6 +136,79 @@ That is the same folder layout a desktop CLI install creates. There is no parall
 - A Godot template folder name will never satisfy a Blazium editor's version check.
 - Production `api/mirrorlist/` may lag the CDN `details.json` order until the site deploy that prefers CDN lands.
 - Per-file downloads (`--platform`, `--runtime`, `--file`) need a working `template_files.json` (or a parseable fallback). If only a `.tpz` exists for that version, use `--tpz`.
+
+## Workflows that stay on the CDN path
+
+Full pack after an editor install:
+
+```text
+blazium-cli install 0.6.838 --templates
+# equivalent templates-only refresh:
+blazium-cli templates download 0.6.838 --tpz
+blazium-cli templates path
+```
+
+Web/desktop runtime set without Android or iOS rows:
+
+```text
+blazium-cli templates download 0.6.838 --runtime --variant release
+blazium-cli templates download nightly --runtime --variant debug --channel nightly
+```
+
+One platform or one file when `template_files.json` is present:
+
+```text
+blazium-cli templates list 0.6.838 --platform web
+blazium-cli templates download 0.6.838 --platform android
+blazium-cli templates download nightly --file web_nothreads_release.zip
+blazium-cli templates download 0.6.838 --all --only-missing
+```
+
+| Failure | What it usually means |
+|---|---|
+| Export dialog: templates missing | Folder is Godot-shaped (`4.3.x.stable`) or wrong channel suffix; need `{version}.{channel}` under the Blazium root |
+| `select exactly one mode` | Passed zero or two of `--tpz` / `--file` / `--platform` / `--runtime` / `--all` |
+| Per-file 404 / empty list | Version only published a `.tpz`; use `--tpz` |
+| Android CI cannot find `android_source.zip` | Templates root empty or wrong; setup-engine should have set `BLAZIUM_TEMPLATE` |
+| Editor button downloads from GitHub, CLI from CDN | Expected until production `api/mirrorlist/` prefers `details.json` order |
+
+`export-blazium-game` expects `android_source.zip` directly under `BLAZIUM_TEMPLATE` and writes `android/.build_version` as `{version}.release`, or the nightly form with `-` turned into `.`. That matches the desktop folder naming the CLI creates. There is no Actions-only parallel tree.
+
+Override the root when a runner or container cannot use the OS default:
+
+```text
+export BLAZIUM_EXPORT_TEMPLATES_DIR=/cache/blazium/export_templates
+blazium-cli templates download 0.6.838 --tpz --dest /cache/blazium/export_templates
+```
+
+`--dest` and `BLAZIUM_EXPORT_TEMPLATES_DIR` both redirect installs; `templates path` prints whichever root the CLI will use next.
+
+## Catalog pointers for templates
+
+| URL | Role |
+|---|---|
+| `https://cdn.blazium.app/catalog/versions/release/latest.json` | Release pointer (`version`, `templates_url`) |
+| `https://cdn.blazium.app/catalog/versions/nightly/latest.json` | Nightly pointer |
+| `https://cdn.blazium.app/release/0.6.838/details.json` | Pack URLs and mirrors for that version |
+| `https://cdn.blazium.app/release/0.6.838/template_files.json` | Per-file catalog when published |
+| `https://blazium.app/api/mirrorlist/0.6.838.release.json` | What the in-editor manager fetches today |
+
+As of 11 October 2026 release latest is **0.6.838** (`released_on` 2026-09-10) and nightly latest is **0.6.924**. Script against the `latest.json` you intend; do not assume the semver alone implies the channel prefix.
+
+## Mode choice cheat sheet
+
+| Situation | Mode |
+|---|---|
+| Fresh desktop install, export every platform later | `install <ver> --templates` or `templates download <ver> --tpz` |
+| CI cache hit, editor already on disk | `templates download <ver> --tpz` (what setup-engine does) |
+| Only shipping Web + desktop | `--runtime --variant release` |
+| Android Gradle export needs `android_source.zip` | `--platform android` or full `--tpz` |
+| Re-run after a partial failure | same mode plus `--only-missing` |
+| .NET export | add `--mono` (second pack / mono catalog rows, same version string) |
+
+`--variant` defaults to `BLAZIUM_TEMPLATE_VARIANT` or `release`. `--channel` on `templates download` is `nightly` or `release` — there is no prerelease template prefix. A prerelease editor version still pulls template metadata from the release CDN folder unless you pass the nightly channel.
+
+Hub never calls Cerebro. The CLI only does when `BLAZIUM_CEREBRO_URL` is set. Public machines leave that unset and stay on `cdn.blazium.app` metadata (`template_files.json` → `templates.json` → `details.json`). Website download buttons resolve the same version folders through `catalog/versions/{channel}/latest.json`, so a CDN outage breaks CLI and site picks together while a stale mirror list only affects the in-editor button.
 
 ## Links
 

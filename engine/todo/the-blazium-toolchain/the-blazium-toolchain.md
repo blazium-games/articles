@@ -25,6 +25,8 @@ The engine README lists PS1, PS2, N64, and Interactive DVD as something Blazium 
 
 ![What actually builds](assets/toolchain-targets.png)
 
+![Editor discovers blazium-toolchain then runs interdvd setup, ffmpeg, or iso as a child process](assets/editor-spawns-cli.png)
+
 ## Two repositories on purpose
 
 `blazium.git` is the MIT editor and runtime. `blazium-toolchain.git` is a separate Go program under GPL-3.0-or-later. The NOTICE file in the toolchain repo states the rule in one sentence: third-party toolchain components must never be merged into the MIT editor; the editor only spawns the CLI.
@@ -61,6 +63,8 @@ Discovery inside the CLI is environment, then that prefix tree, then a portable 
 
 `THIRDPARTY.md` is the authoritative table. Each fetched tree keeps its upstream license. Roles that matter for the boundary:
 
+![Third-party components stay in the spawned toolchain or guest binary, not linked into the MIT editor](assets/third-party-licenses.png)
+
 | Component | Role relative to the editor |
 |---|---|
 | This CLI (GPL-3.0-or-later) | Spawned process |
@@ -92,13 +96,61 @@ Sony BIOS images and N64 PIF dumps are never fetched. `C:\ultra` is ignored. Emu
 
 The CLI treats stdout as process status, not a log stream. Exit `2` means a reserved platform (`ps3`, `ps4`) or a host that cannot compile that guest. Exit `3` means a required host tool is missing. Failures go through the report helpers so a pasted GitHub issue includes kind, message, suggested fix, command line, host triple, toolchain version, and prefix. `--json` collapses the same fields into one object. There is no rotating session log beside that stream.
 
+![Toolchain exit codes: 0 ok, 1 usage, 2 planned or unsupported host, 3 missing tool, 4 fail](assets/exit-codes.png)
+
+| Code | Meaning in this CLI |
+|---|---|
+| `0` | Success |
+| `1` | Usage / unknown platform (also: no arguments prints help and exits `1`) |
+| `2` | Planned platform (`ps3`, `ps4`) or host that cannot compile that guest |
+| `3` | Required host tool missing, or offline when a fetch is required |
+| `4` | Other failure after the command was understood |
+
 That contract matters for the architecture story: the MIT editor only needs to spawn, read exit status, and surface the child’s text. It does not import the Go report package, and it does not need to understand every fetch URL in `pins.json`.
+
+## Editor spawn workflow
+
+Interactive DVD is the only in-tree export platform that shells the CLI. The practical sequence inside the editor is:
+
+1. `InterDVDToolchain::discover_binary` resolves the path (preset / editor setting, then `BLAZIUM_TOOLCHAIN`, then `PATH`).
+2. Scene bake or cell transcode that needs encode calls `interdvd setup` when status says encode is not ready.
+3. Encode runs `interdvd ffmpeg` with the argument list the editor builds.
+4. ISO export runs `interdvd iso` via `InterDVDIfoWriter::toolchain_iso_args` / `InterDVDToolchain::iso_args`: `--dir`, `--out`, optional `--meta` / `--write-meta`, and `--json`.
+
+Dummy-VOB paths that never call FFmpeg can finish without the binary. ISO export and bake paths that need the CLI fail with an explicit missing-toolchain message instead of silently shelling `mkisofs`.
+
+PS1, PS2, and N64 never enter that editor class. After `setup` on Windows or Linux you run `build`, `run`, `iso` / `rom`, and cook flags from a terminal. Cook ABI constants (`BLAZIUM_PS1_COOK_ABI`, `BLAZIUM_PS2_COOK_ABI`, `BLAZIUM_N64_COOK_ABI`) live in the toolchain guest code and are not shared across platforms. They are not an editor cooker on `blazium-dev`.
+
+## Failure cases at the license boundary
+
+| Failure | What it means | What to do |
+|---|---|---|
+| Editor reports toolchain not found | Discovery order found nothing | Set `export/inter_dvd/toolchain`, `BLAZIUM_TOOLCHAIN`, or `PATH` |
+| `interdvd iso` asked for `mkisofs` | Wrong mental model | This path masters ISO9660+UDF inside the Go process |
+| Language / region missing from IFO after CLI ISO | CLI meta fields stay in `disc.interdvd.json` | Use engine `InterDVDIfoWriter` authoring for IFO region/parental/menu/audio |
+| `ps3` / `ps4` exit `2` | Reserved / planned | Do not treat as a ship date |
+| macOS `ps1 setup` exit `2` | Console hosts are Windows/Linux | Use those hosts for compile; macOS can still master Interactive DVD from a local build |
+| Guest links appear inside the editor binary | Someone vendored SDK trees | Keep compilers and SDKs in the toolchain cache / guest export only |
 
 ## Validation versus a shipped title
 
 We used the CLI in-house to validate the four console-adjacent targets and the Interactive DVD editor path. That is not a shipped console title on a storefront. The architecture exists so the MIT editor can stay MIT while authors who need those compilers have one place to fetch them.
 
 Guest cook flags (`--tim`, `--node`, `--luau`, and the rest) read paths you name. The CLI does not sandbox those paths. Treat them like any other build tool that trusts the working tree. Cook ABI constants (`BLAZIUM_PS1_COOK_ABI`, `BLAZIUM_PS2_COOK_ABI`, `BLAZIUM_N64_COOK_ABI`) version the toolchain's guest interfaces and are not shared across platforms—another reason the guest trees live beside the CLI instead of inside `blazium.git`.
+
+## Commands the architecture implies
+
+These are the verbs the split exists to keep outside the MIT editor process:
+
+| Verb | Runs where | Notes |
+|---|---|---|
+| `ps1\|ps2\|n64 setup` | Terminal / CI | Fetches pinned compilers into the prefix |
+| `ps1\|ps2\|n64 build` | Terminal / CI | Links guest stubs; not an `EditorExportPlatform` |
+| `interdvd setup` / `ffmpeg` / `iso` | Editor spawn or terminal | Only Interactive DVD has an export platform |
+| `steam setup` | Terminal | Caches SteamCMD for CLI deploy; no login |
+| `ps3` / `ps4` | Anywhere | Exit `2`, status `planned` |
+
+Catalog for published Linux and Windows binaries: `https://cdn.blazium.app/toolchain/toolchain.json`. CI in that repo runs `go test`, `go vet`, and sample `ps2` / `n64` builds on Ubuntu and Windows. It does not publish a macOS binary even though a local macOS build can master Interactive DVD.
 
 ## Links
 
