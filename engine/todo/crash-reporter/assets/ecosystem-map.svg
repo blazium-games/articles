@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img">
+  <title>The Blazium engine stack</title>
+  <desc>Website, CDN, Hub, CLI, editor, and crash sidecar.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a7aa8"/>
+    </marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#e070ff"/>
+    </marker>
+  </defs>
+  <rect width="1920" height="1080" fill="#121018"/>
+  <text x="64" y="72" fill="#e070ff" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" letter-spacing="2">BLAZIUM</text>
+  <text x="64" y="118" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="42" font-weight="700">The Blazium engine stack</text>
+  <rect x="80" y="220" width="320" height="140" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="240.0" y="278.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">blazium.app</text>
+<text x="240.0" y="312.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">download + docs</text>  <rect x="520" y="220" width="320" height="140" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="680.0" y="278.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">cdn.blazium.app</text>
+<text x="680.0" y="312.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">editors, templates, articles</text>  <rect x="960" y="180" width="280" height="120" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="1100.0" y="228.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">Hub</text>
+<text x="1100.0" y="262.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">Projects / Editors / News</text>  <rect x="1320" y="180" width="280" height="120" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="1460.0" y="228.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">CLI</text>
+<text x="1460.0" y="262.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">install / open / remote</text>  <rect x="960" y="420" width="280" height="140" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="1100.0" y="478.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">Editor</text>
+<text x="1100.0" y="512.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">Blazium 0.6.x</text>  <rect x="1320" y="420" width="280" height="140" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="1460.0" y="478.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">Crash sidecar</text>
+<text x="1460.0" y="512.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">confirm, then upload</text>  <rect x="80" y="820" width="320" height="140" rx="14" fill="#2a2a32" stroke="#6a6a72" stroke-width="2"/>
+  <text x="240.0" y="878.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">Cerebro</text>
+<text x="240.0" y="912.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">CI catalogs  ·  internal</text>  <line x1="400" y1="290" x2="520" y2="290" stroke="#8a7aa8" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="460.0" y="278.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="15" text-anchor="middle">links</text>  <line x1="840" y1="260" x2="960" y2="240" stroke="#8a7aa8" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="900.0" y="238.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="15" text-anchor="middle">catalogs + news</text>  <line x1="1240" y1="240" x2="1320" y2="240" stroke="#8a7aa8" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1280.0" y="228.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="15" text-anchor="middle">mutations</text>  <line x1="1100" y1="300" x2="1100" y2="420" stroke="#8a7aa8" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1100.0" y="348.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="15" text-anchor="middle">open project</text>  <line x1="1460" y1="300" x2="1460" y2="420" stroke="#8a7aa8" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1460.0" y="348.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="15" text-anchor="middle">launch on crash</text>  <line x1="400" y1="890" x2="520" y2="290" stroke="#8a7aa8" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="460.0" y="578.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="15" text-anchor="middle">publish</text><text x="80" y="1040" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="start">Hub never talks to Cerebro at runtime. Catalogs and News come from the CDN.</text></svg>

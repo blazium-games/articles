@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img">
+  <title>Streaming stack</title>
+  <desc>Chat in, the game mutates, OBS cuts.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a7aa8"/>
+    </marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#e070ff"/>
+    </marker>
+  </defs>
+  <rect width="1920" height="1080" fill="#121018"/>
+  <text x="64" y="72" fill="#e070ff" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" letter-spacing="2">BLAZIUM</text>
+  <text x="64" y="118" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="42" font-weight="700">Streaming stack</text>
+  <rect x="80" y="400" width="340" height="200" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="250.0" y="488.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">Twitch / Kick / IRC</text>
+<text x="250.0" y="522.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">Helix, KickAPI, IRCClientNode</text>  <rect x="520" y="400" width="340" height="200" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="690.0" y="488.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">Crowd Control</text>
+<text x="690.0" y="522.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">viewer effects</text>  <rect x="960" y="400" width="340" height="200" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="1130.0" y="488.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">Your game</text>
+<text x="1130.0" y="522.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">spawn, mutate, signal</text>  <rect x="1400" y="400" width="420" height="200" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="1610.0" y="488.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">OBS</text>
+<text x="1610.0" y="522.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">OBSClient  ·  websocket 5.x</text>  <line x1="420" y1="500" x2="520" y2="500" stroke="#8a7aa8" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="470.0" y="488.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="15" text-anchor="middle">command</text>  <line x1="860" y1="500" x2="960" y2="500" stroke="#8a7aa8" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="910.0" y="488.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="15" text-anchor="middle">effect</text>  <line x1="1300" y1="500" x2="1400" y2="500" stroke="#8a7aa8" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1350.0" y="488.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="15" text-anchor="middle">scene</text><text x="80" y="720" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="start">Helix / KickAPI: identity, clips, subscriptions. IRC: messages as they arrive. Crowd Control: paid or voted effects. OBS: broadcast.</text></svg>

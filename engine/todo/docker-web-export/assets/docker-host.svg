@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img">
+  <title>A web export, then a container</title>
+  <rect width="1920" height="1080" fill="#121018"/>
+  <text x="64" y="72" fill="#e070ff" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" letter-spacing="2">BLAZIUM</text>
+  <text x="64" y="124" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="42" font-weight="700">A web export, then a container</text>
+  <text x="64" y="168" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="20">docker-webbuild-template serves files. It does not run the editor or the export.</text>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#8a7aa8"/></marker></defs><rect x="80" y="340" width="420" height="160" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="290.0" y="412.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">Web preset</text>
+  <text x="290.0" y="444.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">EditorExportPlatformWeb</text><rect x="580" y="340" width="420" height="160" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="790.0" y="412.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">static/</text>
+  <text x="790.0" y="444.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">index.html, wasm, pck</text><rect x="1080" y="340" width="420" height="160" rx="14" fill="#1c1828" stroke="#e070ff" stroke-width="2"/>
+  <text x="1290.0" y="412.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">Nginx :8080</text>
+  <text x="1290.0" y="444.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">COOP, COEP, /.proxy/</text><rect x="1560" y="340" width="280" height="160" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="1700.0" y="412.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">Host</text>
+  <text x="1700.0" y="444.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">Discord or YouTube</text><line x1="500" y1="420" x2="580" y2="420" stroke="#8a7aa8" stroke-width="2.5" marker-end="url(#arrow)"/><line x1="1000" y1="420" x2="1080" y2="420" stroke="#8a7aa8" stroke-width="2.5" marker-end="url(#arrow)"/><line x1="1500" y1="420" x2="1560" y2="420" stroke="#8a7aa8" stroke-width="2.5" marker-end="url(#arrow)"/><rect x="580" y="640" width="920" height="150" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="1040.0" y="707.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">/ytgame</text>
+  <text x="1040.0" y="739.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">same files, COOP and COEP headers removed</text>
+  <text x="64" y="1028" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="18">This image is not the web editor. The web editor is a separate CI artifact.</text>
+</svg>

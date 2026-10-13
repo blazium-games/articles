@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img">
+  <title>Install flow</title>
+  <desc>Inno or .deb drops Hub, CLI, and the crash sidecar. CLI owns blazium://.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a7aa8"/>
+    </marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#e070ff"/>
+    </marker>
+  </defs>
+  <rect width="1920" height="1080" fill="#121018"/>
+  <text x="64" y="72" fill="#e070ff" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" letter-spacing="2">BLAZIUM</text>
+  <text x="64" y="118" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="42" font-weight="700">Install flow</text>
+  <rect x="80" y="280" width="360" height="160" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="260.0" y="348.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">1. Installer</text>
+<text x="260.0" y="382.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">Windows Inno  or  Linux .deb</text>  <rect x="480" y="280" width="360" height="160" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="660.0" y="348.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">2. On disk</text>
+<text x="660.0" y="382.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">Hub + CLI + crash sidecar</text>  <rect x="880" y="280" width="360" height="160" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="1060.0" y="348.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">3. Protocol</text>
+<text x="1060.0" y="382.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">blazium://  registered to CLI</text>  <rect x="1280" y="280" width="360" height="160" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="1460.0" y="348.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">4. Hub remote</text>
+<text x="1460.0" y="382.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">loopback :39218</text>  <rect x="280" y="640" width="360" height="160" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="460.0" y="708.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">5. Editors tab</text>
+<text x="460.0" y="742.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">CLI install from CDN</text>  <rect x="880" y="640" width="360" height="160" rx="14" fill="#1c1828" stroke="#6b4a9e" stroke-width="2"/>
+  <text x="1060.0" y="708.0" fill="#f4eefc" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="22" font-weight="600" text-anchor="middle">6. Open project</text>
+<text x="1060.0" y="742.0" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="middle">CLI open / load  +  remote_control</text>  <line x1="440" y1="360" x2="480" y2="360" stroke="#8a7aa8" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <line x1="840" y1="360" x2="880" y2="360" stroke="#8a7aa8" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <line x1="1240" y1="360" x2="1280" y2="360" stroke="#8a7aa8" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <line x1="640" y1="440" x2="460" y2="640" stroke="#8a7aa8" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <line x1="640" y1="720" x2="880" y2="720" stroke="#8a7aa8" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="80" y="1040" fill="#b7acc8" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="16" text-anchor="start">Do not hand-edit hub_remote.json. Installers create it.</text></svg>

@@ -6,7 +6,7 @@ Blazium Hub News.
 
 ## Structure
 
-Engine articles must use this layout (slug = folder name = file name, no spaces):
+Engine articles must use one of these layouts (slug = folder name = file name, no spaces):
 
 ```
 engine/
@@ -15,9 +15,15 @@ engine/
     assets/          (optional)
       cover.jpg
       image1.png
+  todo/              (in progress; never published)
+    <slug>/
+      <slug>.md
+      assets/
 ```
 
 Example: `engine/steam-module/steam-module.md`
+
+Articles already released on IndieDB stay in `engine/<slug>/`. Drafts that are still being written live in `engine/todo/<slug>/`. Moving a draft out of `todo/` is what makes `deployed: true` legal.
 
 ## Frontmatter
 
@@ -44,15 +50,16 @@ hosts:
 | `title` | yes | Display title |
 | `description` | yes | Summary / RSS description |
 | `cover` | yes | Relative path to cover image |
-| `slug` | **yes** | kebab-case `[a-z0-9-]+` only — **no spaces**. Must match path `engine/<slug>/<slug>.md` |
-| `deployed` | yes for CDN | `true` publishes to CDN; `false` / missing skips publish |
+| `slug` | **yes** | kebab-case `[a-z0-9-]+` only — **no spaces**. Must match `engine/<slug>/<slug>.md` or `engine/todo/<slug>/<slug>.md` |
+| `deployed` | yes for CDN | `true` publishes to CDN. `false` / missing skips publish. Articles under `engine/todo/` must stay `false` and are never uploaded |
 | `date` | no | `YYYY-MM-DD`; defaults to git last-commit date at publish |
 | `changes` | no | Changelog / milestone URL |
 | `hosts` | no | Array of `{ name, url }` external places the article is hosted (IndieDB, itch.io, …). Shown in Hub News. May be empty, added before first CDN publish, or updated later and republished via sync. |
 
-Only articles with `deployed: true` are validated for media completeness and uploaded to
-`https://cdn.blazium.app/articles/`. `hosts` is optional for every article and is written into
-CDN `meta.json` / `index.json` when present.
+Articles under `engine/<slug>/` are media-checked when `deployed: true` and uploaded to
+`https://cdn.blazium.app/articles/`. Articles under `engine/todo/` are still validated
+(frontmatter, path, and local images) and are never published, even if `deployed` is set.
+`hosts` is optional for every article and is written into CDN `meta.json` / `index.json` when present.
 
 ## Scripts
 

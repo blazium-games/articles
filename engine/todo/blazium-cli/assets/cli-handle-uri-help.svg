@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1648" height="688" viewBox="0 0 1648 688" role="img">
+  <title>blazium-cli handle-uri --help</title>
+  <rect width="1648" height="688" rx="10" fill="#121018"/>
+  <text x="24" y="28" fill="#e070ff" font-family="Consolas, Cascadia Mono, monospace" font-size="13">asciinema</text>
+  <text x="24" y="64" fill="#e070ff" font-family="Consolas, Cascadia Mono, monospace" font-size="16">$ blazium-cli handle-uri --help</text>
+  <text x="24" y="86" fill="#f4eefc" font-family="Consolas, Cascadia Mono, monospace" font-size="16">Parses blazium:// URIs from the Hub or OS handlers and performs the matching action.</text>
+  <text x="24" y="108" fill="#f4eefc" font-family="Consolas, Cascadia Mono, monospace" font-size="16"></text>
+  <text x="24" y="130" fill="#f4eefc" font-family="Consolas, Cascadia Mono, monospace" font-size="16">Supported forms:</text>
+  <text x="24" y="152" fill="#f4eefc" font-family="Consolas, Cascadia Mono, monospace" font-size="16">  blazium://open?path=&lt;path-or-file-url&gt;</text>
+  <text x="24" y="174" fill="#f4eefc" font-family="Consolas, Cascadia Mono, monospace" font-size="16">  blazium://load?path=&lt;path-or-file-url&gt;</text>
+  <text x="24" y="196" fill="#f4eefc" font-family="Consolas, Cascadia Mono, monospace" font-size="16">  blazium://project/&lt;url-encoded-path&gt;</text>
+  <text x="24" y="218" fill="#f4eefc" font-family="Consolas, Cascadia Mono, monospace" font-size="16">  blazium://install?version=&lt;ver&gt;&amp;channel=&lt;optional&gt;&amp;platform=&amp;arch=&amp;mono=</text>
+  <text x="24" y="240" fill="#f4eefc" font-family="Consolas, Cascadia Mono, monospace" font-size="16">  blazium://register?path=&lt;path&gt;&amp;version=&amp;channel=&amp;platform=&amp;arch=&amp;mono=</text>
+  <text x="24" y="262" fill="#f4eefc" font-family="Consolas, Cascadia Mono, monospace" font-size="16">  blazium://hub  (or blazium:// with empty host)</text>
+  <text x="24" y="284" fill="#f4eefc" font-family="Consolas, Cascadia Mono, monospace" font-size="16"></text>
+  <text x="24" y="306" fill="#f4eefc" font-family="Consolas, Cascadia Mono, monospace" font-size="16">Usage:</text>
+  <text x="24" y="328" fill="#f4eefc" font-family="Consolas, Cascadia Mono, monospace" font-size="16">  blazium-cli handle-uri &lt;uri&gt; [flags]</text>
+  <text x="24" y="350" fill="#f4eefc" font-family="Consolas, Cascadia Mono, monospace" font-size="16"></text>
+  <text x="24" y="372" fill="#f4eefc" font-family="Consolas, Cascadia Mono, monospace" font-size="16">Examples:</text>
+  <text x="24" y="394" fill="#f4eefc" font-family="Consolas, Cascadia Mono, monospace" font-size="16">  blazium-cli handle-uri "blazium://open?path=C%3A%5CGames%5CFoo"</text>
+  <text x="24" y="416" fill="#f4eefc" font-family="Consolas, Cascadia Mono, monospace" font-size="16">  blazium-cli handle-uri "blazium://install?version=0.6.714"</text>
+  <text x="24" y="438" fill="#f4eefc" font-family="Consolas, Cascadia Mono, monospace" font-size="16">  blazium-cli handle-uri "blazium://register?path=C%3A%5CEditors%5Cblazium.exe&amp;version=0.6.714&amp;channel=release"</text>
+  <text x="24" y="460" fill="#f4eefc" font-family="Consolas, Cascadia Mono, monospace" font-size="16">  blazium-cli handle-uri blazium://hub</text>
+  <text x="24" y="482" fill="#f4eefc" font-family="Consolas, Cascadia Mono, monospace" font-size="16"></text>
+  <text x="24" y="504" fill="#f4eefc" font-family="Consolas, Cascadia Mono, monospace" font-size="16">Flags:</text>
+  <text x="24" y="526" fill="#f4eefc" font-family="Consolas, Cascadia Mono, monospace" font-size="16">      --crash-reporter string   Editor sidecar crash reporter executable (omitted: Hub sidecar under BLAZIUM if present)</text>
+  <text x="24" y="548" fill="#f4eefc" font-family="Consolas, Cascadia Mono, monospace" font-size="16">  -h, --help                    help for handle-uri</text>
+  <text x="24" y="570" fill="#f4eefc" font-family="Consolas, Cascadia Mono, monospace" font-size="16"></text>
+  <text x="24" y="592" fill="#f4eefc" font-family="Consolas, Cascadia Mono, monospace" font-size="16">Global Flags:</text>
+  <text x="24" y="614" fill="#f4eefc" font-family="Consolas, Cascadia Mono, monospace" font-size="16">      --format string   Output format: human, json, or tsv (default "human")</text>
+  <text x="24" y="636" fill="#f4eefc" font-family="Consolas, Cascadia Mono, monospace" font-size="16">      --json            Emit JSON on stdout (shorthand for --format json; implies --quiet)</text>
+  <text x="24" y="658" fill="#f4eefc" font-family="Consolas, Cascadia Mono, monospace" font-size="16">      --quiet           Suppress warnings and non-fatal notices</text>
+</svg>
